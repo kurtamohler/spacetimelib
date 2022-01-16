@@ -1,0 +1,48 @@
+I want to have the ability to define a box, or any other arbitrarily shaped
+border, that particles will bounce off of. If we consider a particle moving
+closer to one of the edges of the box, we need a way to detect at what time the
+particle hits the box and should change velocity.
+
+We can think about the edge of the box as a 3-D plane. For the collision
+calculation, we will not treat the 2 spatial dimensions and the 1 time
+dimension any differently from each other--they are just 3 dimensions in
+a geometric space.
+
+As we integrate the particle's velocity, the path of the particle approaches
+the plane, and it will eventually pass through the plane on some time step
+index i. The 3-D position of the particle at time step i-1 is x_i-1, and at
+time step i, it's x_i. Detecting whether this intersection happens on each time
+step, as well as finding the point of intersection, is the main problem.  Once
+we know how to calculate that, then it should be relatively simple to calculate
+what the velocity of the particle should be after it collides and then
+integrate forward from the collision point to find the correct position of the
+particle at the end of the time step.
+
+It's probably important to realize that the particle may have passed through
+more than one plane in one time step, and we'll need to choose the plane
+corresponding with the collision point that is closest to x_i-1. Also, after we
+calculate the corrected x_i after the bounce, it's still possible for the
+particle to collide a second time. We'll need to keep checking for collisions
+and correcting for them until we finally reach the end of the time step.
+
+
+It will be important to find a very efficient way to detect a collision between
+a line segment and a polygon, because we'll have to perform the calculation at
+least L * P times within one time step, where L = the number of line segments
+(or number of particles in the simulation) and P = the number of polygons (or
+edges of the boundaries that particles bounce off of).
+
+
+This is actually quite complicated. I do still want to try this eventually, but
+I realize now that collisions with bounding boxes should probably not be part
+of the MVP for this project. Instead, I could have an API to define a scripted
+event that changes a particle's velocity at a particular time. These scripted
+events can be Lorentz transformed to act the correct way in a different
+reference frame. This is a much more direct way to provide an API to perform
+special relativity experiments. You can simply set up initial conditions of
+particles moving at different velocities, and then just tell the simulation
+that at some time t in frame S, change some particle's velocity to velocity v.
+If we ever change to a different frame S' before the scripted event occurs,
+we'll just perform the Lorentz transform and say that at some time t' in frame
+S', change the particle's velocity to velocity v'.
+

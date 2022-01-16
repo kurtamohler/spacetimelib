@@ -1,5 +1,5 @@
 from direct.showbase.ShowBase import ShowBase
-from panda3d.core import LineSegs, Vec3, Quat
+from panda3d.core import LineSegs, Vec3, Quat, AntialiasAttrib, GeomVertexFormat, Geom, GeomVertexData, GeomVertexWriter, GeomTriangles, GeomNode, NodePath
 import numpy as np
 from itertools import product
 import lorentz
@@ -31,6 +31,7 @@ class ParticlePath():
                 segs.drawTo(path_pos)
 
         self.geom_node = segs.create()
+
 
     def get_path_data(self):
         geom = self.geom_node.modifyGeom(0)
@@ -98,6 +99,24 @@ class SimulationState():
             particle.lorentz_transform(frame_velocity)
 
 
+# TODO: Add some coordinate axes in the corner of the camera, labelled with
+# time, x, and y.
+
+# TODO: There should be a second 2-D timeslice of the current latest simulation
+# time in the current frame of reference. This will let us effectively
+# understand how things appear to move in just space when changing to different
+# frames of reference.
+
+# TODO: It might be a good idea to perform calculations all in the base
+# reference frame, then perform lorentz transform for view purposes? That
+# would fix the existing problem of float errors coming in from repeatedly
+# performing transforms on top of transforms. However, maybe it would
+# be too resource intensive to perform so many transforms. Perhaps
+# there's a more efficient way to reduce the float errors? Or maybe it's not
+# even too intensive after all--with 4 particle paths, it doesn't seem so bad.
+# Actually, it is quit intensive, it seems. I will need to optimize the transform
+# calculation though, since I want to be able to accelerate in real time
+
 class App(ShowBase):
     def __init__(self):
         super().__init__()
@@ -107,7 +126,7 @@ class App(ShowBase):
 
         self.disableMouse()
 
-        self.camera.setPos(0, -100, 0)
+        self.camera.setPos(0, -500, 0)
 
         self.sim = SimulationState()
 
@@ -123,12 +142,63 @@ class App(ShowBase):
         self.sim.particles.append(
             Particle(0, (20, 0), (-.3, 0), color=(0, 0, 0.8, 0)))
 
+        for x, y in product(range(-100, 101, 50), range(-100, 101, 50)):
+            if x != 0 or y != 0:
+                self.sim.particles.append(
+                    Particle(0, (x, y), (0, 0), color=(0.5, 0.5, 0.5, 0)))
+
+
         self.prev_time = 0
 
-        self.time_scale = 1
+        self.time_scale = 10
 
         for particle in self.sim.particles:
             render.attachNewNode(particle.path.geom_node)
+
+        def gen_xy_plane():
+            width = 0.2
+            x = 100
+            y = 100
+            fmt = GeomVertexFormat.getV3()
+            data = GeomVertexData("Data", fmt, Geom.UHStatic)
+            vertices = GeomVertexWriter(data, "vertex")
+            vertices.addData3d(-width, -x, -y)
+            vertices.addData3d( width, -x, -y)
+            vertices.addData3d(-width,  x, -y)
+            vertices.addData3d( width,  x, -y)
+            vertices.addData3d(-width, -x,  y)
+            vertices.addData3d( width, -x,  y)
+            vertices.addData3d(-width,  x,  y)
+            vertices.addData3d( width,  x,  y)
+            triangles = GeomTriangles(Geom.UHStatic)
+
+            def addQuad(v0, v1, v2, v3):
+                triangles.addVertices(v0, v1, v2)
+                triangles.addVertices(v0, v2, v3)
+                triangles.closePrimitive()
+
+            addQuad(4, 5, 7, 6) # Z+
+            addQuad(0, 2, 3, 1) # Z-
+            addQuad(3, 7, 5, 1) # X+
+            addQuad(4, 6, 2, 0) # X-
+            addQuad(2, 6, 7, 3) # Y+
+            addQuad(0, 1, 5, 4) # Y+
+
+            geom = Geom(data)
+            geom.addPrimitive(triangles)
+            
+            node = GeomNode("xy-plane")
+            node.addGeom(geom)
+
+            return NodePath(node)
+
+
+        xy_plane = gen_xy_plane()
+        xy_plane.setColor(.9, .9, .9, 1)
+        xy_plane.reparentTo(render)
+
+        #render.setAntialias(AntialiasAttrib.MMultisample)
+        #render.setAntialias(AntialiasAttrib.MPolygon)
 
         self.taskMgr.add(self.step_task)
 
@@ -160,6 +230,12 @@ class App(ShowBase):
         self.accept('arrow_down-up', self.unset_transform)
         self.accept('arrow_right-up', self.unset_transform)
         self.accept('arrow_left-up', self.unset_transform)
+
+        # TODO: For some reason, the camera seems to zoom out the first time
+        # the lorentz_transform is used. So we do one right at the beginning
+        # to work around it, but it should be fixed.
+        self.sim.lorentz_transform([0, 0.001])
+        self.sim.lorentz_transform([0, -0.001])
 
     def set_transform_up(self):
         self.transform_direction = [0, self.transform_speed]

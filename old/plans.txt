@@ -1,0 +1,50 @@
+
+Create a physics simulator that is correct according to special relativity.
+
+* 2 spatial dimensions and 1 time dimension. This way, we can see everything
+  happening at once. As time progresses, the positions of particles will appear
+  to change in the foremost time slice, shown as a plane in a 3d space. Previous
+  time slices will trail behind it as the simulation evolves, so we can see
+  the path that each object took over time.
+
+* Particles move at constant speeds with respect to each other
+
+* The proper time of every object is tracked. It could be simply a text value
+  that appears next to the objects, or each second of proper time could be marked
+  with a dot on the object's path.
+
+* We can change to a different inertial frame any time we like.
+
+* Probably want to have a border drawn, which objects can bounce off of.
+  However, the fact that things will be changing velocity will make
+  transformations a little tricky.
+
+
+Ideas that would be cool:
+  * You can place and remove new objects into the scene.
+
+
+
+Thoughts on how to solve problems:
+
+
+Maybe I should try to minimize the number of events that I keep track of.
+Starting out, the events I hold onto could just be the starting points of all
+objects and the current points. So, all events at time 0 and all events at time
+t. Each particle's motion between two points in time are just described by two
+events. We can just draw straight lines through the two events for one
+particle.  Any time we have an instantaneous change in velocity for some
+particle, we increment the number of events we keep track of. If a particle has
+changed velocity once, we keep track of the first event, the event where the
+velocity change happened, and the current event. Any time we want to switch
+reference frames, we can just transform all of the events of all of the
+particles.
+
+If I wanted to incorporate accelerations, we may be able to use a similar idea,
+as long as acceleration changes are instantaneous and few. In that case, we
+would just keep track of all the events where the acceleration changes
+happened, and we could fairly simply draw the lines of motion between them.
+However, I'm not sure how useful that would be--any simulation that uses some
+kind of force acting between particles would have continuous acceleration
+changes, right? Perhaps it would be feasible to still do this, but just with
+a large number of events. But there's probably a better way to solve this.
