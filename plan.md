@@ -1,0 +1,56 @@
+# Special relativity simulation tool
+
+## Description
+
+A tool for simulating motion in Minkowski spacetime.
+
+
+## Minimum Viable Product
+
+These features should be done first, before thinking too much about further
+steps.
+
+* There needs to be a representation of an inertial reference frame. Objects
+  and their paths can be added to it. It should have a function that returns
+  a new frame transformed by an arbitrary velocity, position, and time.
+
+* Ability to create a stationary clock. Clocks can be added to a frame. A clock
+  has a constant velocity for the entire time axis. The clock is initialized
+  with a velocity, an event, and an initial time-reading for the clock.  For
+  instance, if the event is `(t=0, x=1, y=3)` and the initial time is `10`
+  seconds, then at time `t=0` in the frame it was added to, the clock is at
+  spatial position `(x=1, y=3)`, and it reads `10` seconds. At different times in
+  the frame, forward and back, the clock moves in a straight line according to
+  the constant velocity it was given, and the reading on the clock face changes
+  according to the dτ/dt that corresponds with the clock's velocity.
+
+* Create an interactive 2-D topdown demo. It shows the spatial positions and
+  readings of all the clocks at some particular time t' in an observer frame.
+  The player controls the observer frame, which can change velocity. There should
+  probably be a little ship in the middle of the screen or something. The change
+  in proper time of the observer frame should always match that of the player in
+  real life. In other words, the player should feel as if they are in the same
+  reference frame as the observer frame in the simulation. The plane of
+  simultaneity must change proportionally to the change in velocity.
+  The motions of all the clocks should be defined ahead of time in a rest
+  frame that does not change at all during the simulation.
+
+
+## Extra ideas
+
+I would love to be able to rotate the observer frame in the demo. I'm not
+entirely sure about what happens in a rotating frame though. I could figure
+that out at some point. But simply because I don't know yet, I won't do this
+for the MVP.
+
+Game engines usually have a hierarchical tree structure which serves as the
+main interface for adding and manipulating objects in the space.  For a special
+relativity engine, a tree like this might also be useful. Each node could
+potentially be its own full reference frame object. I need to think more about
+this.
+
+I want it to eventually be possible to dynamically change the velocities of the
+clocks while the simulation is running, just like you can do to objects in any
+Newtonian physics simulation.
+
+

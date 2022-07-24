@@ -1,9 +1,24 @@
+# This script demos the basic functionality required to create a visual special
+# relativity simulation. It simulates constant velocity motion of a few
+# particles moving in two spatial dimensions. The paths of particles over time
+# are displayed in three dimensions. Particle paths are updated in a fairly
+# efficient way, by directly modifying the Panda3D vertex data.
+#
+# The paths of particles can be viewed from different frames of reference by
+# holding down the arrow keys.
+#
+# The camera can be rotated by right clicking and dragging the mouse. The camera
+# can also be zoomed in and out with the mouse wheel.
+
 from direct.showbase.ShowBase import ShowBase
-from panda3d.core import LineSegs, Vec3, Quat, AntialiasAttrib, GeomVertexFormat, Geom, GeomVertexData, GeomVertexWriter, GeomTriangles, GeomNode, NodePath
+from panda3d.core import LineSegs, Vec3, Quat, AntialiasAttrib, GeomVertexFormat, Geom, GeomVertexData, GeomVertexWriter, GeomTriangles, GeomNode, NodePath, PandaNode, TransparencyAttrib
 import numpy as np
 from itertools import product
 import lorentz
 
+# A ParticleEvent represents one point along a particle's path in space-time
+# from the perspective of a particular frame of reference. It contains the
+# time and position of the event, as well as the particle's velocity.
 class ParticleEvent():
     def __init__(self, time, position, velocity):
         self.time = time
@@ -17,6 +32,12 @@ class ParticleEvent():
             self.time,
             self.velocity)
 
+# A ParticlePath represents the path of a particle through space-time
+# from the perspective of a particular frame of reference. It contains
+# a Panda3D line segment. It has efficient methods to either update just
+# the last vertex of the line segment (when stepping time forward in the
+# simulation) or to update all vertices (when transforming to a different
+# frame of reference).
 class ParticlePath():
     def __init__(self, events, color=(0, 0, 0, 1)):
         segs = LineSegs()
@@ -33,6 +54,7 @@ class ParticlePath():
         self.geom_node = segs.create()
 
 
+    # Create a memoryview of the geometry data of the path
     def get_path_data(self):
         geom = self.geom_node.modifyGeom(0)
         v_data = geom.modifyVertexData()
@@ -40,12 +62,14 @@ class ParticlePath():
         view = memoryview(v_array).cast('B').cast('f')
         return np.asarray(view, dtype=np.float32)
 
+    # Update the position and time of the last vertex of the path
     def update_last(self, time, position):
         path_data = self.get_path_data()
         path_data[-4] = time
         path_data[-3] = position[0]
         path_data[-2] = position[1]
 
+    # Update the positions and times of all vertices of the path
     def update_all(self, times, positions):
         path_data = self.get_path_data()
 
@@ -54,6 +78,9 @@ class ParticlePath():
             path_data[4*idx + 1] = position[0]
             path_data[4*idx + 2] = position[1]
 
+# Particle represents a particle moving through space-time. It is comprised
+# of a series of ParticleEvents which describes its motion. It also contains
+# a ParticlePath that is used to display the particle's path in Panda3D.
 class Particle():
     def __init__(self, time, position, velocity, color=(0, 0, 0, 1)):
         time = np.array(time, dtype=np.float64)
@@ -84,7 +111,9 @@ class Particle():
             [event.time for event in self.events],
             [event.position for event in self.events])
 
-
+# SimulationState represents the state of a region of space-time in
+# a particular frame of reference. It includes the paths of particles moving
+# within the region of space-time.
 class SimulationState():
     def __init__(self):
         self.particles = []
@@ -97,6 +126,70 @@ class SimulationState():
     def lorentz_transform(self, frame_velocity):
         for particle in self.particles:
             particle.lorentz_transform(frame_velocity)
+
+def draw_line(p0, p1, color):
+    segs = LineSegs()
+    segs.setThickness(1)
+    segs.setColor(color)
+    segs.moveTo(p0)
+    segs.drawTo(p1)
+    return segs.create()
+
+def draw_grid(x0=-1000, x1=1000, y0=-1000, y1=1000, z0=0, z1=0, interval=100, color=(.2, .2, .2, 1), skip_x=None, skip_y=None, skip_z=None):
+    if x0 > x1:
+        _ = x0
+        x0 = x1
+        x1 = _
+
+    if y0 > y1:
+        _ = y0
+        y0 = y1
+        y1 = _
+
+    if z0 > z1:
+        _ = z0
+        z0 = z1
+        z1 = _
+
+    node = NodePath('grid')
+
+    if x0 != x1:
+        for y in range(y0, y1 + 1, interval):
+            if skip_y and (y % skip_y) == 0:
+                continue
+            for z in range(z0, z1 + 1, interval):
+                if skip_z and (z % skip_z) == 0:
+                    continue
+                node.attachNewNode(draw_line(
+                    (x0, y, z),
+                    (x1, y, z),
+                    color))
+
+    if y0 != y1:
+        for x in range(x0, x1 + 1, interval):
+            if skip_x and (x % skip_x) == 0:
+                continue
+            for z in range(z0, z1 + 1, interval):
+                if skip_z and (z % skip_z) == 0:
+                    continue
+                node.attachNewNode(draw_line(
+                    (x, y0, z),
+                    (x, y1, z),
+                    color))
+
+    if z0 != z1:
+        for x in range(x0, x1 + 1, interval):
+            if skip_x and (x % skip_x) == 0:
+                continue
+            for y in range(y0, y1 + 1, interval):
+                if skip_y and (y % skip_y) == 0:
+                    continue
+                node.attachNewNode(draw_line(
+                    (x, y, z0),
+                    (x, y, z1),
+                    color))
+
+    return node
 
 
 # TODO: Add some coordinate axes in the corner of the camera, labelled with
@@ -142,18 +235,40 @@ class App(ShowBase):
         self.sim.particles.append(
             Particle(0, (20, 0), (-.3, 0), color=(0, 0, 0.8, 0)))
 
-        for x, y in product(range(-100, 101, 50), range(-100, 101, 50)):
-            if x != 0 or y != 0:
-                self.sim.particles.append(
-                    Particle(0, (x, y), (0, 0), color=(0.5, 0.5, 0.5, 0)))
-
-
         self.prev_time = 0
 
         self.time_scale = 10
 
         for particle in self.sim.particles:
             render.attachNewNode(particle.path.geom_node)
+
+        self.grids = [
+            # 10 light-second grid
+            draw_grid(
+                x0=-1000, x1=1000,
+                y0=-1000, y1=1000,
+                z0=0, z1=0,
+                interval=10,
+                color=(0, 0, 0, 1),
+                skip_x=100,
+                skip_y=100),
+
+            # 100 light-second grid
+            draw_grid(
+                x0=-10_000, x1=10_000,
+                y0=-10_000, y1=10_000,
+                z0=0, z1=0,
+                interval=100,
+                color=(0, 0, 0, 1))
+        ]
+
+        self.grids[0].setTransparency(TransparencyAttrib.MAlpha)
+        self.grids[0].setAlphaScale(.2)
+        self.grids[0].reparentTo(render)
+
+        self.grids[1].setTransparency(TransparencyAttrib.MAlpha)
+        self.grids[1].setAlphaScale(.5)
+        self.grids[1].reparentTo(render)
 
         def gen_xy_plane():
             width = 0.2
@@ -197,9 +312,6 @@ class App(ShowBase):
         xy_plane.setColor(.9, .9, .9, 1)
         xy_plane.reparentTo(render)
 
-        #render.setAntialias(AntialiasAttrib.MMultisample)
-        #render.setAntialias(AntialiasAttrib.MPolygon)
-
         self.taskMgr.add(self.step_task)
 
         self.accept("wheel_up", self.zoom_in)
@@ -219,7 +331,7 @@ class App(ShowBase):
 
         self.taskMgr.add(self.transform_task)
         self.transform_direction = None
-        self.transform_speed = 0.01
+        self.transform_speed = 0.001
 
         self.accept('arrow_up', self.set_transform_up)
         self.accept('arrow_down', self.set_transform_down)
@@ -319,6 +431,7 @@ class App(ShowBase):
                         self.camera.lookAt((0, 0, 0))
 
                     
+            self.adjust_grid_transparency()
             return task.cont
 
 
@@ -331,16 +444,61 @@ class App(ShowBase):
     def zoom_in(self):
         cam_pos = self.camera.getPos()
         self.camera.setPos(*(cam_pos * self.zoom_in_factor))
+        self.adjust_grid_transparency()
 
     def zoom_out(self):
         cam_pos = self.camera.getPos()
         self.camera.setPos(*(cam_pos * self.zoom_out_factor))
+        self.adjust_grid_transparency()
+
+    def adjust_grid_transparency(self):
+        cam_pos = self.camera.getPos()
+        def adjust_by_height():
+            z_abs = abs(cam_pos[2])
+            opaque_z = 100
+            transparent_z = 2000
+
+            if z_abs < opaque_z:
+                self.grids[0].setAlphaScale(.5)
+            elif z_abs > transparent_z:
+                self.grids[0].setAlphaScale(0)
+            else:
+                self.grids[0].setAlphaScale(
+                    .5 * (transparent_z - z_abs) / (transparent_z - opaque_z))
+
+        def adjust_by_dist2():
+            dist2 = cam_pos[0] ** 2 + cam_pos[1] ** 2 + cam_pos[2] ** 2
+            opaque_dist2 = 10 ** 2
+            transparent_dist2 = 2000 ** 2
+
+            if dist2 < opaque_dist2:
+                self.grids[0].setAlphaScale(.5)
+            elif dist2 > transparent_dist2:
+                self.grids[0].setAlphaScale(0)
+            else:
+                self.grids[0].setAlphaScale(
+                    .5 * (transparent_dist2 - dist2) / (transparent_dist2 - opaque_dist2))
+
+        def adjust_by_dist():
+            dist = (cam_pos[0] ** 2 + cam_pos[1] ** 2 + cam_pos[2] ** 2) ** 0.5
+            opaque_dist = 1
+            transparent_dist = 2000
+
+            if dist < opaque_dist:
+                self.grids[0].setAlphaScale(.5)
+            elif dist > transparent_dist:
+                self.grids[0].setAlphaScale(0)
+            else:
+                self.grids[0].setAlphaScale(
+                    .5 * (transparent_dist - dist) / (transparent_dist - opaque_dist))
+
+        adjust_by_dist2()
+        adjust_by_dist()
 
     def mouse_task(self, task):
         if self.mouseWatcherNode.hasMouse():
             x = self.mouseWatcherNode.getMouseX()
             y = self.mouseWatcherNode.getMouseY()
-            print(f'{x}, {y}')
 
         return task.cont
 
