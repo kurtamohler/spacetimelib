@@ -55,8 +55,8 @@ class Frame2D:
 
             position0_, time0_, velocity_ = lorentz.transform(
                 velocity_delta,
-                position0 + event_delta[1:],
-                time0 + event_delta[0],
+                position0 - event_delta[1:],
+                time0 - event_delta[0],
                 velocity)
 
             event0_ = np.concatenate(([time0_], position0_))
