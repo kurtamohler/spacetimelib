@@ -2,6 +2,7 @@
 
 Very early stages of a tool that can simulate motion in relativistic spacetime.
 
+
 ## Install
 
 Install Miniconda: [instructions](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html)
@@ -34,6 +35,9 @@ is exactly at the speed of light.
 
 What you see on the screen are the positions and time readings of the clocks
 from your ship's frame of reference, on its plane of simultaneity.
+
+![Animated gif of a topdown view of a Minkowski space with two spatial dimensions. In the animation, space and time warp when an observer frame changes velocity.](./images/demo_animation0.gif)
+
 
 ## Good resources for learning special relativity
 
