@@ -35,18 +35,15 @@ observer_frame = rest_frame.transform(
 
 
 pygame.init()
+pygame.font.init()
 
 screen = pygame.display.set_mode([800, 800])
-
-
 pygame_clock = pygame.time.Clock()
-
 running = True
-
 display_scale = 10
 
-# Measure the time in seconds since last frame update
-time_delta = pygame_clock.tick(20) * 0.001
+my_font = pygame.font.SysFont('ubuntumono', 16)
+
 
 while running:
     # Detect quit
@@ -57,19 +54,35 @@ while running:
     # Detect key presses for changing velocity
     keys_pressed = pygame.key.get_pressed()
     add_velocity = None
+    control_speed = 0.05
     if keys_pressed[pygame.K_LEFT]:
-        add_velocity = np.array([-0.1, 0])
+        add_velocity = control_speed * np.array([-1, 0])
     elif keys_pressed[pygame.K_RIGHT]:
-        add_velocity = np.array([0.1, 0])
+        add_velocity = control_speed * np.array([1, 0])
     elif keys_pressed[pygame.K_DOWN]:
-        add_velocity = np.array([0, -0.1])
+        add_velocity = control_speed * np.array([0, -1])
     elif keys_pressed[pygame.K_UP]:
-        add_velocity = np.array([0, 0.1])
+        add_velocity = control_speed * np.array([0, 1])
 
     observer_frame_state = observer_frame.get_state_at_time(observer_frame_time)
     observer_clock_face_time = observer_frame_state[-1][0]
 
     if add_velocity is not None:
+    #if True:
+        # TODO: At the moment, the observer's clock face is correct, but all
+        # the other clocks are getting reset to 0. Need to fix that.
+        # A possible way to try to solve the problem is to make this branch
+        # always run even when `add_velocity is None`. I tried it and
+        # a few things are very wonky. When this branch works correctly,
+        # it must give the same exact result as not taking the branch
+        # if we're not accelerating. In other words, applying zero acceleration
+        # must give the same result as not applying any acceleration.
+        # The wonky things are that only the observer clock ticks at all and
+        # when you stop accelerating, your velocity goes right down to zero.
+        # Okay, I fixed the clock face thing. But I still don't know why
+        # the observer stops completely when not accelerating.
+
+
         # Find the new position and velocity of the observer clock in the
         # rest frame
         clock_velocity_ = add_velocity
@@ -100,26 +113,57 @@ while running:
             clock_event,
             clock_velocity)
         observer_frame_time = 0
+
         observer_frame_disp = clock_event
 
 
     # Display everything
     screen.fill((0, 0, 0))
     for idx, (face_time, event) in enumerate(observer_frame_state):
+
+
+        draw_position = (
+            display_scale * event[1] + 400,
+            -display_scale * event[2] + 400)
+        
         if idx == len(observer_frame_state) - 1:
-            color = (255, 0, 0)
+            dot_color = (0, 160, 0)
+            text_color = (100, 160, 100)
+            text_position = (
+                draw_position[0],
+                draw_position[1] - 20)
         else:
-            color = (255, 255, 255)
+            dot_color = (255, 255, 255)
+            text_color = (150, 255, 150)
+            text_position = (
+                draw_position[0],
+                draw_position[1] + 5)
+
         pygame.draw.circle(
             screen,
-            color,
-            (
-                display_scale * event[1] + 400,
-                -display_scale * event[2] + 400
-            ),
+            dot_color,
+            draw_position,
             2)
 
+        text = my_font.render(f'{int(face_time)}', False, text_color)
+        screen.blit(text, text_position)
+
+    
+    observer_clock = rest_frame._clocks[-1]
+    velocity = observer_clock._velocity
+
+    screen.blit(
+        my_font.render(
+            f'velocity x: {velocity[0]}', False, (255, 255, 255)),
+        (10, 10))
+    screen.blit(
+        my_font.render(
+            f'velocity y: {velocity[1]}', False, (255, 255, 255)),
+        (10, 25))
+
     pygame.display.flip()
+
+    # Measure the time in seconds since last frame update
     time_delta = pygame_clock.tick(20) * 0.001
 
     # Iterate the observer frame's time

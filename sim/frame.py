@@ -40,8 +40,12 @@ class Frame2D:
         assert event_delta.shape == (3,)
 
         # Check `velocity_delta` arg
-        velocity_delta = np.array(velocity_delta)
-        assert velocity_delta.shape == (2,)
+        if velocity_delta is None:
+            velocity_delta = np.array([0, 0])
+        else:
+            velocity_delta = np.array(velocity_delta)
+            assert velocity_delta.shape == (2,)
+
         speed = np.linalg.norm(velocity_delta)
         # Don't allow faster than light transformations
         assert speed <= 1
@@ -84,8 +88,12 @@ class Clock:
         #assert event0[0] == 0
 
         # Check `velocity` arg
-        velocity = np.array(velocity)
-        assert velocity.shape == (2,)
+        if velocity is None:
+            velocity = np.array([0, 0])
+        else:
+            velocity = np.array(velocity)
+            assert velocity.shape == (2,)
+
         # Limit the speed of a clock to the speed of light
         speed = np.linalg.norm(velocity)
         assert speed <= 1
@@ -107,7 +115,10 @@ class Clock:
             # TODO: This line would need to change if `event0[0] != 0`
             position0 + self._velocity * (time - time0)))
 
-        face_time = self._face_time0 + time * self._dtau_dt
+
+
+        face_time = self._face_time0 + (time - time0)
+        #face_time = self._face_time0 + time * self._dtau_dt
 
         return face_time, event
 
