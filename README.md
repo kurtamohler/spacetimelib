@@ -34,3 +34,9 @@ is exactly at the speed of light.
 
 What you see on the screen are the positions and time readings of the clocks
 from your ship's frame of reference, on its plane of simultaneity.
+
+## Good resources for learning special relativity
+
+* [Susskind, L., & Friedman, A. (2017). _Special relativity and classical Field theory: The theoretical minimum_. Basic Books.  ](https://www.amazon.com/Special-Relativity-Classical-Field-Theory/dp/0465093345)
+
+* [Leonard Susskind's video lectures on special relativity](https://www.youtube.com/watch?v=toGH5BdgRZ4&list=PLD9DDFBDC338226CA)
