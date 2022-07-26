@@ -84,8 +84,6 @@ class Clock:
         # Check `event0` arg
         event0 = np.array(event0)
         assert event0.shape == (3,)
-        # TODO: Get rid of this requirement
-        #assert event0[0] == 0
 
         # Check `velocity` arg
         if velocity is None:
@@ -95,8 +93,11 @@ class Clock:
             assert velocity.shape == (2,)
 
         # Limit the speed of a clock to the speed of light
+        # TODO: This is probably not a very good idea
         speed = np.linalg.norm(velocity)
-        assert speed <= 1
+        if speed > 1:
+            velocity = velocity / speed
+            speed = 1
 
         self._event0 = event0
         self._face_time0 = face_time0
@@ -112,13 +113,9 @@ class Clock:
         time0 = self._event0[0]
         event = np.concatenate((
             [time],
-            # TODO: This line would need to change if `event0[0] != 0`
             position0 + self._velocity * (time - time0)))
 
-
-
-        face_time = self._face_time0 + (time - time0)
-        #face_time = self._face_time0 + time * self._dtau_dt
+        face_time = self._face_time0 + (time - time0) * self._dtau_dt
 
         return face_time, event
 

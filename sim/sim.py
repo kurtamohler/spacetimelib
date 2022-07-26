@@ -7,15 +7,59 @@ import lorentz
 
 rest_frame = Frame2D()
 
-# Create a grid of stationary clocks around the origin
-for i, j in itertools.product(range(21), range(21)):
+render_clock_times = False
+
+demo_number = 0
+
+if demo_number == 0:
+    # Create a grid of stationary clocks around the origin
+    for i, j in itertools.product(range(21), range(21)):
+        rest_frame.append(Clock(
+            0,
+            20 * np.array([0, i-10, j-10]),
+            (0, 0)))
+
     rest_frame.append(Clock(
         0,
-        20 * np.array([0, i-10, j-10]),
-        (0, 0)))
+        (0, 0, 0),
+        (0.9, 0)))
+
+    rest_frame.append(Clock(
+        0,
+        (0, 0, 0),
+        (1, 0)))
+
+    render_clock_times = True
+
+elif demo_number == 1:
+    # Demonstration of one of the connections between electromagnetic inductance
+    # and special relativity
+    num_charges = 100
+    for i in range(num_charges + 1):
+        rest_frame.append(Clock(
+            0,
+            (0, -10, (i - num_charges/2) * 5),
+            (0, -.9)))
+
+        rest_frame.append(Clock(
+            0,
+            (0, 10, (i - num_charges/2) * 5),
+            (0, .9)))
 
 # Always keep the displacement of the current instantaneous
 # observer frame
+#
+# TODO: There's a problem with how we're transforming with a time displacement.
+# If I turn off the passage of time and play around with changing velocities,
+# a clock very close in space to the observer clock should appear to have the
+# same face time--it shouldn't change at all. But I do see a huge change if the
+# observer frame is displaced by some nonzero amount of time. This issue
+# doesn't happen if the observer frame only has a space displacement. It seems
+# like the rotation of the plane of simultaneity is not centered on the time
+# coordinate of the observer, but it is correctly centered on the space
+# coordinates of the observer. I would bet that somewhere I'm accidentally
+# displacing the time coordinate of the center of rotation with
+# `observer_frame_disp[0]`
 observer_frame_disp = np.array([0, 0, 0])
 
 observer_frame_velocity = np.array([0, 0])
@@ -127,13 +171,13 @@ while running:
             -display_scale * event[2] + 400)
         
         if idx == len(observer_frame_state) - 1:
-            dot_color = (0, 160, 0)
-            text_color = (100, 160, 100)
+            dot_color = (255, 255, 255)
+            text_color = (255, 255, 255)
             text_position = (
                 draw_position[0],
                 draw_position[1] - 20)
         else:
-            dot_color = (255, 255, 255)
+            dot_color = (0, 160, 0)
             text_color = (150, 255, 150)
             text_position = (
                 draw_position[0],
@@ -145,8 +189,9 @@ while running:
             draw_position,
             2)
 
-        text = my_font.render(f'{int(face_time)}', False, text_color)
-        screen.blit(text, text_position)
+        if render_clock_times:
+            text = my_font.render(f'{int(face_time)}', False, text_color)
+            screen.blit(text, text_position)
 
     
     observer_clock = rest_frame._clocks[-1]

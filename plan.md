@@ -38,10 +38,7 @@ steps.
 
 ## Extra ideas
 
-I would love to be able to rotate the observer frame in the demo. I'm not
-entirely sure about what happens in a rotating frame though. I could figure
-that out at some point. But simply because I don't know yet, I won't do this
-for the MVP.
+I would love to be able to rotate the observer frame in the demo.
 
 Game engines usually have a hierarchical tree structure which serves as the
 main interface for adding and manipulating objects in the space.  For a special
@@ -49,8 +46,18 @@ relativity engine, a tree like this might also be useful. Each node could
 potentially be its own full reference frame object. I need to think more about
 this.
 
-I want it to eventually be possible to dynamically change the velocities of the
-clocks while the simulation is running, just like you can do to objects in any
-Newtonian physics simulation.
+I want it to be possible for a clock's path to be finite. Instead of defining
+just one point through which an infinitely long line passes, you would define
+two end-points. Both endpoints could have an option whether it's a finite end
+or not--which would allow for the line being infinitely long in one direction,
+but not another. Maybe would also be a good idea to allow the path to be
+defined by any number of points, like I experimented with in the past, but
+I still worry about performance issues. I could look into ways of simplifying
+the parts of paths of objects that are outside of the future lightcone of the
+observer. And I could just completely delete parts of paths that fall inside
+the observer's past lightcone, since there's no way for the observer's plane of
+simultaneity to intersect with those events ever again-- that is, if I don't
+want to support time travel. These garbage collection features could just be
+offered as options, so that you can support time travel.
 
 
