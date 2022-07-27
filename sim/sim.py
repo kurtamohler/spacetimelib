@@ -88,12 +88,17 @@ display_scale = 10
 
 my_font = pygame.font.SysFont('ubuntumono', 16)
 
+is_clock_ticking = True
 
 while running:
     # Detect quit
     for pygame_event in pygame.event.get():
         if pygame_event.type == pygame.QUIT:
             running = False
+
+        elif pygame_event.type == pygame.KEYDOWN:
+            if pygame_event.key == pygame.K_SPACE:
+                is_clock_ticking = not is_clock_ticking
 
     # Detect key presses for changing velocity
     keys_pressed = pygame.key.get_pressed()
@@ -176,6 +181,42 @@ while running:
             text_position = (
                 draw_position[0],
                 draw_position[1] - 20)
+
+            # Find the observer clock's position and velocity in the rest frame
+            # to be displayed
+            observer_clock = rest_frame._clocks[-1]
+            velocity = observer_clock._velocity
+            rest_pos = lorentz.transform(
+                -velocity,
+                event[1:],
+                event[0]
+            # TODO: I thought this should be a subtraction, but addition
+            # gives the correct result?? Need to figure out why
+            )[0] + observer_frame_disp[1:]
+
+            screen.blit(
+                my_font.render(
+                    f'position x: {rest_pos[0]}', False, (255, 255, 255)),
+                (10, 10)
+            )
+            screen.blit(
+                my_font.render(
+                    f'position y: {rest_pos[1]}', False, (255, 255, 255)),
+                (10, 25)
+            )
+
+
+
+            screen.blit(
+                my_font.render(
+                    f'velocity x: {velocity[0]}', False, (255, 255, 255)),
+                (10, 50)
+            )
+            screen.blit(
+                my_font.render(
+                    f'velocity y: {velocity[1]}', False, (255, 255, 255)),
+                (10, 65)
+            )
         else:
             dot_color = (0, 160, 0)
             text_color = (150, 255, 150)
@@ -194,17 +235,13 @@ while running:
             screen.blit(text, text_position)
 
     
-    observer_clock = rest_frame._clocks[-1]
-    velocity = observer_clock._velocity
 
-    screen.blit(
-        my_font.render(
-            f'velocity x: {velocity[0]}', False, (255, 255, 255)),
-        (10, 10))
-    screen.blit(
-        my_font.render(
-            f'velocity y: {velocity[1]}', False, (255, 255, 255)),
-        (10, 25))
+    if not is_clock_ticking:
+        screen.blit(
+            my_font.render(
+                'time is frozen [spacebar] to unfreeze', False, (255, 255, 255)),
+            (10, 90)
+        )
 
     pygame.display.flip()
 
@@ -212,7 +249,8 @@ while running:
     time_delta = pygame_clock.tick(20) * 0.001
 
     # Iterate the observer frame's time
-    observer_frame_time = observer_frame_time + time_delta
+    if is_clock_ticking:
+        observer_frame_time = observer_frame_time + time_delta
 
 
 pygame.quit()

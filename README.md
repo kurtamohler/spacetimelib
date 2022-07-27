@@ -16,7 +16,7 @@ conda env create -f environment.yaml -n relativity && conda activate relativity
 ## Run
 
 There is just one small interactive demo at the moment. Use the arrow keys to
-move around.
+move around. Click the spacebar to freeze time.
 
 ```bash
 python sim/sim.py
