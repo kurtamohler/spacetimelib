@@ -102,16 +102,27 @@ while running:
 
     # Detect key presses for changing velocity
     keys_pressed = pygame.key.get_pressed()
-    add_velocity = None
+    add_velocity_direction = np.array([0, 0])
+
     control_speed = 0.05
+
     if keys_pressed[pygame.K_LEFT]:
-        add_velocity = control_speed * np.array([-1, 0])
-    elif keys_pressed[pygame.K_RIGHT]:
-        add_velocity = control_speed * np.array([1, 0])
-    elif keys_pressed[pygame.K_DOWN]:
-        add_velocity = control_speed * np.array([0, -1])
-    elif keys_pressed[pygame.K_UP]:
-        add_velocity = control_speed * np.array([0, 1])
+        add_velocity_direction += np.array([-1, 0])
+
+    if keys_pressed[pygame.K_RIGHT]:
+        add_velocity_direction += np.array([1, 0])
+
+    if keys_pressed[pygame.K_DOWN]:
+        add_velocity_direction += np.array([0, -1])
+
+    if keys_pressed[pygame.K_UP]:
+        add_velocity_direction += np.array([0, 1])
+
+    if (add_velocity_direction == 0).all():
+        add_velocity = None
+    else:
+        norm = np.linalg.norm(add_velocity_direction)
+        add_velocity = (control_speed / norm) * add_velocity_direction 
 
     observer_frame_state = observer_frame.get_state_at_time(observer_frame_time)
     observer_clock_face_time = observer_frame_state[-1][0]
