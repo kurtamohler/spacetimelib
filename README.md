@@ -16,7 +16,9 @@ conda env create -f environment.yaml -n relativity && conda activate relativity
 ## Run
 
 There is just one small interactive demo at the moment. Use the arrow keys to
-move around. Click the spacebar to freeze time.
+move around. Click the spacebar to freeze time. You can also shoot projectiles
+with the WASD keys. Be careful shooting too many though, performance decreases
+with each new object.
 
 ```bash
 python sim/sim.py

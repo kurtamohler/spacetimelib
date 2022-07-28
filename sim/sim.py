@@ -90,6 +90,8 @@ my_font = pygame.font.SysFont('ubuntumono', 16)
 
 is_clock_ticking = True
 
+observer_frame_state = observer_frame.get_state_at_time(observer_frame_time)
+
 while running:
     # Detect quit
     for pygame_event in pygame.event.get():
@@ -97,8 +99,51 @@ while running:
             running = False
 
         elif pygame_event.type == pygame.KEYDOWN:
+            new_clock_velocity_ = None
+
             if pygame_event.key == pygame.K_SPACE:
                 is_clock_ticking = not is_clock_ticking
+
+            elif pygame_event.key == pygame.K_w:
+                new_clock_velocity_ = np.array([0, 0.9])
+
+            elif pygame_event.key == pygame.K_s:
+                new_clock_velocity_ = np.array([0, -0.9])
+
+            elif pygame_event.key == pygame.K_a:
+                new_clock_velocity_ = np.array([-0.9, 0])
+
+            elif pygame_event.key == pygame.K_d:
+                new_clock_velocity_ = np.array([0.9, 0])
+
+            if new_clock_velocity_ is not None:
+                observer_clock_velocity = rest_frame._clocks[-1]._velocity
+
+                velocity = rest_frame._clocks[-1]._velocity
+
+                event0_ = observer_frame_state[-1][1]
+
+                new_clock_pos0, new_clock_time0, new_clock_velocity = lorentz.transform(
+                    -rest_frame._clocks[-1]._velocity,
+                    event0_[1:],
+                    event0_[0],
+                    new_clock_velocity_)
+
+                event0 = np.concatenate(([new_clock_time0], new_clock_pos0)) + observer_frame_disp
+
+                rest_frame._clocks.insert(
+                    -1,
+                    Clock(
+                        0,
+                        event0,
+                        new_clock_velocity))
+
+                observer_frame = rest_frame.transform(
+                    observer_frame_disp,
+                    velocity)
+
+
+
 
     # Detect key presses for changing velocity
     keys_pressed = pygame.key.get_pressed()
