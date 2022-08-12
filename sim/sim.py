@@ -48,18 +48,6 @@ elif demo_number == 1:
 
 # Always keep the displacement of the current instantaneous
 # observer frame
-#
-# TODO: There's a problem with how we're transforming with a time displacement.
-# If I turn off the passage of time and play around with changing velocities,
-# a clock very close in space to the observer clock should appear to have the
-# same face time--it shouldn't change at all. But I do see a huge change if the
-# observer frame is displaced by some nonzero amount of time. This issue
-# doesn't happen if the observer frame only has a space displacement. It seems
-# like the rotation of the plane of simultaneity is not centered on the time
-# coordinate of the observer, but it is correctly centered on the space
-# coordinates of the observer. I would bet that somewhere I'm accidentally
-# displacing the time coordinate of the center of rotation with
-# `observer_frame_disp[0]`
 observer_frame_disp = np.array([0, 0, 0])
 
 observer_frame_velocity = np.array([0, 0])
@@ -117,19 +105,15 @@ while running:
                 new_clock_velocity_ = np.array([0.9, 0])
 
             if new_clock_velocity_ is not None:
-                observer_clock_velocity = rest_frame._clocks[-1]._velocity
-
                 velocity = rest_frame._clocks[-1]._velocity
-
                 event0_ = observer_frame_state[-1][1]
 
-                new_clock_pos0, new_clock_time0, new_clock_velocity = lorentz.transform(
+                new_clock_event0, new_clock_velocity = lorentz.transform(
                     -rest_frame._clocks[-1]._velocity,
-                    event0_[1:],
-                    event0_[0],
+                    event0_,
                     new_clock_velocity_)
 
-                event0 = np.concatenate(([new_clock_time0], new_clock_pos0)) + observer_frame_disp
+                event0 = new_clock_event0 + observer_frame_disp
 
                 rest_frame._clocks.insert(
                     -1,
@@ -192,18 +176,15 @@ while running:
         # rest frame
         clock_velocity_ = add_velocity
         clock_event_ = observer_frame_state[-1][1]
-        clock_position_ = clock_event_[1:]
-        clock_time_ = clock_event_[0]
 
-        clock_position, clock_time, clock_velocity = lorentz.transform(
+        clock_event, clock_velocity = lorentz.transform(
             -rest_frame._clocks[-1]._velocity,
-            clock_position_,
-            clock_time_,
+            clock_event_,
             clock_velocity_)
 
         # Need to add the current observer frame's displacement to get the
         # correct event from the rest frame's perspective
-        clock_event = observer_frame_disp + np.concatenate([[clock_time], clock_position])
+        clock_event = observer_frame_disp + clock_event
 
         # Now that we have a new event and velocity for the observer clock,
         # create a new clock and replace the old one in the rest frame
@@ -244,11 +225,10 @@ while running:
             velocity = observer_clock._velocity
             rest_pos = lorentz.transform(
                 -velocity,
-                event[1:],
-                event[0]
+                event
             # TODO: I thought this should be a subtraction, but addition
             # gives the correct result?? Need to figure out why
-            )[0] + observer_frame_disp[1:]
+            )[0][..., 1:] + observer_frame_disp[1:]
 
             screen.blit(
                 my_font.render(

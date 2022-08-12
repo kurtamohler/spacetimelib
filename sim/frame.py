@@ -53,17 +53,13 @@ class Frame2D:
         frame_ = Frame2D()
 
         for clock in self._clocks:
-            time0 = clock._event0[0]
-            position0 = clock._event0[1:]
+            event0 = clock._event0
             velocity = clock._velocity
 
-            position0_, time0_, velocity_ = lorentz.transform(
+            event0_, velocity_ = lorentz.transform(
                 velocity_delta,
-                position0 - event_delta[1:],
-                time0 - event_delta[0],
+                event0 - event_delta,
                 velocity)
-
-            event0_ = np.concatenate(([time0_], position0_))
 
             frame_.append(Clock(
                 clock._face_time0,
