@@ -3,7 +3,7 @@ import pygame
 import numpy as np
 
 from frame import Frame2D, Clock
-import lorentz
+from transformations import boost
 
 rest_frame = Frame2D()
 
@@ -61,7 +61,7 @@ rest_frame.append(Clock(
     observer_frame_disp,
     observer_frame_velocity))
 
-observer_frame = rest_frame.transform(
+observer_frame = rest_frame.boost(
     observer_frame_disp,
     observer_frame_velocity)
 
@@ -108,7 +108,7 @@ while running:
                 velocity = rest_frame._clocks[-1]._velocity
                 event0_ = observer_frame_state[-1][1]
 
-                new_clock_event0, new_clock_velocity = lorentz.transform(
+                new_clock_event0, new_clock_velocity = boost(
                     -rest_frame._clocks[-1]._velocity,
                     event0_,
                     new_clock_velocity_)
@@ -122,7 +122,7 @@ while running:
                         event0,
                         new_clock_velocity))
 
-                observer_frame = rest_frame.transform(
+                observer_frame = rest_frame.boost(
                     observer_frame_disp,
                     velocity)
 
@@ -177,7 +177,7 @@ while running:
         clock_velocity_ = add_velocity
         clock_event_ = observer_frame_state[-1][1]
 
-        clock_event, clock_velocity = lorentz.transform(
+        clock_event, clock_velocity = boost(
             -rest_frame._clocks[-1]._velocity,
             clock_event_,
             clock_velocity_)
@@ -195,7 +195,7 @@ while running:
 
         rest_frame._clocks[-1] = new_observer_clock
 
-        observer_frame = rest_frame.transform(
+        observer_frame = rest_frame.boost(
             clock_event,
             clock_velocity)
         observer_frame_time = 0
@@ -223,7 +223,7 @@ while running:
             # to be displayed
             observer_clock = rest_frame._clocks[-1]
             velocity = observer_clock._velocity
-            rest_pos = lorentz.transform(
+            rest_pos = boost(
                 -velocity,
                 event
             # TODO: I thought this should be a subtraction, but addition

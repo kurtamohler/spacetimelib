@@ -1,6 +1,6 @@
 import numpy as np
 
-import lorentz
+from transformations import boost
 
 
 # An inertial reference frame in Minkowski spacetime with two spatial
@@ -34,7 +34,7 @@ class Frame2D:
 
     # Transform the frame, applying a time and position translations first,
     # then applying a velocity transformation
-    def transform(self, event_delta, velocity_delta):
+    def boost(self, event_delta, velocity_delta):
         # Check `event_delta` arg
         event_delta = np.array(event_delta)
         assert event_delta.shape == (3,)
@@ -56,7 +56,7 @@ class Frame2D:
             event0 = clock._event0
             velocity = clock._velocity
 
-            event0_, velocity_ = lorentz.transform(
+            event0_, velocity_ = boost(
                 velocity_delta,
                 event0 - event_delta,
                 velocity)
@@ -142,7 +142,7 @@ if __name__ == '__main__':
 
     print(frame.get_state_at_time(0))
 
-    frame_ = frame.transform(
+    frame_ = frame.boost(
         (0, 0, 0),
         (0, 0))
     print(frame_.get_state_at_time(0))

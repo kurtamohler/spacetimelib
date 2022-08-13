@@ -11,7 +11,6 @@ def check(condition, error_type, message):
 # This function works for any number of spatial dimensions, N.
 #
 # NOTE:
-#
 #   Some of the arguments of this function can be batched, in order to perform
 #   multiple transformations with one call. This gives better performance than
 #   calling the function many individual times. The `...` in the shape for each
@@ -44,7 +43,7 @@ def check(condition, error_type, message):
 #
 #   position_, time_, velocity_ : tuple of ndarray
 #
-def transform(frame_velocity, event, velocity=None, light_speed=1):
+def boost(frame_velocity, event, velocity=None, light_speed=1):
     event = np.array(event)
     frame_velocity = np.array(frame_velocity)
     light_speed = np.array(light_speed)
