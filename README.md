@@ -13,6 +13,12 @@ Run the following to create and activate an environment with all dependencies.
 conda env create -f environment.yaml -n relativity && conda activate relativity
 ```
 
+Then install SpacetimeLib.
+
+```bash
+python setup.py install
+```
+
 ## Run
 
 There is just one small interactive demo at the moment. Use the arrow keys to
@@ -21,7 +27,7 @@ with the WASD keys. Be careful shooting too many though, performance decreases
 with each new object.
 
 ```bash
-python sim.py
+python examples/clock_grid.py
 ```
 
 In this demo, you control a space ship in a Minkowski spacetime with two

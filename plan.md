@@ -61,3 +61,21 @@ want to support time travel. These garbage collection features could just be
 offered as options, so that you can support time travel.
 
 
+
+
+## API Improvements
+
+If velocity isn't given to `st.boost()`, then it shouldn't return a velocity either.
+```python
+>>> st.boost((0.1,), (1, 1))
+(array([0.90453403, 0.90453403]), None)
+```
+
+If you have one space dimension, you should be able to give velocity as a scalar, not
+just a vector of size 1.
+```python
+>>> st.boost(0.1, (1, 1))
+...
+ValueError: expected 'frame_velocity' to have one or more dimensions, but got 0
+```
+
