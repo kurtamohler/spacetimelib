@@ -21,6 +21,6 @@ setup(
     author_email='kurtamohler@gmail.com',
     url='https://github.com/kurtamohler/spacetimelib',
     # license=license,
-    packages=find_packages(exclude=('images', 'old', 'examples'))
+    packages=find_packages(exclude=('images', 'old', 'examples', 'tests'))
 )
 
