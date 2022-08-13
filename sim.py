@@ -2,8 +2,7 @@ import itertools
 import pygame
 import numpy as np
 
-from frame import Frame2D, Clock
-from transformations import boost
+from spacetime import Frame2D, Clock, boost
 
 rest_frame = Frame2D()
 

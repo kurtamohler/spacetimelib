@@ -1,6 +1,6 @@
-# Special relativity simulation
+# SpacetimeLib
 
-Very early stages of a tool that can simulate motion in relativistic spacetime.
+Very early stages of a tool that can calculate motion of objects in special relativity.
 
 
 ## Install
@@ -21,7 +21,7 @@ with the WASD keys. Be careful shooting too many though, performance decreases
 with each new object.
 
 ```bash
-python sim/sim.py
+python sim.py
 ```
 
 In this demo, you control a space ship in a Minkowski spacetime with two
