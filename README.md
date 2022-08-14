@@ -10,7 +10,7 @@ Install Miniconda: [instructions](https://docs.conda.io/projects/conda/en/latest
 Run the following to create and activate an environment with all dependencies.
 
 ```bash
-conda env create -f environment.yaml -n relativity && conda activate relativity
+conda env create -f environment.yaml -n spacetime && conda activate spacetime
 ```
 
 Then install SpacetimeLib.
