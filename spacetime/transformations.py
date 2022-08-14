@@ -64,7 +64,15 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
     else:
         check(event.shape[-1] - 1 == frame_velocity.shape[-1], ValueError,
               "expected 'event.shape[-1] - 1 == frame_velocity.shape[-1]', but "
-              "got '{event.shape[-1]} - 1 != {frame_velocity.shape[-1]'")
+              f"got '{event.shape[-1]} - 1 != {frame_velocity.shape[-1]}'")
+
+    frame_speed = np.linalg.norm(frame_velocity, axis=-1)
+
+    # TODO: If frame_velocity is batched, we should only print out the
+    # first speed in frame_speed that is greater than light_speed
+    check((frame_speed < light_speed).all(), ValueError,
+          "the norm of 'frame_velocity' must be less than "
+          f"'light_speed' ({light_speed}), but got {frame_speed}")
 
     # TODO: Would batching the speed of light be useful at all? Probably best to
     # wait and see before adding batching.
@@ -75,25 +83,21 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
           f"expected 'light_speed' to be positive, but got {light_speed}")
 
     if velocity is not None:
-        velocity = np.array(velocity)
-        # TODO: This is wrong. Should enable broadcasting between event and velocity.
-        # Also, would be a good idea to check the broadcasting dims separately from
-        # the final dim.
-        check(event[..., 1:].shape == velocity.shape, ValueError,
-            "expected 'event[..., 1:]' and 'velocity' to have the same shape, "
-            f"but got {event[..., 1:].shape} and {velocity.shape}")
+        if velocity.ndim == 0:
+            velocity = np.array([velocity])
+
+        # TODO: Need to think more about the logic here. It might be a bit wrong
+        if event.shape[-1] == 2 and velocity.shape[-1] > 1:
+            velocity = np.expand_dims(velocity, -1)
+        else:
+            check(event.shape[-1] - 1 == velocity.shape[-1], ValueError,
+                  "expected 'event.shape[-1] - 1 == velocity.shape[-1]', but "
+                  "got '{event.shape[-1]} - 1 != {velocity.shape[-1]'")
+
         speed = np.linalg.norm(velocity, axis=-1)
         check((speed <= light_speed).all(), ValueError,
             "the norm of 'velocity' must be less than or equal to "
             f"'light_speed' ({light_speed}), but got {speed}")
-
-    frame_speed = np.linalg.norm(frame_velocity, axis=-1)
-
-    # TODO: If frame_velocity is batched, we should only print out the
-    # first speed in frame_speed that is greater than light_speed
-    check((frame_speed < light_speed).all(), ValueError,
-          "the norm of 'frame_velocity' must be less than "
-          f"'light_speed' ({light_speed}), but got {frame_speed}")
 
     if frame_speed.ndim == 0:
         if frame_speed == 0:
