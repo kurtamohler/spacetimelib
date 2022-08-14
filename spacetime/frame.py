@@ -50,7 +50,7 @@ class Frame2D:
         # Don't allow faster than light transformations
         assert speed <= 1
 
-        frame_ = Frame2D()
+        new_clocks = []
 
         batched = True
 
@@ -76,7 +76,7 @@ class Frame2D:
                 velocity_batch)
 
             for clock_idx, clock in enumerate(self._clocks):
-                frame_.append(Clock(
+                new_clocks.append(Clock(
                     clock._face_time0,
                     event0_batch_out[clock_idx],
                     velocity_batch_out[clock_idx]))
@@ -91,12 +91,12 @@ class Frame2D:
                     event0 - event_delta,
                     velocity)
 
-                frame_.append(Clock(
+                new_clocks.append(Clock(
                     clock._face_time0,
                     event0_,
                     velocity_))
 
-        return frame_
+        return Frame2D(new_clocks)
 
 
 # A clock that moves at a constant velocity, and exists over the entire
