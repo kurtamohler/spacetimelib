@@ -22,7 +22,7 @@ def check(condition, error_type, message):
 #   
 #   frame_velocity : array_like
 #       Velocity of frame F' relative to F.
-#       Shape: (..., N)
+#       Shape: (..., N), or () if `N == 1`
 #
 #   event : array_like
 #       N+1 dimensional event for the particle in frame F. Given as
@@ -51,9 +51,12 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
     check(event.ndim > 0, ValueError,
           "expected 'event' to have one or more dimensions, "
           f"but got {event.ndim}")
-    check(frame_velocity.ndim > 0, ValueError,
+    # TODO: Fix this error message to include the scalar case
+    check(frame_velocity.ndim > 0 or event.shape[-1] == 2, ValueError,
           "expected 'frame_velocity' to have one or more dimensions, "
           f"but got {frame_velocity.ndim}")
+    # TODO: This is also bad
+    frame_velocity = np.array([frame_velocity])
     check(event.shape[-1] - 1 == frame_velocity.shape[-1], ValueError,
           "expected 'event.shape[-1] - 1 == frame_velocity.shape[-1]', but "
           "got '{event.shape[-1]} - 1 != {frame_velocity.shape[-1]'")
