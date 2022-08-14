@@ -52,11 +52,12 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
           "expected 'event' to have one or more dimensions, "
           f"but got {event.ndim}")
     # TODO: Fix this error message to include the scalar case
-    check(frame_velocity.ndim > 0 or event.shape[-1] == 2, ValueError,
-          "expected 'frame_velocity' to have one or more dimensions, "
-          f"but got {frame_velocity.ndim}")
-    # TODO: This is also bad
-    frame_velocity = np.array([frame_velocity])
+    #check(frame_velocity.ndim > 0 or event.shape[-1] == 2, ValueError,
+    #      "expected 'frame_velocity' to have one or more dimensions, "
+    #      f"but got {frame_velocity.ndim}")
+    if frame_velocity.ndim == 0:
+        frame_velocity = np.array([frame_velocity])
+
     check(event.shape[-1] - 1 == frame_velocity.shape[-1], ValueError,
           "expected 'event.shape[-1] - 1 == frame_velocity.shape[-1]', but "
           "got '{event.shape[-1]} - 1 != {frame_velocity.shape[-1]'")
@@ -106,13 +107,13 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
 
     # r' = r + v ((r ⋅ v) (γ - 1) / v² - tγ)
     position_ = position + frame_velocity * np.expand_dims(
-        np.dot(position, frame_velocity) * (lorentz_factor - 1)
+        np.sum(position * frame_velocity, axis=-1) * (lorentz_factor - 1)
             / np.square(frame_speed)    # TODO: fix division by zero case
         - time * lorentz_factor,
         axis=-1)
 
     # t' = γ (t - (r ⋅ v) / c²)
-    time_ = lorentz_factor * (time - np.dot(position, frame_velocity)
+    time_ = lorentz_factor * (time - np.sum(position * frame_velocity, axis=-1)
         / np.square(light_speed))
 
     if velocity is not None:

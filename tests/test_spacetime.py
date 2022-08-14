@@ -13,8 +13,9 @@ class SpacetimeTestSuite(unittest.TestCase):
     def test_boost_1D_random(self):
         v_batch = []
         event_batch = []
+        event_out_batch = []
 
-        for _ in range(100):
+        for _ in range(10):
             v = np.random.uniform(low=0.1, high=1.0, size=())
             x = np.random.uniform(low=-1000, high=1000, size=())
             t = np.random.uniform(low=-1000, high=1000, size=())
@@ -24,6 +25,25 @@ class SpacetimeTestSuite(unittest.TestCase):
 
             assert np.isclose(t_expected, event_out[0]).all()
             assert np.isclose(x_expected, event_out[1]).all()
+
+            v_batch.append(v)
+            event_batch.append(event)
+            event_out_batch.append(event_out)
+
+        # Test batched mode
+
+        v = np.array(v_batch)
+
+        # TODO: I don't like this expansion. I should be able to remove the
+        # need for it, right?
+        v = np.expand_dims(v, -1)
+
+        event = np.array(event_batch)
+        event_out_expected = np.array(event_out_batch)
+
+        event_out, _ = st.boost(v, event)
+        assert np.isclose(event_out, event_out_expected).all()
+
 
 if __name__ == '__main__':
     unittest.main()
