@@ -52,19 +52,49 @@ class Frame2D:
 
         frame_ = Frame2D()
 
-        for clock in self._clocks:
-            event0 = clock._event0
-            velocity = clock._velocity
+        batched = True
 
-            event0_, velocity_ = boost(
+        # TODO: While this impl of batching is roughly 4x faster on my machine
+        # than the non-batched path while uniformly accelerating in
+        # `examples/clock_grid.py`, it is still pretty inefficient to copy all
+        # the events and velocities out of the clocks and then back into the
+        # new clocks. It would be much more efficient to always keep a batched
+        # representation of the frame. The events and velocities of the
+        # individual clocks could potentially be views into the batched
+        # representation, if it makes sense to do so. Otherwise, they could
+        # just be copies. But I would like to have some way to automatically
+        # update between them if one of the copies or views changes. Probably
+        # automating that would be easier if the coordinates are copied rather
+        # than shared. But deciding for sure will require more thought.
+        if batched:
+            event0_batch = np.array([clock._event0 for clock in self._clocks])
+            velocity_batch = np.array([clock._velocity for clock in self._clocks])
+
+            event0_batch_out, velocity_batch_out = boost(
                 velocity_delta,
-                event0 - event_delta,
-                velocity)
+                event0_batch - event_delta,
+                velocity_batch)
 
-            frame_.append(Clock(
-                clock._face_time0,
-                event0_,
-                velocity_))
+            for clock_idx, clock in enumerate(self._clocks):
+                frame_.append(Clock(
+                    clock._face_time0,
+                    event0_batch_out[clock_idx],
+                    velocity_batch_out[clock_idx]))
+
+        else:
+            for clock in self._clocks:
+                event0 = clock._event0
+                velocity = clock._velocity
+
+                event0_, velocity_ = boost(
+                    velocity_delta,
+                    event0 - event_delta,
+                    velocity)
+
+                frame_.append(Clock(
+                    clock._face_time0,
+                    event0_,
+                    velocity_))
 
         return frame_
 

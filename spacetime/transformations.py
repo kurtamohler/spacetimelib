@@ -129,12 +129,19 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
         # u' = (u / γ - v + (γ (u ⋅ v) v) / (c² (γ + 1)))
         #      / (1 - u ⋅ v / c²)
 
-        u_dot_v = np.dot(velocity, frame_velocity)
+        u_dot_v = np.expand_dims(
+            np.sum(velocity * frame_velocity, axis=-1),
+            axis=-1)
 
         outer_factor = 1 / (1 - (u_dot_v / (light_speed**2)))
-        inner_factor = (lorentz_factor / (lorentz_factor + 1)) / (light_speed**2)
+        inner_factor = np.expand_dims(
+            (lorentz_factor / (lorentz_factor + 1)) / (light_speed**2),
+            axis=-1)
 
-        velocity_ = outer_factor * (velocity / lorentz_factor - frame_velocity + inner_factor * u_dot_v * frame_velocity)
+        # TODO: Probably should expand this above, where it's first calculated
+        L = np.expand_dims(lorentz_factor, axis=-1)
+
+        velocity_ = outer_factor * (velocity / L - frame_velocity + inner_factor * u_dot_v * frame_velocity)
 
     else:
         velocity_ = None
