@@ -58,9 +58,14 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
     if frame_velocity.ndim == 0:
         frame_velocity = np.array([frame_velocity])
 
-    check(event.shape[-1] - 1 == frame_velocity.shape[-1], ValueError,
-          "expected 'event.shape[-1] - 1 == frame_velocity.shape[-1]', but "
-          "got '{event.shape[-1]} - 1 != {frame_velocity.shape[-1]'")
+    # TODO: Need to think more about the logic here. It might be a bit wrong
+    if event.shape[-1] == 2 and frame_velocity.shape[-1] > 1:
+        frame_velocity = np.expand_dims(frame_velocity, -1)
+    else:
+        check(event.shape[-1] - 1 == frame_velocity.shape[-1], ValueError,
+              "expected 'event.shape[-1] - 1 == frame_velocity.shape[-1]', but "
+              "got '{event.shape[-1]} - 1 != {frame_velocity.shape[-1]'")
+
     # TODO: Would batching the speed of light be useful at all? Probably best to
     # wait and see before adding batching.
     check(light_speed.ndim == 0, ValueError,

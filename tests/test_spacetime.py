@@ -31,13 +31,7 @@ class SpacetimeTestSuite(unittest.TestCase):
             event_out_batch.append(event_out)
 
         # Test batched mode
-
         v = np.array(v_batch)
-
-        # TODO: I don't like this expansion. I should be able to remove the
-        # need for it, right?
-        v = np.expand_dims(v, -1)
-
         event = np.array(event_batch)
         event_out_expected = np.array(event_out_batch)
 
