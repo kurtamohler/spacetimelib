@@ -44,11 +44,9 @@ def check(condition, error_type, message):
 #   position_, time_, velocity_ : tuple of ndarray
 #
 def boost(frame_velocity, event, velocity=None, light_speed=1):
-    # TODO: Handle dtypes better. Needs to be adaptive
-
-    event = np.array(event, dtype=np.double)
-    frame_velocity = np.array(frame_velocity, dtype=np.double)
-    light_speed = np.array(light_speed, dtype=np.double)
+    event = np.array(event)
+    frame_velocity = np.array(frame_velocity)
+    light_speed = np.array(light_speed)
 
     check(event.ndim > 0, ValueError,
           "expected 'event' to have one or more dimensions, "
@@ -58,7 +56,7 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
     #      "expected 'frame_velocity' to have one or more dimensions, "
     #      f"but got {frame_velocity.ndim}")
     if frame_velocity.ndim == 0:
-        frame_velocity = np.array([frame_velocity], dtype=np.double)
+        frame_velocity = np.array([frame_velocity])
 
     # TODO: Need to think more about the logic here. It might be a bit wrong
     if event.shape[-1] == 2 and frame_velocity.shape[-1] > 1:
@@ -84,10 +82,12 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
     check(light_speed > 0, ValueError,
           f"expected 'light_speed' to be positive, but got {light_speed}")
 
+    dtype = np.find_common_type([event.dtype, frame_velocity.dtype, light_speed.dtype], [])
+
     if velocity is not None:
-        velocity = np.array(velocity, dtype=np.double)
+        velocity = np.array(velocity)
         if velocity.ndim == 0:
-            velocity = np.array([velocity], dtype=np.double)
+            velocity = np.array([velocity])
 
         # TODO: Need to think more about the logic here. It might be a bit wrong
         if event.shape[-1] == 2 and velocity.shape[-1] > 1:
@@ -101,6 +101,15 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
         check((speed <= light_speed).all(), ValueError,
             "the norm of 'velocity' must be less than or equal to "
             f"'light_speed' ({light_speed}), but got {speed}")
+
+        dtype = np.find_common_type([dtype, velocity.dtype], [])
+
+    # Change dtypes to match each other
+    frame_velocity = frame_velocity.astype(dtype)
+    event = event.astype(dtype)
+    light_speed = light_speed.astype(dtype)
+    if velocity is not None:
+        velocity = velocity.astype(dtype)
 
     # TODO: Need to check up front whether the args can broadcast with each other.
 
@@ -156,7 +165,7 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
     else:
         velocity_ = None
 
-    event_ = np.empty(time_.shape + (position_.shape[-1] + 1,), dtype=np.double)
+    event_ = np.empty(time_.shape + (position_.shape[-1] + 1,), dtype=dtype)
 
     event_[..., 0] = time_
     event_[..., 1:] = position_
