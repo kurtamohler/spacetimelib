@@ -156,21 +156,6 @@ while running:
     observer_clock_face_time = observer_frame_state[-1][0]
 
     if add_velocity is not None:
-    #if True:
-        # TODO: At the moment, the observer's clock face is correct, but all
-        # the other clocks are getting reset to 0. Need to fix that.
-        # A possible way to try to solve the problem is to make this branch
-        # always run even when `add_velocity is None`. I tried it and
-        # a few things are very wonky. When this branch works correctly,
-        # it must give the same exact result as not taking the branch
-        # if we're not accelerating. In other words, applying zero acceleration
-        # must give the same result as not applying any acceleration.
-        # The wonky things are that only the observer clock ticks at all and
-        # when you stop accelerating, your velocity goes right down to zero.
-        # Okay, I fixed the clock face thing. But I still don't know why
-        # the observer stops completely when not accelerating.
-
-
         # Find the new position and velocity of the observer clock in the
         # rest frame
         clock_velocity_ = add_velocity
@@ -206,11 +191,10 @@ while running:
     screen.fill((0, 0, 0))
     for idx, (face_time, event) in enumerate(observer_frame_state):
 
-
         draw_position = (
             display_scale * event[1] + 400,
             -display_scale * event[2] + 400)
-        
+
         if idx == len(observer_frame_state) - 1:
             dot_color = (255, 255, 255)
             text_color = (255, 255, 255)
@@ -240,8 +224,6 @@ while running:
                 (10, 25)
             )
 
-
-
             screen.blit(
                 my_font.render(
                     f'velocity x: {velocity[0]}', False, (255, 255, 255)),
@@ -268,8 +250,6 @@ while running:
         if render_clock_times:
             text = my_font.render(f'{int(face_time)}', False, text_color)
             screen.blit(text, text_position)
-
-    
 
     if not is_clock_ticking:
         screen.blit(
