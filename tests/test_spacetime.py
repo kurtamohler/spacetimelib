@@ -24,11 +24,10 @@ class SpacetimeTestSuite(unittest.TestCase):
         event_out_batch = []
 
         for _ in range(10):
-            v = np.random.uniform(low=0.1, high=1.0, size=())
-            u = np.random.uniform(low=0.1, high=1.0, size=())
-            event = np.random.uniform(low=-1000, high=1000, size=(2,))
+            v = np.random.uniform(low=0.1, high=1.0, size=()).astype(np.double)
+            event = np.random.uniform(low=-1000, high=1000, size=(2,)).astype(np.double)
 
-            event_out, _ = st.boost(v, event, u)
+            event_out = st.boost(v, event)
 
             event_out_check = check_boost_event_1D(v, event)
             assert np.isclose(event_out, event_out_check).all()
@@ -38,11 +37,11 @@ class SpacetimeTestSuite(unittest.TestCase):
             event_out_batch.append(event_out)
 
         # Test batched mode
-        v = np.array(v_batch)
-        event = np.array(event_batch)
-        event_out_check = np.array(event_out_batch)
+        v = np.array(v_batch, dtype=np.double)
+        event = np.array(event_batch, dtype=np.double)
+        event_out_check = np.array(event_out_batch, dtype=np.double)
 
-        event_out, _ = st.boost(v, event)
+        event_out = st.boost(v, event)
 
         assert np.isclose(event_out, event_out_check).all()
 
@@ -55,9 +54,9 @@ class SpacetimeTestSuite(unittest.TestCase):
         u_out_batch = []
 
         for _ in range(10):
-            v = np.random.uniform(low=0.1, high=1.0, size=())
-            u = np.random.uniform(low=0.1, high=1.0, size=())
-            event = np.random.uniform(low=-1000, high=1000, size=(2,))
+            v = np.random.uniform(low=0.1, high=1.0, size=()).astype(np.double)
+            u = np.random.uniform(low=0.1, high=1.0, size=()).astype(np.double)
+            event = np.random.uniform(low=-1000, high=1000, size=(2,)).astype(np.double)
 
             event_out, u_out = st.boost(v, event, u)
 
@@ -73,11 +72,11 @@ class SpacetimeTestSuite(unittest.TestCase):
             u_out_batch.append(u_out)
 
         # Test batched mode
-        v = np.array(v_batch)
-        event = np.array(event_batch)
-        event_out_check = np.array(event_out_batch)
-        u = np.array(u_batch)
-        u_out_check = np.array(u_out_batch)
+        v = np.array(v_batch, dtype=np.double)
+        event = np.array(event_batch, dtype=np.double)
+        event_out_check = np.array(event_out_batch, dtype=np.double)
+        u = np.array(u_batch, dtype=np.double)
+        u_out_check = np.array(u_out_batch, dtype=np.double)
 
         event_out, u_out = st.boost(v, event, u)
 

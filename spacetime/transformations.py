@@ -44,9 +44,11 @@ def check(condition, error_type, message):
 #   position_, time_, velocity_ : tuple of ndarray
 #
 def boost(frame_velocity, event, velocity=None, light_speed=1):
-    event = np.array(event)
-    frame_velocity = np.array(frame_velocity)
-    light_speed = np.array(light_speed)
+    # TODO: Handle dtypes better. Needs to be adaptive
+
+    event = np.array(event, dtype=np.double)
+    frame_velocity = np.array(frame_velocity, dtype=np.double)
+    light_speed = np.array(light_speed, dtype=np.double)
 
     check(event.ndim > 0, ValueError,
           "expected 'event' to have one or more dimensions, "
@@ -56,7 +58,7 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
     #      "expected 'frame_velocity' to have one or more dimensions, "
     #      f"but got {frame_velocity.ndim}")
     if frame_velocity.ndim == 0:
-        frame_velocity = np.array([frame_velocity])
+        frame_velocity = np.array([frame_velocity], dtype=np.double)
 
     # TODO: Need to think more about the logic here. It might be a bit wrong
     if event.shape[-1] == 2 and frame_velocity.shape[-1] > 1:
@@ -83,8 +85,9 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
           f"expected 'light_speed' to be positive, but got {light_speed}")
 
     if velocity is not None:
+        velocity = np.array(velocity, dtype=np.double)
         if velocity.ndim == 0:
-            velocity = np.array([velocity])
+            velocity = np.array([velocity], dtype=np.double)
 
         # TODO: Need to think more about the logic here. It might be a bit wrong
         if event.shape[-1] == 2 and velocity.shape[-1] > 1:
@@ -99,9 +102,14 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
             "the norm of 'velocity' must be less than or equal to "
             f"'light_speed' ({light_speed}), but got {speed}")
 
+    # TODO: Need to check up front whether the args can broadcast with each other.
+
     if frame_speed.ndim == 0:
         if frame_speed == 0:
-            return event, velocity
+            if velocity is None:
+                return event
+            else:
+                return event, velocity
     else:
         # TODO: This case should be supported, but will require a condition
         # below to prevent the division by zero
@@ -143,13 +151,17 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
 
         velocity_ = outer_factor * (velocity / L - frame_velocity + inner_factor * u_dot_v * frame_velocity)
 
+        # TODO: Need to broadcast `velocity_` and `event_` together here
+
     else:
         velocity_ = None
 
-    # TODO: Handle dtypes better
     event_ = np.empty(time_.shape + (position_.shape[-1] + 1,), dtype=np.double)
 
     event_[..., 0] = time_
     event_[..., 1:] = position_
 
-    return event_, velocity_
+    if velocity is None:
+        return event_
+    else:
+        return event_, velocity_

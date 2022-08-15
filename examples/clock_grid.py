@@ -227,7 +227,7 @@ while running:
                 event
             # TODO: I thought this should be a subtraction, but addition
             # gives the correct result?? Need to figure out why
-            )[0][..., 1:] + observer_frame_disp[1:]
+            )[..., 1:] + observer_frame_disp[1:]
 
             screen.blit(
                 my_font.render(
