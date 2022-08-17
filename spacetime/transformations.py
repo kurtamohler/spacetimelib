@@ -1,6 +1,10 @@
+# TODO: Rename this file to something like "basic operations", since I'm adding
+# a function that isn't a transformation
+
 import numpy as np
 from numbers import Number
 
+# TODO: Move check to different file
 def check(condition, error_type, message):
     if not condition:
         raise error_type(message)
@@ -174,3 +178,22 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
         return event_
     else:
         return event_, velocity_
+
+
+# Calculate the proper time from `event0` to `event1`
+# TODO: Should choose a better name for this, probably
+def time_distance(event0, event1):
+    event0 = np.array(event0)
+    event1 = np.array(event1)
+
+    check(event0.shape == event1.shape, ValueError,
+          "expected both events to have same shape")
+    check(event0.ndim == 1, ValueError, "expected exactly two dimensions")
+    check(event0.shape[0] >= 2, ValueError, "expected at least 2 dims")
+
+    event_diff_sq = (event1 - event0) ** 2
+
+    return np.sqrt(event_diff_sq[0] - np.sum(event_diff_sq[1:]))
+    
+
+
