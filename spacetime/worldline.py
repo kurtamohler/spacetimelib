@@ -107,7 +107,24 @@ class Worldline:
             return idx_after - 1, idx_after
 
 
-    # Returns the event on the worldline at a specified time
+    # Returns the event at a specified time on the worldline.
+    #
+    # Args:
+    #
+    #   time : number
+    #       Time at which to evaluate the worldline.
+    #
+    #   return_indices : bool, optional
+    #       Whether to return the indices of vertices surrounding the specified time.
+    #       Default: False
+    #
+    # Returns:
+    #
+    #   If `return_indices == False`:
+    #       event : array
+    #
+    #   If `return_indices == True:
+    #       event, (idx_before, idx_after) : array, (int, int)
     def eval(self, time, return_indices=False):
         idx_before, idx_after = self._find_surrounding_vertices(time)
 
