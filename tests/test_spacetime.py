@@ -83,7 +83,7 @@ class SpacetimeTestSuite(unittest.TestCase):
         assert np.isclose(event_out, event_out_check).all()
         assert np.isclose(u_out, u_out_check).all()
 
-    def test_Worldline_interpolate(self):
+    def test_Worldline_eval(self):
         w0 = st.Worldline(
             [[0, 0]],
             end_velocities=[[0.9], [0]])
@@ -109,7 +109,7 @@ class SpacetimeTestSuite(unittest.TestCase):
         for w, t, event_check in test_cases:
             assert event_check[0] == t, 'test case is invalid'
             event_check = np.array(event_check)
-            event = w.interpolate(t)
+            event = w.eval(t)
             self.assertTrue(np.isclose(event, event_check).all())
 
     def test_Worldline_proper_time(self):

@@ -20,7 +20,7 @@ import numpy as np
 # word this.
 #
 # TODO: Would be great to offer different interpolation methods. I think
-# `scipy.interpolate` probably has everything I would need.
+# `scipy.interp` probably has everything I would need.
 class Worldline:
     def __init__(self, vertices, *, end_velocities=(None, None)):
         vertices = np.array(vertices)
@@ -107,10 +107,8 @@ class Worldline:
             return idx_after - 1, idx_after
 
 
-    # Approximate the event on the worldline at a specified time
-    # TODO: Probably should use a different name than `interpolate`, since it
-    # can also extrapolate. Maybe `evaluate`, `eval`, `get`, `__call__`?
-    def interpolate(self, time, return_indices=False):
+    # Returns the event on the worldline at a specified time
+    def eval(self, time, return_indices=False):
         idx_before, idx_after = self._find_surrounding_vertices(time)
 
         if idx_before is None or idx_after is None:
@@ -156,8 +154,8 @@ class Worldline:
             time0 = time1
             time1 = tmp
 
-        first_event, first_indices = self.interpolate(time0, return_indices=True)
-        last_event, last_indices = self.interpolate(time1, return_indices=True)
+        first_event, first_indices = self.eval(time0, return_indices=True)
+        last_event, last_indices = self.eval(time1, return_indices=True)
 
         if first_indices == last_indices:
             return time_distance(first_event, last_event)
