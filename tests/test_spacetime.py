@@ -84,19 +84,28 @@ class SpacetimeTestSuite(unittest.TestCase):
         assert np.isclose(u_out, u_out_check).all()
 
     def test_Worldline_proper_time(self):
-        w = st.Worldline([[0, 0], [1, 0.9], [2, 0]])
+        w0 = st.Worldline([[0, 0], [1, 0.9], [2, 0]])
+        tau0 = (2 ** 2 - 1.8 ** 2) ** 0.5
 
-        tau_check = (2 ** 2 - 1.8 ** 2) ** 0.5
+        test_cases = [
+            # worldline, time0, time1, tau_check
+            (w0, 0, 2, tau0),
+            (w0, 0, 1, tau0 / 2),
+            (w0, 1, 2, tau0 / 2),
+            (w0, 0.5, 1.5, tau0 / 2),
+            (w0, 0.25, 0.75, tau0 / 4),
+            (w0, 1.25, 1.75, tau0 / 4),
+            (w0, 0, 0, 0),
+            (w0, 0, 0.123, 0.123 * tau0 / 2),
+            (w0, 0.123, 0.123, 0),
+            (w0, 1, 1, 0),
+            (w0, 1.234, 1.234, 0),
+            (w0, 2, 2, 0),
+        ]
 
-        self.assertEqual(w.proper_time(0, 1), tau_check / 2)
-        self.assertEqual(w.proper_time(0, 1), tau_check / 2)
-        self.assertEqual(w.proper_time(0, 1), tau_check / 2)
-        self.assertEqual(w.proper_time(0, 2), tau_check)
-        self.assertEqual(w.proper_time(1, 2), tau_check / 2)
-        self.assertEqual(w.proper_time(0.5, 1.5), tau_check / 2)
-        self.assertEqual(w.proper_time(0.5, 1.5), tau_check / 2)
-        self.assertAlmostEqual(w.proper_time(0.25, 0.75), tau_check / 4)
-        self.assertAlmostEqual(w.proper_time(1.25, 1.75), tau_check / 4)
+        for w, time0, time1, tau_check in test_cases:
+            self.assertAlmostEqual(w.proper_time(time0, time1), tau_check)
+            self.assertAlmostEqual(w.proper_time(time1, time0), tau_check)
 
 if __name__ == '__main__':
     unittest.main()

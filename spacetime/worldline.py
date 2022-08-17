@@ -130,6 +130,11 @@ class Worldline:
     # Measure the proper time span across a section of the worldline between
     # two specified time coordinates.
     def proper_time(self, time0, time1):
+        if time0 > time1:
+            tmp = time0
+            time0 = time1
+            time1 = tmp
+
         first_event, first_indices = self.interpolate(time0, return_indices=True)
         last_event, last_indices = self.interpolate(time1, return_indices=True)
 
