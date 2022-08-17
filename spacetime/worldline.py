@@ -127,26 +127,23 @@ class Worldline:
         else:
             return event
 
-    # Measure the proper time span across the section of the worldline between
+    # Measure the proper time span across a section of the worldline between
     # two specified time coordinates.
-    # TODO: Should choose a better name for this, probably
-    def proper_time_range(self, time0, time1):
+    def proper_time(self, time0, time1):
         first_event, first_indices = self.interpolate(time0, return_indices=True)
         last_event, last_indices = self.interpolate(time1, return_indices=True)
 
-        proper_time = 0
+        res = 0
         if first_indices[0] != first_indices[1]:
-            proper_time += time_distance(first_event, self._vertices[first_indices[1]])
+            res += time_distance(first_event, self._vertices[first_indices[1]])
 
         for idx0 in range(first_indices[1], last_indices[0]):
             idx1 = idx0 + 1
             v0 = self._vertices[idx0]
             v1 = self._vertices[idx1]
-            proper_time += time_distance(v0, v1)
+            res += time_distance(v0, v1)
 
         if last_indices[0] != last_indices[1]:
-            proper_time += time_distance(self._vertices[last_indices[0]], last_event)
+            res += time_distance(self._vertices[last_indices[0]], last_event)
 
-        return proper_time
-
-
+        return res

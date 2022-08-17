@@ -83,5 +83,18 @@ class SpacetimeTestSuite(unittest.TestCase):
         assert np.isclose(event_out, event_out_check).all()
         assert np.isclose(u_out, u_out_check).all()
 
+    def test_Worldline_proper_time(self):
+        w = st.Worldline([[0, 0], [1, 0.9], [2, 0]])
+
+        tau_check = (2 ** 2 - 1.8 ** 2) ** 0.5
+
+        self.assertEqual(w.proper_time(0, 1), tau_check / 2)
+        self.assertEqual(w.proper_time(0, 1), tau_check / 2)
+        self.assertEqual(w.proper_time(0, 1), tau_check / 2)
+        self.assertEqual(w.proper_time(0, 2), tau_check)
+        self.assertEqual(w.proper_time(1, 2), tau_check / 2)
+        self.assertEqual(w.proper_time(0.5, 1.5), tau_check / 2)
+        self.assertEqual(w.proper_time(0.5, 1.5), tau_check / 2)
+
 if __name__ == '__main__':
     unittest.main()
