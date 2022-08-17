@@ -22,7 +22,7 @@ import numpy as np
 # TODO: Would be great to offer different interpolation methods. I think
 # `scipy.interpolate` probably has everything I would need.
 class Worldline:
-    def __init__(self, vertices, *, end_velocities=None):
+    def __init__(self, vertices, *, end_velocities=(None, None)):
         vertices = np.array(vertices)
 
         check(vertices.ndim == 2, ValueError,
@@ -50,18 +50,29 @@ class Worldline:
 
         self._vertices = vertices
 
-        # TODO: I don't like the name `end_velcities`
-        if end_velocities is not None:
-            raise NotImplementedError
-            end_velocities = np.array(end_velocities)
-            ndim_spatial = vertices.shape[-1] - 1
-            check(end_velocities.shape[-1] == ndim_spatial, ValueError, (
-                  f"Expected 'end_velocities.shape[-1]' to be equal to the number of "
-                  f"spatial dims in 'vertices', {ndim_spatial}, but got "
-                  f"{end_velocities.shape[-1]}"))
-        else:
-            self._velocity_before = None
-            self._velocity_after = None
+        num_spatial_dims = vertices.shape[-1] - 1
+
+        # TODO: I don't like the name `end_velocities`
+        check(isinstance(end_velocities, (tuple, list)), TypeError,
+            f"`end_velocities` must be a tuple, but got {type(end_velocities)} instead")
+        check(len(end_velocities) == 2, IndexError,
+            f"expected `len(end_velocities) == 2`, but got {len(end_velocities)} instead")
+
+        self._end_velocities = [None, None]
+
+        for idx, v in enumerate(end_velocities):
+            if v is not None:
+                v = np.array(v)
+                check(v.shape == (num_spatial_dims,), ValueError,
+                    f"expected `end_velocities[{idx}].shape == ({num_spatial_dims},)`, "
+                    f"since `events` has {num_spatial_dims} spatial dimensions, but got "
+                    f"`{v.shape}` instead")
+                speed = np.linalg.norm(v)
+                check(speed <= 1, ValueError,
+                    f"expected `end_velocities[{idx}]` to have speed less than or equal "
+                    f"to the speed of light, 1, but got {speed} instead")
+                self._end_velocities[idx] = v
+
 
     # Find the two closest vertices surrounding a specified time coorindate.
     #
@@ -97,30 +108,40 @@ class Worldline:
 
 
     # Approximate the event on the worldline at a specified time
+    # TODO: Probably should use a different name than `interpolate`, since it
+    # can also extrapolate. Maybe `evaluate`, `eval`, `get`, `__call__`?
     def interpolate(self, time, return_indices=False):
         idx_before, idx_after = self._find_surrounding_vertices(time)
 
-        if idx_before is None:
-            check(self._velocity_before is not None, ValueError,
-                f"time '{time}' is before the first event on the worldline at "
-                f"time '{self._vertices[0][0]}'")
-            raise NotImplementedError
-        elif idx_after is None:
-            check(self._velocity_after is not None, ValueError,
-                f"time '{time}' is after the last event on the worldline at "
-                f"time '{self._vertices[-1][0]}'")
-            raise NotImplementedError
-        elif idx_before == idx_after:
-            if return_indices:
-                return self._vertices[idx_before], (idx_before, idx_after)
+        if idx_before is None or idx_after is None:
+            assert idx_before != idx_after, "should never fail"
+
+            if idx_before is None:
+                end_velocity = self._end_velocities[0]
+                check(end_velocity is not None, ValueError,
+                    f"time '{time}' is before the first event on the worldline at "
+                    f"time '{self._vertices[0][0]}'")
+                vert = self._vertices[0]
             else:
-                return self._vertices[idx_before]
+                end_velocity = self._end_velocities[1]
+                check(end_velocity is not None, ValueError,
+                    f"time '{time}' is after the last event on the worldline at "
+                    f"time '{self._vertices[-1][0]}'")
+                vert = self._vertices[-1]
 
-        v0 = self._vertices[idx_before]
-        v1 = self._vertices[idx_after]
-        delta_ratio = (time - v0[0]) / (v1[0] - v0[0])
+            event = np.concatenate([[time],
+                vert[1:] + end_velocity * (time - vert[0])])
 
-        event = (v1 - v0) * delta_ratio + v0
+        elif idx_before == idx_after:
+            event = self._vertices[idx_before]
+
+        else:
+            v0 = self._vertices[idx_before]
+            v1 = self._vertices[idx_after]
+            delta_ratio = (time - v0[0]) / (v1[0] - v0[0])
+            event = (v1 - v0) * delta_ratio + v0
+
+        assert (event[0] == time).all(), "should never fail"
 
         if return_indices:
             return event, (idx_before, idx_after)
