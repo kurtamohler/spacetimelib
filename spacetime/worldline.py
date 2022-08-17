@@ -133,17 +133,21 @@ class Worldline:
         first_event, first_indices = self.interpolate(time0, return_indices=True)
         last_event, last_indices = self.interpolate(time1, return_indices=True)
 
-        res = 0
-        if first_indices[0] != first_indices[1]:
-            res += time_distance(first_event, self._vertices[first_indices[1]])
+        if first_indices == last_indices:
+            return time_distance(first_event, last_event)
 
-        for idx0 in range(first_indices[1], last_indices[0]):
-            idx1 = idx0 + 1
-            v0 = self._vertices[idx0]
-            v1 = self._vertices[idx1]
-            res += time_distance(v0, v1)
+        else:
+            res = 0
+            if first_indices[0] != first_indices[1]:
+                res += time_distance(first_event, self._vertices[first_indices[1]])
 
-        if last_indices[0] != last_indices[1]:
-            res += time_distance(self._vertices[last_indices[0]], last_event)
+            for idx0 in range(first_indices[1], last_indices[0]):
+                idx1 = idx0 + 1
+                v0 = self._vertices[idx0]
+                v1 = self._vertices[idx1]
+                res += time_distance(v0, v1)
 
-        return res
+            if last_indices[0] != last_indices[1]:
+                res += time_distance(self._vertices[last_indices[0]], last_event)
+
+            return res

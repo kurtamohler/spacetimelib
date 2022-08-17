@@ -95,6 +95,8 @@ class SpacetimeTestSuite(unittest.TestCase):
         self.assertEqual(w.proper_time(1, 2), tau_check / 2)
         self.assertEqual(w.proper_time(0.5, 1.5), tau_check / 2)
         self.assertEqual(w.proper_time(0.5, 1.5), tau_check / 2)
+        self.assertAlmostEqual(w.proper_time(0.25, 0.75), tau_check / 4)
+        self.assertAlmostEqual(w.proper_time(1.25, 1.75), tau_check / 4)
 
 if __name__ == '__main__':
     unittest.main()
