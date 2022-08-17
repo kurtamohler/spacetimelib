@@ -22,6 +22,20 @@ import numpy as np
 # TODO: Would be great to offer different interpolation methods. I think
 # `scipy.interp` probably has everything I would need.
 class Worldline:
+
+    # Args:
+    #
+    #   vertices : array
+    #       Set of events to use as the vertices of the worldline.
+    #
+    # Keyword args:
+    #
+    #   end_velocities : 2-tuple of None or array
+    #       The velocities to use for evaluation of time coordinates before or
+    #       after all the events in `vertices`. `end_velocities[0]` is used
+    #       extrapolate into the past, and `end_velocities[1]` is used to
+    #       extrapolate into the future. If `end_velocities[i] is None`, then
+    #       evaluating into that region throws an error.
     def __init__(self, vertices, *, end_velocities=(None, None)):
         vertices = np.array(vertices)
 
