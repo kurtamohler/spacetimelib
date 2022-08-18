@@ -2,7 +2,7 @@ import itertools
 import pygame
 import numpy as np
 
-from spacetime import Frame2D, Clock, boost
+from spacetime import Frame2D, Clock, boost, Worldline
 
 rest_frame = Frame2D()
 
@@ -12,21 +12,37 @@ demo_number = 0
 
 if demo_number == 0:
     # Create a grid of stationary clocks around the origin
-    for i, j in itertools.product(range(21), range(21)):
-        rest_frame.append(Clock(
+    for i, j in itertools.product(range(11), range(11)):
+        rest_frame.append(
+            Clock(
+                Worldline(
+                    [20 * np.array([0, i-5, j-5])],
+                    end_velocities=[[0, 0], [0, 0]]
+                ),
+                0,
+                0))
+
+    rest_frame.append(
+        Clock(
+            Worldline(
+                # TODO: If I use light speed line segments here, there's an NaN
+                # error when calculating clock face time.
+                [
+                    [0, -4, 20],
+                    [8.1, 4, 20],
+                    [16.2, -4, 20],
+                    [24.3, 4, 20],
+                    [32.4, -4, 20],
+                    [40.5, 4, 20],
+                    [48.6, -4, 20],
+                    [56.7, 4, 20],
+                    [64.8, -4, 20],
+                    [72.9, 4, 20],
+                ],
+                end_velocities=[[0, 0], [0, 0]]
+            ),
             0,
-            20 * np.array([0, i-10, j-10]),
-            (0, 0)))
-
-    rest_frame.append(Clock(
-        0,
-        (0, 0, 0),
-        (0.9, 0)))
-
-    rest_frame.append(Clock(
-        0,
-        (0, 0, 0),
-        (1, 0)))
+            0))
 
     render_clock_times = True
 
@@ -55,10 +71,19 @@ observer_frame_time = 0
 # Add a clock that will represent the observer's clock
 # TODO: I should improve the interface for this kind of thing. Maybe allow
 # clocks to be named, and they can be accessed from the frame by name
-rest_frame.append(Clock(
-    0, 
-    observer_frame_disp,
-    observer_frame_velocity))
+#rest_frame.append(Clock(
+#    0, 
+#    observer_frame_disp,
+#    observer_frame_velocity))
+
+rest_frame.append(
+    Clock(
+        Worldline(
+            [observer_frame_disp],
+            end_velocities=[observer_frame_velocity, observer_frame_velocity]
+        ),
+        observer_frame_disp[0],
+        0))
 
 observer_frame = rest_frame.boost(
     observer_frame_disp,
@@ -104,11 +129,12 @@ while running:
                 new_clock_velocity_ = np.array([0.9, 0])
 
             if new_clock_velocity_ is not None:
-                velocity = rest_frame._clocks[-1]._velocity
+                # TODO: Fix this hack
+                velocity = rest_frame._clocks[-1]._worldline._end_velocities[0]
                 event0_ = observer_frame_state[-1][1]
 
                 new_clock_event0, new_clock_velocity = boost(
-                    -rest_frame._clocks[-1]._velocity,
+                    -velocity,
                     event0_,
                     new_clock_velocity_)
 
@@ -117,9 +143,12 @@ while running:
                 rest_frame._clocks.insert(
                     -1,
                     Clock(
-                        0,
-                        event0,
-                        new_clock_velocity))
+                        Worldline(
+                            [event0],
+                            end_velocities=[new_clock_velocity, new_clock_velocity]
+                        ),
+                        event0[0],
+                        0))
 
                 observer_frame = rest_frame.boost(
                     observer_frame_disp,
@@ -161,8 +190,12 @@ while running:
         clock_velocity_ = add_velocity
         clock_event_ = observer_frame_state[-1][1]
 
+        # TODO: This is a bit of a hack. Should probably add a method to
+        # `Worldline` that gives the velocity at a particular time
+        observer_velocity = observer_clock._worldline._end_velocities[0]
+
         clock_event, clock_velocity = boost(
-            -rest_frame._clocks[-1]._velocity,
+            -observer_velocity,
             clock_event_,
             clock_velocity_)
 
@@ -172,10 +205,18 @@ while running:
 
         # Now that we have a new event and velocity for the observer clock,
         # create a new clock and replace the old one in the rest frame
+        #new_observer_clock = Clock(
+        #    observer_clock_face_time,
+        #    clock_event,
+        #    clock_velocity)
+
         new_observer_clock = Clock(
-            observer_clock_face_time,
-            clock_event,
-            clock_velocity)
+            Worldline(
+                [clock_event],
+                end_velocities=[clock_velocity, clock_velocity]
+            ),
+            clock_event[0],
+            observer_clock_face_time)
 
         rest_frame._clocks[-1] = new_observer_clock
 
@@ -205,7 +246,10 @@ while running:
             # Find the observer clock's position and velocity in the rest frame
             # to be displayed
             observer_clock = rest_frame._clocks[-1]
-            velocity = observer_clock._velocity
+
+            # TODO: This is a bit of a hack. Should probably add a method to
+            # `Worldline` that gives the velocity at a particular time
+            velocity = observer_clock._worldline._end_velocities[0]
             rest_pos = boost(
                 -velocity,
                 event
