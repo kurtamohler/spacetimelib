@@ -1,4 +1,5 @@
-from .transformations import boost, time_distance, check
+from .transformations import boost, time_distance
+from .error_checking import check
 
 import numpy as np
 
@@ -40,9 +41,9 @@ class Worldline:
         vertices = np.array(vertices)
 
         check(vertices.ndim == 2, ValueError,
-              f"expected 'vertices' to have 2 dims, but got {vertices.ndim}")
+            f"expected 'vertices' to have 2 dims, but got {vertices.ndim}")
         check(vertices.shape[-1] >= 2, ValueError,
-              f"expected 'vertices.shape[-1] >= 2', but got {vertices.shape[-1]}")
+            f"expected 'vertices.shape[-1] >= 2', but got {vertices.shape[-1]}")
 
         prev_event = vertices[0]
 
@@ -53,12 +54,12 @@ class Worldline:
 
             # Time dimension must increase for each pair
             check(cur_event[0] > prev_event[0], ValueError,
-                  "expected 'vertices' to be ordered by increasing time coordinate")
+                "expected 'vertices' to be ordered by increasing time coordinate")
 
             dist = time_distance(prev_event, cur_event)
 
             check(dist >= 0, ValueError,
-                  "expected 'vertices' to all have time-like separation")
+                "expected 'vertices' to all have time-like separation")
 
             prev_event = cur_event
 
@@ -78,12 +79,12 @@ class Worldline:
             if v is not None:
                 v = np.array(v)
                 check(v.shape == (num_spatial_dims,), ValueError,
-                    f"expected `end_velocities[{idx}].shape == ({num_spatial_dims},)`, "
-                    f"since `events` has {num_spatial_dims} spatial dimensions, but got "
+                    f"expected `end_velocities[{idx}].shape == ({num_spatial_dims},)`, ",
+                    f"since `events` has {num_spatial_dims} spatial dimensions, but got ",
                     f"`{v.shape}` instead")
                 speed = np.linalg.norm(v)
                 check(speed <= 1, ValueError,
-                    f"expected `end_velocities[{idx}]` to have speed less than or equal "
+                    f"expected `end_velocities[{idx}]` to have speed less than or equal ",
                     f"to the speed of light, 1, but got {speed} instead")
                 self._end_velocities[idx] = v
 
@@ -148,13 +149,13 @@ class Worldline:
             if idx_before is None:
                 end_velocity = self._end_velocities[0]
                 check(end_velocity is not None, ValueError,
-                    f"time '{time}' is before the first event on the worldline at "
+                    f"time '{time}' is before the first event on the worldline at ",
                     f"time '{self._vertices[0][0]}'")
                 vert = self._vertices[0]
             else:
                 end_velocity = self._end_velocities[1]
                 check(end_velocity is not None, ValueError,
-                    f"time '{time}' is after the last event on the worldline at "
+                    f"time '{time}' is after the last event on the worldline at ",
                     f"time '{self._vertices[-1][0]}'")
                 vert = self._vertices[-1]
 

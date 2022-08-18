@@ -1,13 +1,10 @@
 # TODO: Rename this file to something like "basic operations", since I'm adding
 # a function that isn't a transformation
 
+from .error_checking import check
+
 import numpy as np
 from numbers import Number
-
-# TODO: Move check to different file
-def check(condition, error_type, message):
-    if not condition:
-        raise error_type(message)
 
 # Transforms an event from one inertial frame, F, to a another inertial frame,
 # F', using the Lorentz vector transformations
@@ -53,8 +50,8 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
     light_speed = np.array(light_speed)
 
     check(event.ndim > 0, ValueError,
-          "expected 'event' to have one or more dimensions, "
-          f"but got {event.ndim}")
+        "expected 'event' to have one or more dimensions, ",
+        f"but got {event.ndim}")
     # TODO: Fix this error message to include the scalar case
     #check(frame_velocity.ndim > 0 or event.shape[-1] == 2, ValueError,
     #      "expected 'frame_velocity' to have one or more dimensions, "
@@ -67,24 +64,24 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
         frame_velocity = np.expand_dims(frame_velocity, -1)
     else:
         check(event.shape[-1] - 1 == frame_velocity.shape[-1], ValueError,
-              "expected 'event.shape[-1] - 1 == frame_velocity.shape[-1]', but "
-              f"got '{event.shape[-1]} - 1 != {frame_velocity.shape[-1]}'")
+            "expected 'event.shape[-1] - 1 == frame_velocity.shape[-1]', but ",
+            f"got '{event.shape[-1]} - 1 != {frame_velocity.shape[-1]}'")
 
     frame_speed = np.linalg.norm(frame_velocity, axis=-1)
 
     # TODO: If frame_velocity is batched, we should only print out the
     # first speed in frame_speed that is greater than light_speed
     check((frame_speed < light_speed).all(), ValueError,
-          "the norm of 'frame_velocity' must be less than "
-          f"'light_speed' ({light_speed}), but got {frame_speed}")
+        "the norm of 'frame_velocity' must be less than ",
+        f"'light_speed' ({light_speed}), but got {frame_speed}")
 
     # TODO: Would batching the speed of light be useful at all? Probably best to
     # wait and see before adding batching.
     check(light_speed.ndim == 0, ValueError,
-          "expected 'light_speed' to have 0 dimensions, "
-          f"but got {light_speed.ndim}")
+        "expected 'light_speed' to have 0 dimensions, ",
+        f"but got {light_speed.ndim}")
     check(light_speed > 0, ValueError,
-          f"expected 'light_speed' to be positive, but got {light_speed}")
+        f"expected 'light_speed' to be positive, but got {light_speed}")
 
     dtype = np.find_common_type([event.dtype, frame_velocity.dtype, light_speed.dtype], [])
 
@@ -98,12 +95,12 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
             velocity = np.expand_dims(velocity, -1)
         else:
             check(event.shape[-1] - 1 == velocity.shape[-1], ValueError,
-                  "expected 'event.shape[-1] - 1 == velocity.shape[-1]', but "
-                  "got '{event.shape[-1]} - 1 != {velocity.shape[-1]'")
+                "expected 'event.shape[-1] - 1 == velocity.shape[-1]', but ",
+                "got '{event.shape[-1]} - 1 != {velocity.shape[-1]'")
 
         speed = np.linalg.norm(velocity, axis=-1)
         check((speed <= light_speed).all(), ValueError,
-            "the norm of 'velocity' must be less than or equal to "
+            "the norm of 'velocity' must be less than or equal to ",
             f"'light_speed' ({light_speed}), but got {speed}")
 
         dtype = np.find_common_type([dtype, velocity.dtype], [])
@@ -127,7 +124,7 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
         # TODO: This case should be supported, but will require a condition
         # below to prevent the division by zero
         check((frame_speed > 0).all(), ValueError,
-              f"'frame_velocity' must be nonzero, but got {frame_velocity}")
+            f"'frame_velocity' must be nonzero, but got {frame_velocity}")
 
     # γ = 1 / √(1 - v ⋅ v / c²)
     lorentz_factor = 1 / np.sqrt(1 - np.square(frame_speed / light_speed))
@@ -187,7 +184,7 @@ def time_distance(event0, event1):
     event1 = np.array(event1)
 
     check(event0.shape == event1.shape, ValueError,
-          "expected both events to have same shape")
+        "expected both events to have same shape")
     check(event0.ndim == 1, ValueError, "expected exactly two dimensions")
     check(event0.shape[0] >= 2, ValueError, "expected at least 2 dims")
 
