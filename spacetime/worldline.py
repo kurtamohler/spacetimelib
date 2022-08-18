@@ -1,5 +1,5 @@
 from .basic_ops import boost, proper_time
-from .error_checking import check
+from .error_checking import check, internal_assert
 
 import numpy as np
 
@@ -144,7 +144,7 @@ class Worldline:
         idx_before, idx_after = self._find_surrounding_vertices(time)
 
         if idx_before is None or idx_after is None:
-            assert idx_before != idx_after, "should never fail"
+            internal_assert(idx_before != idx_after)
 
             if idx_before is None:
                 end_velocity = self._end_velocities[0]
@@ -171,7 +171,7 @@ class Worldline:
             delta_ratio = (time - v0[0]) / (v1[0] - v0[0])
             event = (v1 - v0) * delta_ratio + v0
 
-        #assert (event[0] == time).all(), "should never fail"
+        internal_assert(np.isclose(event[0], time).all())
 
         if return_indices:
             return event, (idx_before, idx_after)
