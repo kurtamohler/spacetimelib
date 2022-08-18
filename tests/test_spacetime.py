@@ -58,12 +58,19 @@ class SpacetimeTestSuite(unittest.TestCase):
             u = np.random.uniform(low=0.1, high=1.0, size=()).astype(np.double)
             event = np.random.uniform(low=-1000, high=1000, size=(2,)).astype(np.double)
 
-            event_out, u_out = st.boost(v, event, u)
-
             u_out_check = check_boost_velocity_1D(v, u)
             event_out_check = check_boost_event_1D(v, event)
+
+            # Check boosting velocity without event
+            _, u_out = st.boost(v, None, u)
+            assert np.isclose(u_out, u_out_check).all()
+
+            # Check boosting velocity with event
+            event_out, u_out = st.boost(v, event, u)
+
             assert np.isclose(u_out, u_out_check).all()
             assert np.isclose(event_out, event_out_check).all()
+
 
             v_batch.append(v)
             event_batch.append(event)
