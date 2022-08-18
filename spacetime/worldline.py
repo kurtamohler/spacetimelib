@@ -1,4 +1,4 @@
-from .transformations import boost, time_distance
+from .basic_ops import boost, proper_time
 from .error_checking import check
 
 import numpy as np
@@ -56,9 +56,9 @@ class Worldline:
             check(cur_event[0] > prev_event[0], ValueError,
                 "expected 'vertices' to be ordered by increasing time coordinate")
 
-            dist = time_distance(prev_event, cur_event)
+            tau = proper_time(prev_event, cur_event)
 
-            check(dist >= 0, ValueError,
+            check(tau >= 0, ValueError,
                 "expected 'vertices' to all have time-like separation")
 
             prev_event = cur_event
@@ -190,20 +190,20 @@ class Worldline:
         last_event, last_indices = self.eval(time1, return_indices=True)
 
         if first_indices == last_indices:
-            return time_distance(first_event, last_event)
+            return proper_time(first_event, last_event)
 
         else:
             res = 0
             if first_indices[0] != first_indices[1]:
-                res += time_distance(first_event, self._vertices[first_indices[1]])
+                res += proper_time(first_event, self._vertices[first_indices[1]])
 
             for idx0 in range(first_indices[1], last_indices[0]):
                 idx1 = idx0 + 1
                 v0 = self._vertices[idx0]
                 v1 = self._vertices[idx1]
-                res += time_distance(v0, v1)
+                res += proper_time(v0, v1)
 
             if last_indices[0] != last_indices[1]:
-                res += time_distance(self._vertices[last_indices[0]], last_event)
+                res += proper_time(self._vertices[last_indices[0]], last_event)
 
             return res

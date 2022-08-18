@@ -1,6 +1,6 @@
 import numpy as np
 
-from .transformations import boost
+from .basic_ops import boost
 
 
 # An inertial reference frame in Minkowski spacetime with two spatial

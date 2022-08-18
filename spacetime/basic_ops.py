@@ -1,10 +1,6 @@
-# TODO: Rename this file to something like "basic operations", since I'm adding
-# a function that isn't a transformation
-
 from .error_checking import check
 
 import numpy as np
-from numbers import Number
 
 # Transforms an event from one inertial frame, F, to a another inertial frame,
 # F', using the Lorentz vector transformations
@@ -178,8 +174,8 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
 
 
 # Calculate the proper time from `event0` to `event1`
-# TODO: Should choose a better name for this, probably
-def time_distance(event0, event1):
+# TODO: Should probably support any number of events, even disordered.
+def proper_time(event0, event1):
     event0 = np.array(event0)
     event1 = np.array(event1)
 
@@ -191,6 +187,4 @@ def time_distance(event0, event1):
     event_diff_sq = (event1 - event0) ** 2
 
     return np.sqrt(event_diff_sq[0] - np.sum(event_diff_sq[1:]))
-    
-
 
