@@ -24,10 +24,11 @@ import numpy as np
 #       Velocity of frame F' relative to F.
 #       Shape: (..., N), or () if `N == 1`
 #
-#   event : array_like
+#   event : array_like or None
 #       N+1 dimensional event for the particle in frame F. Given as
 #       [t, x_1, x_2, ..., x_N], where t is the time coordinate and x_i is the
-#       spatial coordinate for dimension i.
+#       spatial coordinate for dimension i. If `None`, then `velocity` must not
+#       be `None`.
 #       Shape: (..., N+1)
 #
 #   velocity : array_like, optional
@@ -46,27 +47,27 @@ import numpy as np
 # TODO: Consider splitting velocity and event boosts into two different functions.
 # TODO: velocity and event should probably not be broadcast together, actually.
 def boost(frame_velocity, event, velocity=None, light_speed=1):
-    event = np.array(event)
+    check(event is not None or velocity is not None, ValueError,
+        "expected either `event` or `velocity` to be given, but both are `None`")
     frame_velocity = np.array(frame_velocity)
     light_speed = np.array(light_speed)
 
-    check(event.ndim > 0, ValueError,
-        "expected 'event' to have one or more dimensions, ",
-        f"but got {event.ndim}")
-    # TODO: Fix this error message to include the scalar case
-    #check(frame_velocity.ndim > 0 or event.shape[-1] == 2, ValueError,
-    #      "expected 'frame_velocity' to have one or more dimensions, "
-    #      f"but got {frame_velocity.ndim}")
     if frame_velocity.ndim == 0:
         frame_velocity = np.array([frame_velocity])
 
-    # TODO: Need to think more about the logic here. It might be a bit wrong
-    if event.shape[-1] == 2 and frame_velocity.shape[-1] > 1:
-        frame_velocity = np.expand_dims(frame_velocity, -1)
-    else:
-        check(event.shape[-1] - 1 == frame_velocity.shape[-1], ValueError,
-            "expected 'event.shape[-1] - 1 == frame_velocity.shape[-1]', but ",
-            f"got '{event.shape[-1]} - 1 != {frame_velocity.shape[-1]}'")
+    if event is not None:
+        event = np.array(event)
+        check(event.ndim > 0, ValueError,
+            "expected 'event' to have one or more dimensions, ",
+            f"but got {event.ndim}")
+
+        # TODO: Need to think more about the logic here. It might be a bit wrong
+        if event.shape[-1] == 2 and frame_velocity.shape[-1] > 1:
+            frame_velocity = np.expand_dims(frame_velocity, -1)
+        else:
+            check(event.shape[-1] - 1 == frame_velocity.shape[-1], ValueError,
+                "expected 'event.shape[-1] - 1 == frame_velocity.shape[-1]', but ",
+                f"got '{event.shape[-1]} - 1 != {frame_velocity.shape[-1]}'")
 
     frame_speed = np.linalg.norm(frame_velocity, axis=-1)
 
@@ -84,7 +85,10 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
     check(light_speed > 0, ValueError,
         f"expected 'light_speed' to be positive, but got {light_speed}")
 
-    dtype = np.find_common_type([event.dtype, frame_velocity.dtype, light_speed.dtype], [])
+    dtype = np.find_common_type([frame_velocity.dtype, light_speed.dtype], [])
+
+    if event is not None:
+        dtype = np.find_common_type([event.dtype, dtype], [])
 
     if velocity is not None:
         velocity = np.array(velocity)
@@ -92,12 +96,13 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
             velocity = np.array([velocity])
 
         # TODO: Need to think more about the logic here. It might be a bit wrong
-        if event.shape[-1] == 2 and velocity.shape[-1] > 1:
-            velocity = np.expand_dims(velocity, -1)
-        else:
-            check(event.shape[-1] - 1 == velocity.shape[-1], ValueError,
-                "expected 'event.shape[-1] - 1 == velocity.shape[-1]', but ",
-                "got '{event.shape[-1]} - 1 != {velocity.shape[-1]'")
+        if event is not None:
+            if event.shape[-1] == 2 and velocity.shape[-1] > 1:
+                velocity = np.expand_dims(velocity, -1)
+            else:
+                check(event.shape[-1] - 1 == velocity.shape[-1], ValueError,
+                    "expected 'event.shape[-1] - 1 == velocity.shape[-1]', but ",
+                    "got '{event.shape[-1]} - 1 != {velocity.shape[-1]'")
 
         speed = np.linalg.norm(velocity, axis=-1)
         check((speed <= light_speed).all(), ValueError,
@@ -108,8 +113,9 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
 
     # Change dtypes to match each other
     frame_velocity = frame_velocity.astype(dtype)
-    event = event.astype(dtype)
     light_speed = light_speed.astype(dtype)
+    if event is not None:
+        event = event.astype(dtype)
     if velocity is not None:
         velocity = velocity.astype(dtype)
 
@@ -129,20 +135,29 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
 
     # γ = 1 / √(1 - v ⋅ v / c²)
     lorentz_factor = 1 / np.sqrt(1 - np.square(frame_speed / light_speed))
+    
+    if event is not None:
+        position = event[..., 1:]
+        time = event[..., 0]
 
-    position = event[..., 1:]
-    time = event[..., 0]
+        # r' = r + v ((r ⋅ v) (γ - 1) / v² - tγ)
+        position_ = position + frame_velocity * np.expand_dims(
+            np.sum(position * frame_velocity, axis=-1) * (lorentz_factor - 1)
+                / np.square(frame_speed)    # TODO: fix division by zero case
+            - time * lorentz_factor,
+            axis=-1)
 
-    # r' = r + v ((r ⋅ v) (γ - 1) / v² - tγ)
-    position_ = position + frame_velocity * np.expand_dims(
-        np.sum(position * frame_velocity, axis=-1) * (lorentz_factor - 1)
-            / np.square(frame_speed)    # TODO: fix division by zero case
-        - time * lorentz_factor,
-        axis=-1)
+        # t' = γ (t - (r ⋅ v) / c²)
+        time_ = lorentz_factor * (time - np.sum(position * frame_velocity, axis=-1)
+            / np.square(light_speed))
 
-    # t' = γ (t - (r ⋅ v) / c²)
-    time_ = lorentz_factor * (time - np.sum(position * frame_velocity, axis=-1)
-        / np.square(light_speed))
+        event_ = np.empty(time_.shape + (position_.shape[-1] + 1,), dtype=dtype)
+
+        event_[..., 0] = time_
+        event_[..., 1:] = position_
+
+    else:
+        event_ = None
 
     if velocity is not None:
         # u' = (u / γ - v + (γ (u ⋅ v) v) / (c² (γ + 1)))
@@ -166,11 +181,6 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
 
     else:
         velocity_ = None
-
-    event_ = np.empty(time_.shape + (position_.shape[-1] + 1,), dtype=dtype)
-
-    event_[..., 0] = time_
-    event_[..., 1:] = position_
 
     if velocity is None:
         return event_

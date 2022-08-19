@@ -1,5 +1,5 @@
 from .basic_ops import boost, proper_time
-from .error_checking import check
+from .error_checking import check, internal_assert
 
 import numpy as np
 
@@ -144,7 +144,7 @@ class Worldline:
         idx_before, idx_after = self._find_surrounding_vertices(time)
 
         if idx_before is None or idx_after is None:
-            assert idx_before != idx_after, "should never fail"
+            internal_assert(idx_before != idx_after)
 
             if idx_before is None:
                 end_velocity = self._end_velocities[0]
@@ -171,7 +171,7 @@ class Worldline:
             delta_ratio = (time - v0[0]) / (v1[0] - v0[0])
             event = (v1 - v0) * delta_ratio + v0
 
-        assert (event[0] == time).all(), "should never fail"
+        internal_assert(np.isclose(event[0], time).all())
 
         if return_indices:
             return event, (idx_before, idx_after)
@@ -207,3 +207,24 @@ class Worldline:
                 res += proper_time(self._vertices[last_indices[0]], last_event)
 
             return res
+
+    def boost(self, frame_velocity):
+        vertices = boost(frame_velocity, self._vertices)
+        end_velocities = [None, None]
+
+        for idx in [0, 1]:
+            if self._end_velocities[idx] is not None:
+                _, end_velocities[idx] = boost(
+                    frame_velocity,
+                    np.zeros_like(vertices[0]),
+                    self._end_velocities[idx])
+
+        return Worldline(vertices, end_velocities=end_velocities)
+
+    def __add__(self, event_delta):
+        return Worldline(
+            self._vertices + event_delta,
+            end_velocities=self._end_velocities)
+
+    def __sub__(self, event_delta):
+        return self + (-event_delta)
