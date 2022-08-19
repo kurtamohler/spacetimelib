@@ -24,9 +24,10 @@ class Frame2D:
     def get_state_at_time(self, time):
         state = []
 
-        # TODO: Storing the properties of the clocks together in `ndarray`s
-        # would make transformations much more performant because we'd replace
-        # this loop with just a couple numpy calls
+        # TODO: I'd like to parallelize this into one batched operation, but
+        # I don't think that's very possible since worldlines can have all
+        # different numbers of vertices. Still, there could be something that
+        # would give better performance here.
         for clock in self._clocks:
             face_time, event = clock.get_state_at_time(time)
             state.append((face_time, event))
@@ -37,7 +38,8 @@ class Frame2D:
     # Transform the frame, applying a time and position translations first,
     # then applying a velocity transformation
     # TODO: `event_delta` should be None by default. Actually, probably shouldn't
-    # even be here--instead, add an addition function and use that.
+    # even be here--instead, add an addition function and use that? But that would
+    # give worse performance though...
     def boost(self, event_delta, velocity_delta):
         # Check `event_delta` arg
         event_delta = np.array(event_delta)
@@ -56,36 +58,89 @@ class Frame2D:
 
         new_clocks = []
 
-        batched = False
+        batched = True
 
-        # TODO: While this impl of batching is roughly 4x faster on my machine
+        # TODO: While this impl of batching is roughly 3x faster on my machine
         # than the non-batched path while uniformly accelerating in
         # `examples/clock_grid.py`, it is still pretty inefficient to copy all
         # the events and velocities out of the clocks and then back into the
         # new clocks. It would be much more efficient to always keep a batched
-        # representation of the frame. The events and velocities of the
-        # individual clocks could potentially be views into the batched
-        # representation, if it makes sense to do so. Otherwise, they could
-        # just be copies. But I would like to have some way to automatically
-        # update between them if one of the copies or views changes. Probably
-        # automating that would be easier if the coordinates are copied rather
-        # than shared. But deciding for sure will require more thought.
+        # representation of the frame cached. This would be very simple to
+        # implement, just separate the batched representation creation into
+        # a new function and use the `lru_cache` decorator (or whatever it's
+        # called) to auto-cache it.  Another possibility is that events and
+        # velocities of the individual clocks could potentially be views into
+        # the batched representation, but that seems harder to implement and
+        # prevent broken views.
         if batched:
-            # TODO: Need to update this to handle the new `Clock` type that
-            # uses a `Worldline` internally
-            event0_batch = np.array([clock._event0 for clock in self._clocks])
-            velocity_batch = np.array([clock._velocity for clock in self._clocks])
+            vertex_count = []
+            vertices = []
+            velocities = []
+            clock_time0_events = []
 
-            event0_batch_out, velocity_batch_out = boost(
+            # Map the clock index to an index into `velocities`, for both the
+            # past and future velocity
+            past_velocity_idx_map = {}
+            future_velocity_idx_map = {}
+
+            # Need to grab all event vertices and velocities from all worldlines and combine
+            # them into two batched event and velocity arrays that can be boosted. Need
+            # to keep track of which vertices and velocities belong to which clocks.
+            for clock_idx, clock in enumerate(self._clocks):
+                worldline = clock._worldline
+                vertex_count.append(len(worldline._vertices))
+                vertices += [vertex for vertex in worldline._vertices]
+
+                if worldline._end_velocities[0] is not None:
+                    past_velocity_idx_map[clock_idx] = len(velocities)
+                    velocities.append(worldline._end_velocities[0])
+
+                if worldline._end_velocities[1] is not None:
+                    future_velocity_idx_map[clock_idx] = len(velocities)
+                    velocities.append(worldline._end_velocities[1])
+
+                clock_time0_events.append(worldline.eval(clock._time0))
+
+            # TODO: Need to change `boost` to avoid broadcasting of events and
+            # velocities so that I can combine these calls into one
+            new_vertices = boost(
                 velocity_delta,
-                event0_batch - event_delta,
-                velocity_batch)
+                vertices - event_delta)
+
+            _, new_velocities = boost(
+                velocity_delta,
+                None,
+                velocities)
+
+            new_clock_time0_events = boost(
+                velocity_delta,
+                clock_time0_events - event_delta)
+
+            cur_vertices_idx = 0
 
             for clock_idx, clock in enumerate(self._clocks):
+                if clock_idx in past_velocity_idx_map:
+                    past_velocity = new_velocities[past_velocity_idx_map[clock_idx]]
+                else:
+                    past_velocity = None
+
+                if clock_idx in future_velocity_idx_map:
+                    future_velocity = new_velocities[future_velocity_idx_map[clock_idx]]
+                else:
+                    future_velocity = None
+
+                num_vertices = vertex_count[clock_idx]
+                
+                new_worldline = Worldline(
+                        new_vertices[cur_vertices_idx : cur_vertices_idx + num_vertices],
+                        end_velocities=(past_velocity, future_velocity))
+
+                cur_vertices_idx += num_vertices
+
                 new_clocks.append(Clock(
-                    clock._clock_time0,
-                    event0_batch_out[clock_idx],
-                    velocity_batch_out[clock_idx]))
+                    new_worldline,
+                    new_clock_time0_events[clock_idx][0],
+                    clock._clock_time0))
 
         else:
             for clock in self._clocks:
