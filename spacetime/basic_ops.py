@@ -15,6 +15,9 @@ import numpy as np
 #   broadcastable together. NumPy broadcasting semantics are used:
 #   https://numpy.org/doc/stable/user/basics.broadcasting.html
 #
+#   TODO: The actual batching behavior is wonky. Need to think carefully
+#   about what behavior would be most useful and understandable.
+#
 # Arguments:
 #   
 #   frame_velocity : array_like
@@ -40,6 +43,8 @@ import numpy as np
 #
 #   position_, time_, velocity_ : tuple of ndarray
 #
+# TODO: Consider splitting velocity and event boosts into two different functions.
+# TODO: velocity and event should probably not be broadcast together, actually.
 def boost(frame_velocity, event, velocity=None, light_speed=1):
     event = np.array(event)
     frame_velocity = np.array(frame_velocity)
