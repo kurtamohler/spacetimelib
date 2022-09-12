@@ -90,6 +90,52 @@ class SpacetimeTestSuite(unittest.TestCase):
         assert np.isclose(event_out, event_out_check).all()
         assert np.isclose(u_out, u_out_check).all()
 
+    # Test `spacetime.boost` with lots of different input shapes
+    def test_boost_shapes(self):
+        input_shapes = [
+            # frame_v_shape, x_shape, u_shape, x_out_shape_check, u_out_shape_check
+            # NOTE: If x_out_shape_check or u_out_shape_check is None, it indicates
+            # that the corresponding output shape should be the same as the input shape.
+            ((2,), (3,), (2,), None, None),
+            ((2,), (3,), (1, 2,), None, None),
+            ((2,), (3,), (3, 2,), None, None),
+            ((2,), (3,), (3, 2,), None, None),
+            ((2,), (3,), (1, 3, 2,), None, None),
+            ((3,), (4,), (10, 30, 3,), None, None),
+            ((2,), (1, 3,), (2,), None, None),
+            ((3,), (1, 4,), (3,), None, None),
+            ((3,), (10, 4,), (3,), None, None),
+            ((3,), (5, 10, 4,), (3,), None, None),
+            ((3,), (5, 10, 4,), (30, 3,), None, None),
+            ((3,), (5, 10, 4,), (5, 1, 30, 3,), None, None),
+            ((10, 3,), (5, 10, 4,), (5, 1, 10, 3,), None, None),
+            ((4, 2,), (3,), (2,), (4, 3), (4, 2)),
+            ((4, 2,), (1, 3,), (2,), (4, 3), (4, 2)),
+            ((4, 2,), (1, 3,), (2,), (4, 3), (4, 2)),
+            ((4, 2,), (1, 1, 3,), (2,), (1, 4, 3), (4, 2)),
+            ((4, 2,), (3,), (1, 2,), (4, 3), (4, 2)),
+            ((4, 2,), (3,), (4, 2,), (4, 3), None),
+            ((4, 2,), (3,), (1, 1, 2,), (4, 3), (1, 4, 2)),
+            ((4, 2,), (3,), (1, 4, 2,), (4, 3), None),
+            ((4, 2,), (4, 3,), (1, 4, 2,), None, None),
+        ]
+
+        for frame_v_shape, x_shape, u_shape, x_out_shape_check, u_out_shape_check in input_shapes:
+            if x_out_shape_check is None:
+                x_out_shape_check = x_shape
+
+            if u_out_shape_check is None:
+                u_out_shape_check = u_shape
+
+            frame_v = 0.1 * np.random.randn(*frame_v_shape)
+            x = np.random.randn(*x_shape)
+            u = 0.1 * np.random.randn(*u_shape)
+
+            x_out, u_out = st.boost(frame_v, x, u)
+
+            self.assertEqual(x_out_shape_check, x_out.shape)
+            self.assertEqual(u_out_shape_check, u_out.shape)
+
     def test_Worldline_eval(self):
         w0 = st.Worldline(
             [[0, 0]],

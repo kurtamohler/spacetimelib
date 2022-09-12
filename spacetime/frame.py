@@ -75,8 +75,9 @@ class Frame2D:
         if batched:
             vertex_count = []
             vertices = []
-            velocities = []
             clock_time0_events = []
+
+            batched_velocities = []
 
             # Map the clock index to an index into `velocities`, for both the
             # past and future velocity
@@ -92,40 +93,35 @@ class Frame2D:
                 vertices += [vertex for vertex in worldline._vertices]
 
                 if worldline._end_velocities[0] is not None:
-                    past_velocity_idx_map[clock_idx] = len(velocities)
-                    velocities.append(worldline._end_velocities[0])
+                    past_velocity_idx_map[clock_idx] = len(batched_velocities)
+                    batched_velocities.append(worldline._end_velocities[0])
 
                 if worldline._end_velocities[1] is not None:
-                    future_velocity_idx_map[clock_idx] = len(velocities)
-                    velocities.append(worldline._end_velocities[1])
+                    future_velocity_idx_map[clock_idx] = len(batched_velocities)
+                    batched_velocities.append(worldline._end_velocities[1])
 
                 clock_time0_events.append(worldline.eval(clock._time0))
 
-            # TODO: Need to change `boost` to avoid broadcasting of events and
-            # velocities so that I can combine these calls into one
-            new_vertices = boost(
-                velocity_delta,
-                vertices - event_delta)
+            batched_events = np.concatenate([vertices, clock_time0_events])
 
-            _, new_velocities = boost(
+            new_batched_events, new_batched_velocities = boost(
                 velocity_delta,
-                None,
-                velocities)
+                batched_events - event_delta,
+                batched_velocities)
 
-            new_clock_time0_events = boost(
-                velocity_delta,
-                clock_time0_events - event_delta)
+            new_vertices = new_batched_events[:len(vertices)]
+            new_clock_time0_events = new_batched_events[len(vertices):]
 
             cur_vertices_idx = 0
 
             for clock_idx, clock in enumerate(self._clocks):
                 if clock_idx in past_velocity_idx_map:
-                    past_velocity = new_velocities[past_velocity_idx_map[clock_idx]]
+                    past_velocity = new_batched_velocities[past_velocity_idx_map[clock_idx]]
                 else:
                     past_velocity = None
 
                 if clock_idx in future_velocity_idx_map:
-                    future_velocity = new_velocities[future_velocity_idx_map[clock_idx]]
+                    future_velocity = new_batched_velocities[future_velocity_idx_map[clock_idx]]
                 else:
                     future_velocity = None
 

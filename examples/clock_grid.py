@@ -6,7 +6,7 @@ from spacetime import Frame2D, Clock, boost, Worldline
 
 rest_frame = Frame2D()
 
-render_clock_times = False
+render_clock_times = True
 
 demo_number = 0
 
@@ -20,46 +20,69 @@ if demo_number == 0:
                     end_velocities=[[0, 0], [0, 0]]
                 ),
                 0,
-                0))
-
-    rest_frame.append(
-        Clock(
-            Worldline(
-                # TODO: If I use light speed line segments here, there's an NaN
-                # error when calculating clock face time.
-                [
-                    [0, -4, 20],
-                    [8.1, 4, 20],
-                    [16.2, -4, 20],
-                    [24.3, 4, 20],
-                    [32.4, -4, 20],
-                    [40.5, 4, 20],
-                    [48.6, -4, 20],
-                    [56.7, 4, 20],
-                    [64.8, -4, 20],
-                    [72.9, 4, 20],
-                ],
-                end_velocities=[[0, 0], [0, 0]]
-            ),
-            0,
-            0))
-
-    render_clock_times = True
+                0
+            )
+        )
 
 elif demo_number == 1:
-    # Demonstration of one of the connections between electromagnetic inductance
-    # and special relativity
+    R = 20
+    N = 30
+
+    for i in range(N):
+        angle = 2 * np.pi * i / 20
+
+        rest_frame.append(
+            Clock(
+                Worldline(
+                    [R * np.array([0, np.sin(angle), np.cos(angle)])],
+                    end_velocities=[[0, 0], [0, 0]]
+                ),
+                0,
+                0
+            )
+        )
+
+elif demo_number == 2:
     num_charges = 100
     for i in range(num_charges + 1):
-        rest_frame.append(Clock(
-            0,
-            (0, -10, (i - num_charges/2) * 5),
-            (0, -.9)))
+        for direction in [-1, 1]:
+            rest_frame.append(
+                Clock(
+                    Worldline(
+                        [(0, 10 * direction, (i - num_charges/2) * 5)],
+                        end_velocities=[[0, 0.5 * direction], [0, 0.5 * direction]]
+                    ),
+                    0,
+                    0
+                )
+            )
 
-        rest_frame.append(Clock(
-            0,
-            (0, 10, (i - num_charges/2) * 5),
-            (0, .9)))
+elif demo_number == 3:
+    N = 100
+    spacing = 4
+
+    for i in range(N):
+        rest_frame.append(
+            Clock(
+                Worldline(
+                    # TODO: If I use light speed line segments here, there's an NaN
+                    # error when calculating clock face time.
+                    np.array([
+                        [0, -4, 0],
+                        [10, 4, 0],
+                        [20, -4, 0],
+                        [30, 4, 0],
+                        [40, -4, 0],
+                        [50, 4, 0],
+                        [60, -4, 0],
+                        [70, 4, 0],
+                        [80, -4, 0],
+                        [90, 4, 0],
+                    ]) + (-40.5, 0, spacing * i - spacing * (N//2)),
+                    end_velocities=[[0, 0], [0, 0]]
+                ),
+                0,
+                0))
 
 # Always keep the displacement of the current instantaneous
 # observer frame
@@ -71,11 +94,6 @@ observer_frame_time = 0
 # Add a clock that will represent the observer's clock
 # TODO: I should improve the interface for this kind of thing. Maybe allow
 # clocks to be named, and they can be accessed from the frame by name
-#rest_frame.append(Clock(
-#    0, 
-#    observer_frame_disp,
-#    observer_frame_velocity))
-
 rest_frame.append(
     Clock(
         Worldline(

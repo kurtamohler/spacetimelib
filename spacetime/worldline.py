@@ -20,8 +20,9 @@ import numpy as np
 # infinite time in the appropriate direction. TODO: Think of a better way to
 # word this.
 #
-# TODO: Would be great to offer different interpolation methods. I think
-# `scipy.interp` probably has everything I would need.
+# TODO: Would be great to offer different interpolation methods to make the curve
+# smoother. I think `scipy.interp` probably has everything I would need.
+# TODO: Would be cool to enable infinite loops over the positions in the vertices.
 class Worldline:
 
     # Args:
