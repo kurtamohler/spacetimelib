@@ -38,7 +38,7 @@ class Worldline:
     #       extrapolate into the past, and `end_velocities[1]` is used to
     #       extrapolate into the future. If `end_velocities[i] is None`, then
     #       evaluating into that region throws an error.
-    def __init__(self, vertices, *, end_velocities=(None, None)):
+    def __init__(self, vertices, end_velocities=(None, None)):
         vertices = np.array(vertices)
 
         check(vertices.ndim == 2, ValueError,
@@ -68,7 +68,7 @@ class Worldline:
 
         num_spatial_dims = vertices.shape[-1] - 1
 
-        # TODO: I don't like the name `end_velocities`
+        # TODO: Not sure I like the name `end_velocities`
         check(isinstance(end_velocities, (tuple, list)), TypeError,
             f"`end_velocities` must be a tuple, but got {type(end_velocities)} instead")
         check(len(end_velocities) == 2, IndexError,
@@ -220,12 +220,12 @@ class Worldline:
                     np.zeros_like(vertices[0]),
                     self._end_velocities[idx])
 
-        return Worldline(vertices, end_velocities=end_velocities)
+        return Worldline(vertices, end_velocities)
 
     def __add__(self, event_delta):
         return Worldline(
             self._vertices + event_delta,
-            end_velocities=self._end_velocities)
+            self._end_velocities)
 
     def __sub__(self, event_delta):
         return self + (-event_delta)

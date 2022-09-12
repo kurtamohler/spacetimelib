@@ -139,10 +139,10 @@ class SpacetimeTestSuite(unittest.TestCase):
     def test_Worldline_eval(self):
         w0 = st.Worldline(
             [[0, 0]],
-            end_velocities=[[0.9], [0]])
+            [[0.9], [0]])
         w1 = st.Worldline(
             [[0, 0], [1, 0.9], [2, 0], [4, 2]],
-            end_velocities=[[-0.1], [0.9]])
+            [[-0.1], [0.9]])
         test_cases = [
             # worldline, time, event_check
             (w0, 0, [0, 0]),
