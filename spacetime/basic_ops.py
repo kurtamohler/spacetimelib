@@ -2,51 +2,50 @@ from .error_checking import check
 
 import numpy as np
 
-# Transforms an event from one inertial frame, F, to a another inertial frame,
-# F', using the Lorentz vector transformations
-# (https://en.wikipedia.org/wiki/Lorentz_transformation#Vector_transformations).
-# This function works for any number of spatial dimensions, N.
-#
-# NOTE:
-#   Some of the arguments of this function can be batched, in order to perform
-#   multiple transformations with one call. This gives better performance than
-#   calling the function many individual times. The `...` in the shape for each
-#   argument below means that those parts of their shapes must all be
-#   broadcastable together. NumPy broadcasting semantics are used:
-#   https://numpy.org/doc/stable/user/basics.broadcasting.html
-#
-#   TODO: The actual batching behavior is wonky. Need to think carefully
-#   about what behavior would be most useful and understandable.
-#
-# Arguments:
-#   
-#   frame_velocity : array_like
-#       Velocity of frame F' relative to F.
-#       Shape: (..., N), or () if `N == 1`
-#
-#   event : array_like or None
-#       N+1 dimensional event for the particle in frame F. Given as
-#       [t, x_1, x_2, ..., x_N], where t is the time coordinate and x_i is the
-#       spatial coordinate for dimension i. If `None`, then `velocity` must not
-#       be `None`.
-#       Shape: (..., N+1)
-#
-#   velocity : array_like, optional
-#       Velocity of the particle for each spatial dimension with respect to
-#       time in frame F. If given, the output `velocity_` will be the
-#       Lorentz transformed velocity of the particle in frame F'.
-#       Shape: (..., N)
-#       Default: None
-#
-#   light_speed : array_like, optional scalar Speed of light. Default: 1
-#
-# Returns:
-#
-#   position_, time_, velocity_ : tuple of ndarray
-#
-# TODO: Consider splitting velocity and event boosts into two different functions.
-# TODO: velocity and event should probably not be broadcast together, actually.
 def boost(frame_velocity, event, velocity=None, light_speed=1):
+    '''
+    Transforms an event from one inertial frame, F, to a another inertial frame,
+    F', using the Lorentz vector transformations
+    (https://en.wikipedia.org/wiki/Lorentz_transformation#Vector_transformations).
+    This function works for any number of spatial dimensions, N.
+
+    NOTE:
+      The arguments of this function can be batched, in order to perform
+      multiple transformations with one call. This gives better performance than
+      calling the function many individual times. The `...` in the shape for each
+      argument below means that those parts of their shapes must all be
+      broadcastable together. NumPy broadcasting semantics are used:
+      https://numpy.org/doc/stable/user/basics.broadcasting.html
+
+      TODO: The actual batching behavior is wonky. Need to think carefully
+      about what behavior would be most useful and understandable.
+
+    Args:
+
+      frame_velocity : array_like
+          Velocity of frame F' relative to F.
+          Shape: (..., N), or () if `N == 1`
+
+      event : array_like or None
+          N+1 dimensional event for the particle in frame F. Given as
+          [t, x_1, x_2, ..., x_N], where t is the time coordinate and x_i is the
+          spatial coordinate for dimension i. If `None`, then `velocity` must not
+          be `None`.
+          Shape: (..., N+1)
+
+      velocity : array_like, optional
+          Velocity of the particle for each spatial dimension with respect to
+          time in frame F. If given, the output `velocity_` will be the
+          Lorentz transformed velocity of the particle in frame F'.
+          Shape: (..., N)
+          Default: None
+
+      light_speed : array_like, optional scalar Speed of light. Default: 1
+
+    Returns:
+
+      position_, time_, velocity_ : tuple of ndarray
+    '''
     check(event is not None or velocity is not None, ValueError,
         "expected either `event` or `velocity` to be given, but both are `None`")
     frame_velocity = np.array(frame_velocity)
@@ -188,9 +187,20 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
         return event_, velocity_
 
 
-# Calculate the proper time from `event0` to `event1`
 # TODO: Should probably support any number of events, even disordered.
 def proper_time(event0, event1):
+    '''
+    Calculate the proper time between two events.
+
+    Args:
+        event0 : array
+            First event
+
+        event1 : array
+            Second event
+
+    Returns: number
+    '''
     event0 = np.array(event0)
     event1 = np.array(event1)
 
