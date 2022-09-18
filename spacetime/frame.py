@@ -92,13 +92,13 @@ class Frame2D:
                 vertex_count.append(len(worldline._vertices))
                 vertices += [vertex for vertex in worldline._vertices]
 
-                if worldline._end_velocities[0] is not None:
+                if worldline._vel_ends[0] is not None:
                     past_velocity_idx_map[clock_idx] = len(batched_velocities)
-                    batched_velocities.append(worldline._end_velocities[0])
+                    batched_velocities.append(worldline._vel_ends[0])
 
-                if worldline._end_velocities[1] is not None:
+                if worldline._vel_ends[1] is not None:
                     future_velocity_idx_map[clock_idx] = len(batched_velocities)
-                    batched_velocities.append(worldline._end_velocities[1])
+                    batched_velocities.append(worldline._vel_ends[1])
 
                 clock_time0_events.append(worldline.eval(clock._time0))
 
@@ -129,7 +129,8 @@ class Frame2D:
                 
                 new_worldline = Worldline(
                         new_vertices[cur_vertices_idx : cur_vertices_idx + num_vertices],
-                        (past_velocity, future_velocity))
+                        vel0=past_velocity,
+                        velN=future_velocity)
 
                 cur_vertices_idx += num_vertices
 

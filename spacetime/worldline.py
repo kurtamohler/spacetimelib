@@ -3,42 +3,49 @@ from .error_checking import check, internal_assert
 
 import numpy as np
 
-# The worldline of an object in spacetime. It is represented as a finite set of
-# events, called vertices, in a common inertial reference frame, sorted by
-# increasing time coordinate, all connected together by time-like straight line
-# segments.  Continuous worldlines can be approximated, and the the accuracy of
-# the approximation is proportional to the density of vertices and inversely
-# proportional to the complexity of the actual worldline being approximated.
-#
-# Since a `Worldline` is just a set of vertices, it can be transformed in all the
-# ways that an event can be transformed. It can be Lorentz boosted or
-# displaced, as long as the same transformation is applied to every
-# single event in the `Worldline`.
-#
-# The first and last of the vertices in a `Worldline` can either be a finite
-# end point or it can be a straight line of some arbitrary velocity for
-# infinite time in the appropriate direction. TODO: Think of a better way to
-# word this.
-#
-# TODO: Would be great to offer different interpolation methods to make the curve
-# smoother. I think `scipy.interp` probably has everything I would need.
-# TODO: Would be cool to enable infinite loops over the positions in the vertices.
 class Worldline:
+    '''
+    The worldline of an object. It is represented as a finite set of events,
+    called vertices, within an inertial reference frame connected together by
+    straight time-like line segments. Events between a pair of vertices are
+    evaluated using basic linear interpolation. Continuous worldlines can be
+    approximated, with accuracy proportional to the density of vertices.
 
-    # Args:
-    #
-    #   vertices : array
-    #       Set of events to use as the vertices of the worldline.
-    #
-    # Keyword args:
-    #
-    #   end_velocities : 2-tuple of None or array
-    #       The velocities to use for evaluation of time coordinates before or
-    #       after all the events in `vertices`. `end_velocities[0]` is used
-    #       extrapolate into the past, and `end_velocities[1]` is used to
-    #       extrapolate into the future. If `end_velocities[i] is None`, then
-    #       evaluating into that region throws an error.
-    def __init__(self, vertices, end_velocities=(None, None)):
+    By default, the first and last vertices are treated as end point
+    boundaries, past which events cannot be evaluated. Alternatively, the
+    `vel_ends`, `vel0`, or `velN` arguments can be specified to enable linear
+    extrapolation of events that fall outside of these boundaries.
+    '''
+
+    # TODO: Would be cool to add an option to enable infinite loops over the
+    # positions in the vertices.
+
+    # TODO: Investigate using SymPy to enable continuous worldlines.
+
+    def __init__(self, vertices, vel_ends=None, *, vel0=None, velN=None):
+        '''
+        Args:
+
+            vertices : array
+                Set of events to use as the vertices of the worldline. Events
+                must be sorted by increasing time coordinate, and each pair of
+                events must have time-like separation.
+
+            vel_ends : array, optional
+                Velocity of the worldline before and after the first and last
+                vertices. This enables the extrapolation of events that occur
+                before and after the first and last `vertices`. Default: `None`.
+
+        Keyword args:
+
+            vel0 : array, optional
+                Velocity of the worldline before the first vertex. If specified,
+                `vel_ends` must be `None`. Default: `None`.
+
+            velN : array, optional
+                Velocity of the worldline after the last vertex. If specified,
+                `vel_ends` must be `None`. Default: `None`.
+        '''
         vertices = np.array(vertices)
 
         check(vertices.ndim == 2, ValueError,
@@ -68,46 +75,55 @@ class Worldline:
 
         num_spatial_dims = vertices.shape[-1] - 1
 
-        # TODO: Not sure I like the name `end_velocities`
-        check(isinstance(end_velocities, (tuple, list)), TypeError,
-            f"`end_velocities` must be a tuple, but got {type(end_velocities)} instead")
-        check(len(end_velocities) == 2, IndexError,
-            f"expected `len(end_velocities) == 2`, but got {len(end_velocities)} instead")
+        def check_vel_end(arg_name, v):
+            check(v.shape == (num_spatial_dims,), ValueError,
+                f"expected `{arg_name}.shape == ({num_spatial_dims},)`, ",
+                f"since `events` has {num_spatial_dims} spatial dimensions, but got ",
+                f"`{v.shape}` instead")
+            speed = np.linalg.norm(v)
+            check(speed <= 1, ValueError,
+                f"expected `{arg_name}` to have speed less than or equal ",
+                f"to the speed of light, 1, but got {speed} instead")
 
-        self._end_velocities = [None, None]
+        if vel_ends is not None:
+            check(vel0 is None and velN is None, ValueError,
+                "expected `vel0` and `velN` to be None, since `vel_ends` was given")
+            vel_ends = np.array(vel_ends)
+            check_vel_end('vel_ends', vel_ends)
+            self._vel_ends = [vel_ends, vel_ends]
+        else:
+            self._vel_ends = [None, None]
 
-        for idx, v in enumerate(end_velocities):
-            if v is not None:
-                v = np.array(v)
-                check(v.shape == (num_spatial_dims,), ValueError,
-                    f"expected `end_velocities[{idx}].shape == ({num_spatial_dims},)`, ",
-                    f"since `events` has {num_spatial_dims} spatial dimensions, but got ",
-                    f"`{v.shape}` instead")
-                speed = np.linalg.norm(v)
-                check(speed <= 1, ValueError,
-                    f"expected `end_velocities[{idx}]` to have speed less than or equal ",
-                    f"to the speed of light, 1, but got {speed} instead")
-                self._end_velocities[idx] = v
+            if vel0 is not None:
+                vel0 = np.array(vel0)
+                check_vel_end('vel0', vel0)
+                self._vel_ends[0] = vel0
 
+            if velN is not None:
+                velN = np.array(velN)
+                check_vel_end('velN', velN)
+                self._vel_ends[1] = velN
 
-    # Find the two closest vertices surrounding a specified time coorindate.
-    #
-    # Arguments:
-    #
-    #   time : number
-    #       The time coordinate.
-    #
-    # Returns:
-    #   idx_before, idx_after : tuple of int
-    #       Indices into `self._vertices`.
-    #
-    # If a vertex is at exactly `time`, then it is returned as both `idx_before`
-    # and `idx_after`, so `idx_before == idx_after`.
-    #
-    # If there is no vertex before `time`, then `idx_before = None`.
-    #
-    # If there is no vertex after `time`, then `idx_after = None`.
     def _find_surrounding_vertices(self, time):
+        '''
+        Find the two closest vertices surrounding a specified time coorindate.
+        
+        Args:
+        
+          time : number
+              The time coordinate.
+        
+        Returns:
+          idx_before, idx_after : tuple of int
+              Indices into `self._vertices`.
+        
+        If a vertex is at exactly `time`, then it is returned as both `idx_before`
+        and `idx_after`, so `idx_before == idx_after`.
+        
+        If there is no vertex before `time`, then `idx_before = None`.
+        
+        If there is no vertex after `time`, then `idx_after = None`.
+        '''
         idx_after = np.searchsorted(self._vertices[..., 0], time)
 
         if idx_after >= len(self._vertices):
@@ -123,45 +139,47 @@ class Worldline:
             return idx_after - 1, idx_after
 
 
-    # Returns the event at a specified time on the worldline.
-    #
-    # Args:
-    #
-    #   time : number
-    #       Time at which to evaluate the worldline.
-    #
-    #   return_indices : bool, optional
-    #       Whether to return the indices of vertices surrounding the specified time.
-    #       Default: False
-    #
-    # Returns:
-    #
-    #   If `return_indices == False`:
-    #       event : array
-    #
-    #   If `return_indices == True:
-    #       event, (idx_before, idx_after) : array, (int, int)
     def eval(self, time, return_indices=False):
+        '''
+        Returns the event at a specified time on the worldline.
+        
+        Args:
+        
+          time : number
+              Time at which to evaluate the worldline.
+        
+          return_indices : bool, optional
+              Whether to return the indices of vertices surrounding the specified time.
+              Default: False
+        
+        Returns:
+        
+          If `return_indices == False`:
+              event : array
+        
+          If `return_indices == True:
+              event, (idx_before, idx_after) : array, (int, int)
+        '''
         idx_before, idx_after = self._find_surrounding_vertices(time)
 
         if idx_before is None or idx_after is None:
             internal_assert(idx_before != idx_after)
 
             if idx_before is None:
-                end_velocity = self._end_velocities[0]
-                check(end_velocity is not None, ValueError,
+                vel_ends = self._vel_ends[0]
+                check(vel_ends is not None, ValueError,
                     f"time '{time}' is before the first event on the worldline at ",
                     f"time '{self._vertices[0][0]}'")
                 vert = self._vertices[0]
             else:
-                end_velocity = self._end_velocities[1]
-                check(end_velocity is not None, ValueError,
+                vel_ends = self._vel_ends[1]
+                check(vel_ends is not None, ValueError,
                     f"time '{time}' is after the last event on the worldline at ",
                     f"time '{self._vertices[-1][0]}'")
                 vert = self._vertices[-1]
 
             event = np.concatenate([[time],
-                vert[1:] + end_velocity * (time - vert[0])])
+                vert[1:] + vel_ends * (time - vert[0])])
 
         elif idx_before == idx_after:
             event = self._vertices[idx_before]
@@ -211,21 +229,21 @@ class Worldline:
 
     def boost(self, frame_velocity):
         vertices = boost(frame_velocity, self._vertices)
-        end_velocities = [None, None]
+        vel_ends = [None, None]
 
         for idx in [0, 1]:
-            if self._end_velocities[idx] is not None:
-                _, end_velocities[idx] = boost(
+            if self._vel_ends[idx] is not None:
+                _, vel_ends[idx] = boost(
                     frame_velocity,
                     np.zeros_like(vertices[0]),
-                    self._end_velocities[idx])
+                    self._vel_ends[idx])
 
-        return Worldline(vertices, end_velocities)
+        return Worldline(vertices, vel_ends)
 
     def __add__(self, event_delta):
         return Worldline(
             self._vertices + event_delta,
-            self._end_velocities)
+            self._vel_ends)
 
     def __sub__(self, event_delta):
         return self + (-event_delta)

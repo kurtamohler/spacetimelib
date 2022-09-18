@@ -17,7 +17,7 @@ if demo_number == 0:
             Clock(
                 Worldline(
                     [20 * np.array([0, i-5, j-5])],
-                    [[0, 0], [0, 0]]
+                    [0, 0]
                 ),
                 0,
                 0
@@ -35,7 +35,7 @@ elif demo_number == 1:
             Clock(
                 Worldline(
                     [R * np.array([0, np.sin(angle), np.cos(angle)])],
-                    [[0, 0], [0, 0]]
+                    [0, 0]
                 ),
                 0,
                 0
@@ -50,7 +50,7 @@ elif demo_number == 2:
                 Clock(
                     Worldline(
                         [(0, 10 * direction, (i - num_charges/2) * 5)],
-                        [[0, 0.5 * direction], [0, 0.5 * direction]]
+                        [0, 0.5 * direction]
                     ),
                     0,
                     0
@@ -79,7 +79,7 @@ elif demo_number == 3:
                         [80, -4, 0],
                         [90, 4, 0],
                     ]) + (-40.5, 0, spacing * i - spacing * (N//2)),
-                    [[0, 0], [0, 0]]
+                    [0, 0]
                 ),
                 0,
                 0))
@@ -98,7 +98,7 @@ rest_frame.append(
     Clock(
         Worldline(
             [observer_frame_disp],
-            [observer_frame_velocity, observer_frame_velocity]
+            observer_frame_velocity
         ),
         observer_frame_disp[0],
         0))
@@ -148,7 +148,7 @@ while running:
 
             if new_clock_velocity_ is not None:
                 # TODO: Fix this hack
-                velocity = rest_frame._clocks[-1]._worldline._end_velocities[0]
+                velocity = rest_frame._clocks[-1]._worldline._vel_ends[0]
                 event0_ = observer_frame_state[-1][1]
 
                 new_clock_event0, new_clock_velocity = boost(
@@ -163,7 +163,7 @@ while running:
                     Clock(
                         Worldline(
                             [event0],
-                            [new_clock_velocity, new_clock_velocity]
+                            new_clock_velocity
                         ),
                         event0[0],
                         0))
@@ -210,7 +210,7 @@ while running:
 
         # TODO: This is a bit of a hack. Should probably add a method to
         # `Worldline` that gives the velocity at a particular time
-        observer_velocity = observer_clock._worldline._end_velocities[0]
+        observer_velocity = observer_clock._worldline._vel_ends[0]
 
         clock_event, clock_velocity = boost(
             -observer_velocity,
@@ -231,7 +231,7 @@ while running:
         new_observer_clock = Clock(
             Worldline(
                 [clock_event],
-                [clock_velocity, clock_velocity]
+                clock_velocity
             ),
             clock_event[0],
             observer_clock_face_time)
@@ -267,7 +267,7 @@ while running:
 
             # TODO: This is a bit of a hack. Should probably add a method to
             # `Worldline` that gives the velocity at a particular time
-            velocity = observer_clock._worldline._end_velocities[0]
+            velocity = observer_clock._worldline._vel_ends[0]
             rest_pos = boost(
                 -velocity,
                 event

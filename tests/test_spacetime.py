@@ -139,28 +139,42 @@ class SpacetimeTestSuite(unittest.TestCase):
     def test_Worldline_eval(self):
         w0 = st.Worldline(
             [[0, 0]],
-            [[0.9], [0]])
+            [0.9])
         w1 = st.Worldline(
-            [[0, 0], [1, 0.9], [2, 0], [4, 2]],
-            [[-0.1], [0.9]])
+            [[0, 0]],
+            vel0=[0.7],
+            velN=[-0.1])
+        w2 = st.Worldline(
+            [[-100, 1], [10, -50]],
+            [-0.4])
+        w3 = st.Worldline(
+            [[-100, 1], [10, -50]],
+            vel0=[0.4],
+            velN=[-0.1])
         test_cases = [
             # worldline, time, event_check
             (w0, 0, [0, 0]),
-            (w0, 1, [1, 0]),
+            (w0, 1, [1, 0.9]),
+            (w0, 2, [2, 1.8]),
             (w0, -1, [-1, -0.9]),
+            (w0, -2, [-2, -1.8]),
+            (w1, -10, [-10, -7]),
+            (w1, 10, [10, -1]),
             (w1, 0, [0, 0]),
-            (w1, 0.5, [0.5, 0.45]),
-            (w1, 1, [1, 0.9]),
-            (w1, 1.25, [1.25, 0.9 * 3 / 4]),
-            (w1, 2, [2, 0]),
-            (w1, 3, [3, 1]),
-            (w1, 5, [5, 2 + 0.9]),
-            (w1, 50, [50, 2 + 0.9 * 46]),
-            (w1, -1, [-1, 0.1]),
-            (w1, -100, [-100, 10]),
+            (w2, -200, [-200, 1 + 0.4 * 100]),
+            (w2, -100, [-100, 1]),
+            (w2, -50, [-50, 1 + (-51 * 50 / 110)]),
+            (w2, 10, [10, -50]),
+            (w2, 30, [30, -50 + 20 * -0.4]),
+            (w3, -200, [-200, 1 - 0.4 * 100]),
+            (w3, -100, [-100, 1]),
+            (w3, -50, [-50, 1 + (-51 * 50 / 110)]),
+            (w3, 10, [10, -50]),
+            (w3, 30, [30, -50 + 20 * -0.1]),
         ]
         for w, t, event_check in test_cases:
-            assert event_check[0] == t, 'test case is invalid'
+            assert event_check[0] == t, (
+                'test case is invalid, time coordinate does not match')
             event_check = np.array(event_check)
             event = w.eval(t)
             self.assertTrue(np.isclose(event, event_check).all())
