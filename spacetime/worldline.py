@@ -107,21 +107,21 @@ class Worldline:
     def _find_surrounding_vertices(self, time):
         '''
         Find the two closest vertices surrounding a specified time coorindate.
-        
+
         Args:
-        
+
           time : number
               The time coordinate.
-        
+
         Returns:
           idx_before, idx_after : tuple of int
               Indices into `self._vertices`.
-        
+
         If a vertex is at exactly `time`, then it is returned as both `idx_before`
         and `idx_after`, so `idx_before == idx_after`.
-        
+
         If there is no vertex before `time`, then `idx_before = None`.
-        
+
         If there is no vertex after `time`, then `idx_after = None`.
         '''
         idx_after = np.searchsorted(self._vertices[..., 0], time)
@@ -138,25 +138,23 @@ class Worldline:
         else:
             return idx_after - 1, idx_after
 
-
     def eval(self, time, return_indices=False):
         '''
         Returns the event at a specified time on the worldline.
-        
+
         Args:
-        
           time : number
               Time at which to evaluate the worldline.
-        
+
           return_indices : bool, optional
               Whether to return the indices of vertices surrounding the specified time.
               Default: False
-        
+
         Returns:
-        
+
           If `return_indices == False`:
               event : array
-        
+
           If `return_indices == True:
               event, (idx_before, idx_after) : array, (int, int)
         '''
@@ -197,9 +195,20 @@ class Worldline:
         else:
             return event
 
-    # Measure the proper time span across a section of the worldline between
-    # two specified time coordinates.
     def proper_time(self, time0, time1):
+        '''
+        Measure the proper time span across a section of the worldline between
+        two specified time coordinates.
+
+        Args:
+            time0 : number
+                First time coordinate
+
+            time1 : number
+                Second time coordinate
+
+        Returns: number
+        '''
         if time0 > time1:
             tmp = time0
             time0 = time1
@@ -228,6 +237,15 @@ class Worldline:
             return res
 
     def boost(self, frame_velocity):
+        '''
+        Boost the worldline to a different inertial reference frame.
+
+        Args:
+            frame_velocity : array
+                Velocity to boost the worldline by.
+
+        Returns: Worldline
+        '''
         vertices = boost(frame_velocity, self._vertices)
         vel_ends = [None, None]
 
@@ -241,9 +259,27 @@ class Worldline:
         return Worldline(vertices, vel_ends)
 
     def __add__(self, event_delta):
+        '''
+        Add a displacement to all events in the worldline.
+
+        Args:
+            event_delta : array
+                Displacements to add to each dimension.
+
+        Returns: Worldline
+        '''
         return Worldline(
             self._vertices + event_delta,
             self._vel_ends)
 
     def __sub__(self, event_delta):
+        '''
+        Subtract a displacement from all events in the worldline.
+
+        Args:
+            event_delta : array
+                Displacements to subtract from each dimension.
+
+        Returns: Worldline
+        '''
         return self + (-event_delta)
