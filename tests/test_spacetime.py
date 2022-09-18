@@ -142,15 +142,15 @@ class SpacetimeTestSuite(unittest.TestCase):
             [0.9])
         w1 = st.Worldline(
             [[0, 0]],
-            vel0=[0.7],
-            velN=[-0.1])
+            vel_past=[0.7],
+            vel_future=[-0.1])
         w2 = st.Worldline(
             [[-100, 1], [10, -50]],
             [-0.4])
         w3 = st.Worldline(
             [[-100, 1], [10, -50]],
-            vel0=[0.4],
-            velN=[-0.1])
+            vel_past=[0.4],
+            vel_future=[-0.1])
         test_cases = [
             # worldline, time, event_check
             (w0, 0, [0, 0]),

@@ -13,7 +13,7 @@ class Worldline:
 
     By default, the first and last vertices are treated as end point
     boundaries, past which events cannot be evaluated. Alternatively, the
-    `vel_ends`, `vel0`, or `velN` arguments can be specified to enable linear
+    `vel_ends`, `vel_past`, or `vel_future` arguments can be specified to enable linear
     extrapolation of events that fall outside of these boundaries.
     '''
 
@@ -22,7 +22,7 @@ class Worldline:
 
     # TODO: Investigate using SymPy to enable continuous worldlines.
 
-    def __init__(self, vertices, vel_ends=None, *, vel0=None, velN=None):
+    def __init__(self, vertices, vel_ends=None, *, vel_past=None, vel_future=None):
         '''
         Args:
 
@@ -38,11 +38,11 @@ class Worldline:
 
         Keyword args:
 
-            vel0 : array, optional
+            vel_past : array, optional
                 Velocity of the worldline before the first vertex. If specified,
                 `vel_ends` must be `None`. Default: `None`.
 
-            velN : array, optional
+            vel_future : array, optional
                 Velocity of the worldline after the last vertex. If specified,
                 `vel_ends` must be `None`. Default: `None`.
         '''
@@ -86,23 +86,23 @@ class Worldline:
                 f"to the speed of light, 1, but got {speed} instead")
 
         if vel_ends is not None:
-            check(vel0 is None and velN is None, ValueError,
-                "expected `vel0` and `velN` to be None, since `vel_ends` was given")
+            check(vel_past is None and vel_future is None, ValueError,
+                "expected `vel_past` and `vel_future` to be None, since `vel_ends` was given")
             vel_ends = np.array(vel_ends)
             check_vel_end('vel_ends', vel_ends)
             self._vel_ends = [vel_ends, vel_ends]
         else:
             self._vel_ends = [None, None]
 
-            if vel0 is not None:
-                vel0 = np.array(vel0)
-                check_vel_end('vel0', vel0)
-                self._vel_ends[0] = vel0
+            if vel_past is not None:
+                vel_past = np.array(vel_past)
+                check_vel_end('vel_past', vel_past)
+                self._vel_ends[0] = vel_past
 
-            if velN is not None:
-                velN = np.array(velN)
-                check_vel_end('velN', velN)
-                self._vel_ends[1] = velN
+            if vel_future is not None:
+                vel_future = np.array(vel_future)
+                check_vel_end('vel_future', vel_future)
+                self._vel_ends[1] = vel_future
 
     def _find_surrounding_vertices(self, time):
         '''

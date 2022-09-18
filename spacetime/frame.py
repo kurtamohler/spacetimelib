@@ -129,8 +129,8 @@ class Frame2D:
                 
                 new_worldline = Worldline(
                         new_vertices[cur_vertices_idx : cur_vertices_idx + num_vertices],
-                        vel0=past_velocity,
-                        velN=future_velocity)
+                        vel_past=past_velocity,
+                        vel_future=future_velocity)
 
                 cur_vertices_idx += num_vertices
 
