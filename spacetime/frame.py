@@ -5,9 +5,12 @@ from .worldline import Worldline
 from .error_checking import check
 
 
-# An inertial reference frame in Minkowski spacetime with two spatial
-# dimensions.
 class Frame2D:
+    '''
+    An inertial reference frame in Minkowski spacetime with two spatial
+    dimensions.
+    '''
+
     def __init__(self, clocks=None):
         if clocks is None:
             self._clocks = []
@@ -20,8 +23,10 @@ class Frame2D:
     def append(self, clock):
         self._clocks.append(clock)
 
-    # Returns the face times and events for all clocks at the specified time
     def get_state_at_time(self, time):
+        '''
+        Returns the face times and events for all clocks at the specified time.
+        '''
         state = []
 
         # TODO: I'd like to parallelize this into one batched operation, but
@@ -35,12 +40,14 @@ class Frame2D:
         return state
 
 
-    # Transform the frame, applying a time and position translations first,
-    # then applying a velocity transformation
     # TODO: `event_delta` should be None by default. Actually, probably shouldn't
     # even be here--instead, add an addition function and use that? But that would
     # give worse performance though...
     def boost(self, event_delta, velocity_delta):
+        '''
+        Transform the frame, applying a time and position translations first,
+        then applying a velocity transformation.
+        '''
         # Check `event_delta` arg
         event_delta = np.array(event_delta)
         assert event_delta.shape == (3,)
@@ -158,10 +165,11 @@ class Frame2D:
         return Frame2D(new_clocks)
 
 
-# A clock that moves at a constant velocity, and exists over the entire
-# time axis of a reference frame.
 class Clock:
-    #def __init__(self, face_time0, event0, velocity):
+    '''
+    A clock that moves at a constant velocity, and exists over the entire
+    time axis of a reference frame.
+    '''
 
     def __init__(self, worldline, time0, clock_time0):
         check(isinstance(worldline, Worldline), TypeError,
@@ -184,18 +192,10 @@ class Clock:
         self._time0 = time0
         self._clock_time0 = clock_time0
 
-    # Gives the event and face time of the clock at a particular time
     def get_state_at_time(self, time):
-        #position0 = self._event0[1:]
-        #time0 = self._event0[0]
-        #event = np.concatenate((
-        #    [time],
-        #    position0 + self._velocity * (time - time0)))
-
-        #face_time = self._clock_time0 + (time - time0) * self._dtau_dt
-
-        #return face_time, event
-
+        '''
+        Gives the event and face time of the clock at a particular time.
+        '''
         event = self._worldline.eval(time)
 
         tau = self._worldline.proper_time(
@@ -210,9 +210,6 @@ class Clock:
             clock_time = self._clock_time0 - tau
 
         return clock_time, event
-
-
-
 
 if __name__ == '__main__':
     frame = Frame2D()
@@ -243,6 +240,3 @@ if __name__ == '__main__':
         (0, 0, 0),
         (0, 0))
     print(frame_.get_state_at_time(0))
-
-
-
