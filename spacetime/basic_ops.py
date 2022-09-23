@@ -5,8 +5,9 @@ import numpy as np
 def boost(frame_velocity, event, velocity=None, light_speed=1):
     '''
     Transforms an event from one inertial frame, F, to a another inertial frame,
-    F', using the Lorentz vector transformations
-    (https://en.wikipedia.org/wiki/Lorentz_transformation#Vector_transformations).
+    F', using the Lorentz vector transformations:
+    https://en.wikipedia.org/wiki/Lorentz_transformation#Vector_transformations
+
     This function works for any number of spatial dimensions, N.
 
     NOTE:
@@ -44,7 +45,7 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
 
     Returns:
 
-      position_, time_, velocity_ : tuple of ndarray
+      `event_`, `velocity_` : tuple of ndarray
     '''
     check(event is not None or velocity is not None, ValueError,
         "expected either `event` or `velocity` to be given, but both are `None`")

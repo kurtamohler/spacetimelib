@@ -46,6 +46,11 @@ from your ship's frame of reference, on its plane of simultaneity.
 
 ![Animated gif of a topdown view of a Minkowski space with two spatial dimensions. In the animation, space and time warp when an observer frame changes velocity.](./images/demo_animation0.gif)
 
+## Build documentation
+
+```bash
+sphinx-build -b html docs/source docs/build/html
+```
 
 ## Good resources for learning special relativity
 
