@@ -2,58 +2,60 @@ from .error_checking import check
 
 import numpy as np
 
-def boost(frame_velocity, event, velocity=None, light_speed=1):
+def boost(boost_velocity, event, velocity=None, light_speed=1):
     '''
-    Transforms an event from one inertial frame, F, to a another inertial frame,
-    F', using the Lorentz vector transformations:
+    Boost the coordinates of one or more events by a specified velocity.
+    Optionally, velocities can also be boosted.
+
+    This operation uses the Lorentz vector transformations as described here:
     https://en.wikipedia.org/wiki/Lorentz_transformation#Vector_transformations
 
-    This function works for any number of spatial dimensions, N.
+    Batched inputs are supported, to allow boosting multiple events and velocities
+    by multiple boost velocities in one call.
 
-    NOTE:
-      The arguments of this function can be batched, in order to perform
-      multiple transformations with one call. This gives better performance than
-      calling the function many individual times. The `...` in the shape for each
-      argument below means that those parts of their shapes must all be
-      broadcastable together. NumPy broadcasting semantics are used:
-      https://numpy.org/doc/stable/user/basics.broadcasting.html
+    A single event is given by a 1-D array of N+1 elements, where N is the
+    number of spatial dimensions. The first element is the time coordinate, and
+    the remaining elements are spatial coordinates. For example, if the event
+    is `(t, x, y, z)`, `t` is the time coordinate and `x`, `y`, and `z` are
+    spatial coordinates in a three dimensional space.
 
-      TODO: The actual batching behavior is wonky. Need to think carefully
-      about what behavior would be most useful and understandable.
+    A single velocity is given by a 1-D array of N elements, derivatives of the
+    spatial dimensions with respect to coordinate time. For example, the
+    velocity `(v_x, v_y, v_z)` can also be written `(dx/dt, dy/dt, dz/dt)`.
 
     Args:
 
-      frame_velocity : array_like
-          Velocity of frame F' relative to F.
-          Shape: (..., N), or () if `N == 1`
+      boost_velocity : array_like
+          Boost velocity to use for the transformation.
+          Shape: (..., N)
 
       event : array_like or None
-          N+1 dimensional event for the particle in frame F. Given as
-          [t, x_1, x_2, ..., x_N], where t is the time coordinate and x_i is the
-          spatial coordinate for dimension i. If `None`, then `velocity` must not
-          be `None`.
+          Coordinates of events (or any 4-vector) to be boosted.
           Shape: (..., N+1)
 
       velocity : array_like, optional
-          Velocity of the particle for each spatial dimension with respect to
-          time in frame F. If given, the output `velocity_` will be the
-          Lorentz transformed velocity of the particle in frame F'.
+          Velocities to be boosted.
           Shape: (..., N)
           Default: None
 
-      light_speed : array_like, optional scalar Speed of light. Default: 1
+      light_speed : array_like, optional scalar speed of light. Default: 1
 
     Returns:
 
-      `event_`, `velocity_` : tuple of ndarray
+      If `velocity is None`:
+          `event_boosted` : ndarray
+
+      If `velocity is not None`:
+          (`event_boosted`, `velocity_boosted`) : tuple of ndarray
+
     '''
     check(event is not None or velocity is not None, ValueError,
         "expected either `event` or `velocity` to be given, but both are `None`")
-    frame_velocity = np.array(frame_velocity)
+    boost_velocity = np.array(boost_velocity)
     light_speed = np.array(light_speed)
 
-    if frame_velocity.ndim == 0:
-        frame_velocity = np.array([frame_velocity])
+    if boost_velocity.ndim == 0:
+        boost_velocity = np.array([boost_velocity])
 
     if event is not None:
         event = np.array(event)
@@ -62,19 +64,19 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
             f"but got {event.ndim}")
 
         # TODO: Need to think more about the logic here. It might be a bit wrong
-        if event.shape[-1] == 2 and frame_velocity.shape[-1] > 1:
-            frame_velocity = np.expand_dims(frame_velocity, -1)
+        if event.shape[-1] == 2 and boost_velocity.shape[-1] > 1:
+            boost_velocity = np.expand_dims(boost_velocity, -1)
         else:
-            check(event.shape[-1] - 1 == frame_velocity.shape[-1], ValueError,
-                "expected 'event.shape[-1] - 1 == frame_velocity.shape[-1]', but ",
-                f"got '{event.shape[-1]} - 1 != {frame_velocity.shape[-1]}'")
+            check(event.shape[-1] - 1 == boost_velocity.shape[-1], ValueError,
+                "expected 'event.shape[-1] - 1 == boost_velocity.shape[-1]', but ",
+                f"got '{event.shape[-1]} - 1 != {boost_velocity.shape[-1]}'")
 
-    frame_speed = np.linalg.norm(frame_velocity, axis=-1)
+    frame_speed = np.linalg.norm(boost_velocity, axis=-1)
 
-    # TODO: If frame_velocity is batched, we should only print out the
+    # TODO: If boost_velocity is batched, we should only print out the
     # first speed in frame_speed that is greater than light_speed
     check((frame_speed < light_speed).all(), ValueError,
-        "the norm of 'frame_velocity' must be less than ",
+        "the norm of 'boost_velocity' must be less than ",
         f"'light_speed' ({light_speed}), but got {frame_speed}")
 
     # TODO: Would batching the speed of light be useful at all? Probably best to
@@ -85,7 +87,7 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
     check(light_speed > 0, ValueError,
         f"expected 'light_speed' to be positive, but got {light_speed}")
 
-    dtype = np.find_common_type([frame_velocity.dtype, light_speed.dtype], [])
+    dtype = np.find_common_type([boost_velocity.dtype, light_speed.dtype], [])
 
     if event is not None:
         dtype = np.find_common_type([event.dtype, dtype], [])
@@ -112,7 +114,7 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
         dtype = np.find_common_type([dtype, velocity.dtype], [])
 
     # Change dtypes to match each other
-    frame_velocity = frame_velocity.astype(dtype)
+    boost_velocity = boost_velocity.astype(dtype)
     light_speed = light_speed.astype(dtype)
     if event is not None:
         event = event.astype(dtype)
@@ -131,7 +133,7 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
         # TODO: This case should be supported, but will require a condition
         # below to prevent the division by zero
         check((frame_speed > 0).all(), ValueError,
-            f"'frame_velocity' must be nonzero, but got {frame_velocity}")
+            f"'boost_velocity' must be nonzero, but got {boost_velocity}")
 
     # γ = 1 / √(1 - v ⋅ v / c²)
     lorentz_factor = 1 / np.sqrt(1 - np.square(frame_speed / light_speed))
@@ -141,14 +143,14 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
         time = event[..., 0]
 
         # r' = r + v ((r ⋅ v) (γ - 1) / v² - tγ)
-        position_ = position + frame_velocity * np.expand_dims(
-            np.sum(position * frame_velocity, axis=-1) * (lorentz_factor - 1)
+        position_ = position + boost_velocity * np.expand_dims(
+            np.sum(position * boost_velocity, axis=-1) * (lorentz_factor - 1)
                 / np.square(frame_speed)    # TODO: fix division by zero case
             - time * lorentz_factor,
             axis=-1)
 
         # t' = γ (t - (r ⋅ v) / c²)
-        time_ = lorentz_factor * (time - np.sum(position * frame_velocity, axis=-1)
+        time_ = lorentz_factor * (time - np.sum(position * boost_velocity, axis=-1)
             / np.square(light_speed))
 
         event_ = np.empty(time_.shape + (position_.shape[-1] + 1,), dtype=dtype)
@@ -164,7 +166,7 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
         #      / (1 - u ⋅ v / c²)
 
         u_dot_v = np.expand_dims(
-            np.sum(velocity * frame_velocity, axis=-1),
+            np.sum(velocity * boost_velocity, axis=-1),
             axis=-1)
 
         outer_factor = 1 / (1 - (u_dot_v / (light_speed**2)))
@@ -175,7 +177,7 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
         # TODO: Probably should expand this above, where it's first calculated
         L = np.expand_dims(lorentz_factor, axis=-1)
 
-        velocity_ = outer_factor * (velocity / L - frame_velocity + inner_factor * u_dot_v * frame_velocity)
+        velocity_ = outer_factor * (velocity / L - boost_velocity + inner_factor * u_dot_v * boost_velocity)
 
         # TODO: Need to broadcast `velocity_` and `event_` together here
 
