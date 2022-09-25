@@ -13,14 +13,15 @@ problems in special relativity physics.
 
    This project is in early development, so nothing is guaranteed to be stable.
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
 Contents
 --------
 
 .. toctree::
+   :maxdepth: 1
 
    getting-started
+
+.. toctree::
+   :maxdepth: 2
+
    api-reference
