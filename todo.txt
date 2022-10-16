@@ -1,0 +1,3 @@
+Consider adding a function that integrates the action of a path?
+
+Make worldlines really continuous?
