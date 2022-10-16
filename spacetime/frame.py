@@ -198,11 +198,11 @@ class Clock:
         '''
         event = self._worldline.eval(time)
 
-        tau = self._worldline.proper_time(
+        tau = self._worldline._proper_time(
             self._time0,
             time)
 
-        # TODO: Should probably have an option in `proper_time` to preserve sign,
+        # TODO: Should probably have an option in `_proper_time` to preserve sign,
         # to avoid this conditional?
         if time > self._time0:
             clock_time = self._clock_time0 + tau

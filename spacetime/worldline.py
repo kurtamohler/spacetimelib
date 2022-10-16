@@ -1,4 +1,4 @@
-from .basic_ops import boost, proper_time
+from .basic_ops import boost, _proper_time
 from .error_checking import check, internal_assert
 
 import numpy as np
@@ -64,7 +64,7 @@ class Worldline:
             check(cur_event[0] > prev_event[0], ValueError,
                 "expected 'vertices' to be ordered by increasing time coordinate")
 
-            tau = proper_time(prev_event, cur_event)
+            tau = _proper_time(prev_event, cur_event)
 
             check(tau >= 0, ValueError,
                 "expected 'vertices' to all have time-like separation")
@@ -195,7 +195,7 @@ class Worldline:
         else:
             return event
 
-    def proper_time(self, time0, time1):
+    def _proper_time(self, time0, time1):
         '''
         Measure the proper time span across a section of the worldline between
         two specified time coordinates.
@@ -218,21 +218,21 @@ class Worldline:
         last_event, last_indices = self.eval(time1, return_indices=True)
 
         if first_indices == last_indices:
-            return proper_time(first_event, last_event)
+            return _proper_time(first_event, last_event)
 
         else:
             res = 0
             if first_indices[0] != first_indices[1]:
-                res += proper_time(first_event, self._vertices[first_indices[1]])
+                res += _proper_time(first_event, self._vertices[first_indices[1]])
 
             for idx0 in range(first_indices[1], last_indices[0]):
                 idx1 = idx0 + 1
                 v0 = self._vertices[idx0]
                 v1 = self._vertices[idx1]
-                res += proper_time(v0, v1)
+                res += _proper_time(v0, v1)
 
             if last_indices[0] != last_indices[1]:
-                res += proper_time(self._vertices[last_indices[0]], last_event)
+                res += _proper_time(self._vertices[last_indices[0]], last_event)
 
             return res
 

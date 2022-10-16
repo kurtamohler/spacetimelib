@@ -1,3 +1,16 @@
 Consider adding a function that integrates the action of a path?
 
 Make worldlines really continuous?
+
+
+In light of my new understanding of four-vectors and four-velocity, I should
+make a few changes.
+
+  * I don't think `st.boost`'s `velocity` argument is really necessary anymore,
+    since we can actually transform a four-velocity if it's part of the `event`
+    argument. It may be useful to have a three-velocity boosting function, but it
+    should really be separate from `st.boost`, I think.
+
+  * Related to the previous point, `st.boost`'s `event` argument should really be something
+    more general, like `four_vector` or something. A four-velocity is not an event, but
+    the function can still boost it.

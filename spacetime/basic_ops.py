@@ -188,8 +188,9 @@ def boost(frame_velocity, event, velocity=None, light_speed=1):
         return event_, velocity_
 
 
-# TODO: Should probably support any number of events, even disordered.
-def proper_time(event0, event1):
+# TODO: Need to get rid of this, in favor of just taking the difference between the
+# two events and calling `proper_time_squared` on the difference.
+def _proper_time(event0, event1):
     '''
     Calculate the proper time between two events.
 
@@ -213,4 +214,56 @@ def proper_time(event0, event1):
     event_diff_sq = (event1 - event0) ** 2
 
     return np.sqrt(event_diff_sq[0] - np.sum(event_diff_sq[1:]))
+
+def proper_time_squared(four_vector):
+    '''
+    Calculate the proper time squared between the origin and some four_vector.
+
+    Args:
+        four_vector : array
+            A four-vector.
+    '''
+    four_vector = np.array(four_vector)
+
+    return four_vector[..., 0]**2 - np.sum(four_vector[..., 1:]**2, axis=-1)
+
+
+def four_velocity(three_velocity, light_speed=1):
+    '''
+    Creates a four-velocity vector from a three-velocity vector. However, this
+    function is generalized to any N+1 Minkowski spactime, so it can also
+    create an (N+1)-velocity vector from an N-velocity vector.
+
+    Args:
+
+      velocity : array_like
+          Velocity of a particle for each spatial dimension with respect to
+          time.
+          Shape: (..., N)
+
+      light_speed : array_like, optional scalar Speed of light. Default: 1
+    '''
+    three_velocity = np.array(three_velocity)
+    if three_velocity.ndim == 0:
+        velocity = np.array([three_velocity])
+
+    speed = np.linalg.norm(three_velocity, axis=-1)
+    check((speed <= light_speed).all(), ValueError,
+        "the norm of 'three_velocity' must be less than or equal to ",
+        f"'light_speed' ({light_speed}), but got {speed}")
+
+    shape = list(three_velocity.shape)
+    shape[-1] += 1
+    four_velocity = np.empty(shape, dtype=three_velocity.dtype)
+
+    four_velocity[..., 0] = 1 / np.sqrt(1 - speed**2)
+    four_velocity[..., 1:] = three_velocity / np.sqrt(1 - np.expand_dims(speed, -1)**2)
+
+    if not np.allclose(proper_time_squared(four_velocity), 1, atol=0.01):
+        raise ValueError(
+            'Due to floating point error, one of the given three-velocities '
+            'gave a four-velocity whose proper time is not 1. I hope this '
+            'error never happens.')
+
+    return four_velocity
 
