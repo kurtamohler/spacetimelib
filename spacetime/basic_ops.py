@@ -231,18 +231,22 @@ def proper_time_squared(four_vector):
 def four_velocity(three_velocity, light_speed=1):
     '''
     Creates a four-velocity vector from a three-velocity vector. However, this
-    function is generalized to any N+1 Minkowski spactime, so it can also
+    function is generalized to any N+1 Minkowski spacetime, so it can also
     create an (N+1)-velocity vector from an N-velocity vector.
 
     Args:
 
-      velocity : array_like
-          Velocity of a particle for each spatial dimension with respect to
-          time.
+      three_velocity : array_like
+          Three-velocity of a particle for each spacetime dimension with respect to
+          proper time.
           Shape: (..., N)
 
       light_speed : array_like, optional scalar Speed of light. Default: 1
     '''
+
+    if light_speed != 1:
+        raise NotImplementedError('light_speed must be 1')
+
     three_velocity = np.array(three_velocity)
     if three_velocity.ndim == 0:
         velocity = np.array([three_velocity])
@@ -259,7 +263,8 @@ def four_velocity(three_velocity, light_speed=1):
     four_velocity[..., 0] = 1 / np.sqrt(1 - speed**2)
     four_velocity[..., 1:] = three_velocity / np.sqrt(1 - np.expand_dims(speed, -1)**2)
 
-    if not np.allclose(proper_time_squared(four_velocity), 1, atol=0.01):
+    # TODO: Find out if this should be light_speed**2 or light_speed**-2 or whatever.
+    if not np.allclose(proper_time_squared(four_velocity), light_speed, atol=0.01):
         raise ValueError(
             'Due to floating point error, one of the given three-velocities '
             'gave a four-velocity whose proper time is not 1. I hope this '
@@ -267,3 +272,17 @@ def four_velocity(three_velocity, light_speed=1):
 
     return four_velocity
 
+def three_velocity(four_velocity):
+    '''
+    Creates a three-velocity vector from a four-velocity vector. However, this
+    function is generalized to any N+1 Minkowski spacetime, so it can also
+    create an N-velocity vector from an (N+1)-velocity vector.
+
+    Args:
+
+      four_velocity : array_like
+          Four-velocity of a particle for each spacetime dimension with respect to
+          proper time.
+          Shape: (..., N+1)
+    '''
+    return four_velocity[..., 1:] / np.expand_dims(four_velocity[..., 0], -1)
