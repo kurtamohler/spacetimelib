@@ -4,8 +4,8 @@ channels:
 dependencies:
   - pip
   - python>=3
+  - pygame
   - pip:
-    - pygame
     - numpy
     - sphinx
     - myst-parser
