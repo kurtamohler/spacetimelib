@@ -29,3 +29,9 @@ exclude_patterns = []
 
 html_theme = 'alabaster'
 html_static_path = ['_static']
+
+
+
+# -- Pull in public methods and `__init__` func docstrings for autoclasses. --
+# Doesn't pull in the other dunder methods, so they need to be added in doc source
+autoclass_content = 'both'
