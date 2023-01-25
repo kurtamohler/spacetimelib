@@ -28,14 +28,6 @@ jobs:
       - name: Conda list
         run: conda list
 
-          #- name: Lint with flake8
-          #  shell: bash -el {0}
-          #  run: |
-          #    conda install flake8
-          #    # stop the build if there are Python syntax errors or undefined names
-          #    flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          #    # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-          #    flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - name: Build spacetime
         shell: bash -el {0}
         run: |
@@ -51,3 +43,17 @@ jobs:
         shell: bash -el {0}
         run: |
           python setup.py build_sphinx
+
+      - name: Upload docs
+        uses: actions/upload-artifact@v3
+        with:
+          name: html-docs
+          path: build/sphinx/html/
+          retention-days: 5
+
+      - name: Deploy docs
+        uses: peaceiris/actions-gh-pages@v3
+        if: github.ref == 'refs/heads/main'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build/sphinx/html
