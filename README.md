@@ -2,6 +2,10 @@
 
 Very early stages of a tool that can calculate motion of objects in special relativity.
 
+## Documentation
+
+The documentation for the latest `main` branch is found here:
+[https://kurtamohler.github.io/spacetimelib/](https://kurtamohler.github.io/spacetimelib/)
 
 ## Install
 
