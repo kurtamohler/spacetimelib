@@ -187,3 +187,23 @@ total? The answer is [time
 dilation](https://en.wikipedia.org/wiki/Time_dilation). In Alice's frame of
 reference, Bob's wrist watch ticks 7.5 seconds within the time that it takes
 Alice's wrist watch to tick 10 seconds.
+
+## Worldlines
+
+A [worldline](https://en.wikipedia.org/wiki/World_line) is the path that an
+object takes through spacetime. A worldline is a continuous set of events
+through which an object passes. As such, we can describe a worldline by the
+coordinates of each event along the worldline in a particular frame of
+reference. Since every object travels at or below the speed of light, the
+combined magnitude of the derivative of the wordline's position coordinates
+with respect to the time coordinate must be less than or equal to the speed of
+light at every point along the worldline.
+
+In general, a worldline's position coordinates can be described by any type of
+continuous function that depends on the time coordinate and obeys the speed of
+light. However, in SpacetimeLib, we represent a worldline with a finite number
+of event coordinates, called vertices. Between each vertex, we evaluate the
+coordinate using linear interpolation. So we still have a continuous function
+to describe the worldline, such that we can determine a definite position at
+any moment in time between any two vertices, but the first derivative of the
+worldline with respect to time is discrete.
