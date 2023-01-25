@@ -149,7 +149,7 @@ If we know the coordinates of some event in one of the frames, we can use the
 to find the event's coordinates in the other frame. In SpacetimeLib, the
 [`spacetime.boost`](spacetime.boost) function performs a rotation-free Lorentz
 transformation, also known as a Lorentz boost. A Lorentz boost is just
-a Lorentz transformation in which the two reference frames's corresponding
+a Lorentz transformation in which the two reference frames' corresponding
 spatial dimensions are pointed in the same directions. In other words, the
 frames have different relative velocities, but not different relative spatial
 rotations.
