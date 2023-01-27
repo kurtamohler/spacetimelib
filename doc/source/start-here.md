@@ -1,23 +1,24 @@
-# Getting Started
+# Start here
 
 ## Welcome to SpacetimeLib
 
 SpacetimeLib is an open source Python library for special relativity physics.
 You can use it for things like solving textbook special relativity problems and
-creating physics simulations that follow relativistic principles like time
+creating physics simulations that exhibit relativistic effects like time
 dilation, length contraction, and the relativity of simultaneity.
 
-This document describes the main concepts required to start using SpacetimeLib.
-A few of the fundamental ideas of special relativity are explained briefly, but
-we will not start from the very beginning or do any derivations--there are many
-exising resources for that. (TODO: Create and link to page with recommended
-learning resources)
+This page describes the main concepts, terminology, and library features
+required to start using SpacetimeLib. A few of the basic ideas of special
+relativity are explained briefly, but we will not start from the very beginning
+or do any derivations--there are many exising resources for that. (TODO: Create
+and link to page with recommended learning resources)
 
-Readers who haven't studied special relativity before can probably learn
-a little bit by reading some of this document. However, it is recommended to
-have a basic prior understanding of the subject. If you know how to calculate
-Lorentz transformations with one spatial dimension, then you probably know
-enough, or almost enough, to learn everything in this document.
+Readers who haven't studied special relativity before may learn something by
+reading this page and experimenting with SpacetimeLib in the interactive Python
+CLI. However, it would certainly be helpful to have a basic understanding of
+the subject. If you know how to calculate Lorentz transformations with one
+spatial dimension, then you probably know enough to understand everything in
+this document.
 
 ## Installing SpacetimeLib
 
@@ -37,56 +38,122 @@ name.
 
 ## Spacetime
 
-SpacetimeLib is named after the mathematical concept of spacetime, which is
-a type of topological space that has one time dimension and one or more spatial
-dimensions. If a spacetime has N spatial dimensions, it can be called an N+1
-spacetime. The "+1" is for the time dimension.
+SpacetimeLib is named after the mathematical concept of
+[spacetime](https://en.wikipedia.org/wiki/Spacetime), which is a type of
+topological space that has one time dimension and number of spatial dimensions.
+If a spacetime has N spatial dimensions, it can be called an N+1 spacetime. The
+"+1" is for the time dimension.
 
 Special relativity focuses on a particular type of N+1 spacetime called
-a Minkowski spacetime. A defining rule of Minkowski spacetime is that the speed
-of light has a limit and nothing can travel faster than light.
+a [Minkowski spacetime](https://en.wikipedia.org/wiki/Minkowski_space).
+A defining rule of Minkowski spacetime is that light always travels at the same
+constant speed in every inertial reference frame, and nothing can travel faster
+than light.
 
 SpacetimeLib provides operations for manipulating events, velocities, and
 worldlines in an N+1 Minkowski spacetime.
 
-## Event vectors
+## Events
 
-An event is a single point in spacetime. We can locate an event using
-a coordinate system that tracks the position and time of the event, which we
-combine into a vector of N+1 elements. The first element is the time
-coordinate and the remaining elements are coordinates in each dimension of
-space. For example, given the event `(t, x, y, z)`, `t` is the time of the
-event and `x`, `y`, and `z` are spatial coordinates along the x-, y-, and
-z-axes in a 3+1 spacetime.
+An event is a single point in spacetime. We can describe the location of an
+event in spacetime using a coordinate system embedded in the N+1 dimensions of
+the spacetime. An event's N+1 coordinates are combined into a vector. The first
+element is the time coordinate and the remaining elements are coordinates in
+each dimension of space. For example, given the event `(t, x, y, z)`, `t` is
+the time coordinate of the event and `x`, `y`, and `z` are spatial coordinates
+along the x-, y-, and z-axes in a 3+1 spacetime.
 
 In SpacetimeLib, we represent an event with a one dimensional arraylike
-(`list`, `tuple`, or `numpy.ndarray`) containing real numbers. For example:
+(`list`, `tuple`, or `numpy.ndarray`) containing N+1 real numbers. For example:
 
 ```python
->>> q = (10, 2, 0, 0)
+>>> q = [10, 2, 0, 0]
 ```
 
 `q` is an event at time `t = 10` and spatial position `x = 2`, `y = 0`, `z = 0`.
 
-## Velocity vectors
+## Spacetime-vectors and space-vectors (classically called four-vectors and three-vectors)
 
-A velocity vector keeps track of how fast something is moving a particular
-instant in time. It is a vector of N elements. Each element is the derivative
-of a spatial dimension with respect to time. For example, if a particle has the
-velocity vector `(v_x, v_y, v_z)`, then it is moving with velocity `v_x` along
-the x-axis, `v_y` along the y-axis, and `v_z` along the z-axis. We can show
-these in Leibniz notation as `dx/dt = v_x`, `dy/dt = v_y`, and `dz/dt = v_z`.
+In SpacetimeLib, we use the term "spacetime-vector" to mean any vector that has
+N+1 elements, each corresponding to a different time or space dimension of an
+N+1 spacetime. An event vector is an example of a spacetime-vector. Typically
+in classical special relativity, the real world is modelled as a 3+1 Minkowski
+spacetime, so in that context, a spacetime-vector is called
+a ["four-vector"](https://en.wikipedia.org/wiki/Four-vector). Breaking from
+traditional terminology in this case makes it easier to think with any number
+of spatial dimensions.
 
-A velocity vector is represented in SpacetimeLib as a one dimensional arraylike
-containing real numbers. For example:
+Similarly, we use the term "space-vector" to mean any vector that has
+N elements, each corresponding to a different space dimension in an N+1
+spacetime. So, for instance, if we want to indicate a position in space without
+including a time coordinate, we would use a space-vector. In classical physics,
+a space-vector is called a "three-vector", and again we break from traditional
+terminology.
+
+## Spacetime norm
+
+TODO
+
+## Velocity
+
+If some particle is moving through space over time relative to some other
+entity (like another particle, a fixed position in space, etc), then the
+particle has a nonzero velocity with respect to that entity. We can choose to
+quantify the relative velocity of a particle using either a space-vector which
+we call a "space-velocity", or a spacetime-vector which we call
+a "spacetime-velocity". Both types of velocity vectors convey the same
+information, but they have different mathematical properties, so choosing which
+one to use will depend on the context.
+
+In traditional terminology, a space-velocity is called a "three-velocity" and
+a spacetime-velocity is called
+a ["four-velocity"](https://en.wikipedia.org/wiki/Four-velocity).
+
+Each element of a space-velocity is the derivative of each space dimension with
+respect to coordinate time. For example, if a particle in a 3+1 spacetime has
+the space-velocity `(v_x, v_y, v_z)`, then it is moving with velocity `v_x`
+along the x-axis, `v_y` along the y-axis, and `v_z` along the z-axis. We can
+also write the space-velocity in Leibniz notation as `(dx/dt, dy/dt, dz/dt)`.
+The norm of a space-velocity must always be less than or equal to the speed of
+light.
+
+Each element of a spacetime-velocity is the derivative of each dimension of
+spacetime with respect to proper time. For instance, the space-velocity
+`(dx/dt, dy/dt, dz/dt)` can be converted to the spacetime-velocity `(dt/dτ,
+dx/dτ, dy/dτ, dz/dτ)`, where `τ` is the proper time.
+
+We won't go through the derivation, but there is a simple way to calculate the
+spacetime-velocity from a space-velocity vector. Given a space-velocity `v
+= (v1, ..., vN)`, the spacetime-velocity is calculated by `(1 , v1, ...,
+vN) / sqrt(1 - space_norm(v)**2)`.
+
+The norm of a spacetime-velocity must always be equal to the speed of light.
+
+SpacetimeLib has the functions [`spacetime.space_velocity`](spacetime.space_velocity)
+and [`spacetime.spacetime_velocity`](spacetime.spacetime_velocity) for converting
+between the two kinds of velocity vectors.
 
 ```python
->>> v = (0.5, 0, 0)
-```
+>>> vel_s = [0.1, -0.2]
 
-A particle with the above velocity is moves along the x-axis with velocity
-`0.5` and stays fixed along the y- and z-axes, since the corresponding elements
-are `0`.
+# The norm of the space-velocity must be less than 1, the speed of light
+>>> st.space_norm(vel_s)
+0.223606797749979
+
+# Convert the space-velocity into a spacetime-velocity
+>>> vel_st = st.spacetime_velocity(vel_s)
+>>> vel_st
+array([ 1.02597835,  0.10259784, -0.20519567])
+
+# Converting the spacetime-velocity back into a space-velocity gives the same
+# space-velocity that we started with
+>>> st.space_velocity(vel_st)
+array([ 0.1, -0.2])
+
+# The norm of the spacetime-velocity is equal to 1, with some small error
+>>> st.spacetime_norm2(vel_st)
+1.0000000000000002
+```
 
 ## Units of measurement
 
@@ -126,11 +193,10 @@ but `v1` is not valid because its magnitude is greater than `1`.
 
 ## Frames of reference
 
-As we said before, an event vector is described by a coordinate within
-a particular frame of reference. A frame of reference is a description of
-the point of view of an observer. An observer moving at a constant velocity
-describes their frame of reference as a coordinate system with themself
-positioned at the spatial origin, x=0, y=0, etc., for all time coordinates.
+A frame of reference is a description of the state of a spacetime from point of
+view of an observer. An observer moving at a constant velocity describes their
+frame of reference as a coordinate system with themself positioned at the
+spatial origin, x=0, y=0, etc., for all time coordinates.
 
 From the point of view of two different observers moving at different
 velocities, the same event will be described by different event vectors. This

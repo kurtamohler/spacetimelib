@@ -190,8 +190,8 @@ def boost(boost_velocity, event, velocity=None, light_speed=1):
         return event_, velocity_
 
 
-# TODO: Need to get rid of this, in favor of just taking the difference between the
-# two events and calling `proper_time_squared` on the difference.
+# TODO: Probably get rid of this, in favor of just taking the difference between the
+# two events and calling `spacetime_norm2` on the difference.
 def _proper_time(event0, event1):
     '''
     Calculate the proper time between two events.
@@ -213,34 +213,53 @@ def _proper_time(event0, event1):
     check(event0.ndim == 1, ValueError, "expected exactly two dimensions")
     check(event0.shape[0] >= 2, ValueError, "expected at least 2 dims")
 
-    event_diff_sq = (event1 - event0) ** 2
+    return np.sqrt(spacetime_norm2(event1 - event0))
 
-    return np.sqrt(event_diff_sq[0] - np.sum(event_diff_sq[1:]))
-
-def proper_time_squared(four_vector):
+def space_norm(vec_s):
     '''
-    Calculate the proper time squared between the origin and some four_vector.
+    Calculate the space norm of a space-vector. This is simply the Euclidean
+    norm, or more formally, the L-2 norm.
 
     Args:
-        four_vector : array
-            A four-vector.
+        vec_s : array
+            Any space-vector
+            Shape: (..., N)
     '''
-    four_vector = np.array(four_vector)
+    return np.linalg.norm(vec_s, axis=-1)
 
-    return four_vector[..., 0]**2 - np.sum(four_vector[..., 1:]**2, axis=-1)
-
-
-def four_velocity(three_velocity, light_speed=1):
+def spacetime_norm2(vec_st):
     '''
-    Creates a four-velocity vector from a three-velocity vector. However, this
-    function is generalized to any N+1 Minkowski spacetime, so it can also
-    create an (N+1)-velocity vector from an N-velocity vector.
+    Calculate the square of the norm of a spacetime-vector.
+
+    Given an N+1 spacetime-vector `A = (a0, ..., aN)`, the square norm is
+    calculated by `a0^2 - ... - aN^2`.
+
+    For instance, if the spacetime-vector represents the difference between the
+    coordinates of two events, then its norm represents the proper time
+    distance (also called the time-like interval) between the events.
+
+    Args:
+        vec_st : array
+            Any spacetime-vector
+            Shape: (..., N+1)
+    '''
+    vec_st = np.array(vec_st)
+
+    return vec_st[..., 0]**2 - np.sum(vec_st[..., 1:]**2, axis=-1)
+
+
+def spacetime_velocity(vel_s, light_speed=1):
+    '''
+    Calculates the spacetime-velocity vector from a space-velocity vector.
+
+    Given a space-velocity `v = (v1, ..., vN)`, the spacetime-velocity is
+    calculated by `(1 , v1, ..., vN) / sqrt(1 - |v|**2)`.
 
     Args:
 
-      three_velocity : array_like
-          Three-velocity of a particle for each spacetime dimension with respect to
-          proper time.
+      vel_s : array_like
+          Space-velocity of a particle, given by the derivative of each space
+          dimension with respect to coordinate time.
           Shape: (..., N)
 
       light_speed : array_like, optional scalar Speed of light. Default: 1
@@ -249,42 +268,41 @@ def four_velocity(three_velocity, light_speed=1):
     if light_speed != 1:
         raise NotImplementedError('light_speed must be 1')
 
-    three_velocity = np.array(three_velocity)
-    if three_velocity.ndim == 0:
-        velocity = np.array([three_velocity])
+    vel_s = np.array(vel_s)
+    if vel_s.ndim == 0:
+        vel_s = np.array([vel_s])
 
-    speed = np.linalg.norm(three_velocity, axis=-1)
+    speed = np.linalg.norm(vel_s, axis=-1)
     check((speed <= light_speed).all(), ValueError,
-        "the norm of 'three_velocity' must be less than or equal to ",
+        "the norm of 'vel_s' must be less than or equal to ",
         f"'light_speed' ({light_speed}), but got {speed}")
 
-    shape = list(three_velocity.shape)
+    shape = list(vel_s.shape)
     shape[-1] += 1
-    four_velocity = np.empty(shape, dtype=three_velocity.dtype)
+    vel_st = np.empty(shape, dtype=vel_s.dtype)
 
-    four_velocity[..., 0] = 1 / np.sqrt(1 - speed**2)
-    four_velocity[..., 1:] = three_velocity / np.sqrt(1 - np.expand_dims(speed, -1)**2)
+    vel_st[..., 0] = 1 / np.sqrt(1 - speed**2)
+    vel_st[..., 1:] = vel_s / np.sqrt(1 - np.expand_dims(speed, -1)**2)
 
     # TODO: Find out if this should be light_speed**2 or light_speed**-2 or whatever.
-    if not np.allclose(proper_time_squared(four_velocity), light_speed, atol=0.01):
+    if not np.allclose(spacetime_norm2(vel_st), light_speed, atol=0.01):
         raise ValueError(
-            'Due to floating point error, one of the given three-velocities '
-            'gave a four-velocity whose proper time is not 1. I hope this '
+            'Due to floating point error, one of the given space-velocities '
+            'gave a spacetime-velocity whose proper time is not 1. I hope this '
             'error never happens.')
 
-    return four_velocity
+    return vel_st
 
-def three_velocity(four_velocity):
+def space_velocity(vel_st):
     '''
-    Creates a three-velocity vector from a four-velocity vector. However, this
-    function is generalized to any N+1 Minkowski spacetime, so it can also
-    create an N-velocity vector from an (N+1)-velocity vector.
+    Calculates the space-velocity vector from a spacetime-velocity vector.
 
     Args:
 
-      four_velocity : array_like
-          Four-velocity of a particle for each spacetime dimension with respect to
-          proper time.
+      vel_st : array_like
+          Spacetime-velocity of a particle, given by the derivative of each
+          dimension of spacetime (coordinate time dimension comes first) with
+          respect to proper time.
           Shape: (..., N+1)
     '''
-    return four_velocity[..., 1:] / np.expand_dims(four_velocity[..., 0], -1)
+    return vel_st[..., 1:] / np.expand_dims(vel_st[..., 0], -1)
