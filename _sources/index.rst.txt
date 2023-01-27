@@ -19,7 +19,7 @@ Contents
 .. toctree::
    :maxdepth: 1
 
-   getting-started
+   start-here
 
 .. toctree::
    :maxdepth: 2

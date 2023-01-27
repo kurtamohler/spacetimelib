@@ -17,7 +17,7 @@
     <script src="_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Getting Started" href="getting-started.html" />
+    <link rel="prev" title="Start here" href="start-here.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -36,6 +36,74 @@
             
   <section id="api-reference">
 <h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="spacetime.space_norm">
+<span class="sig-prename descclassname"><span class="pre">spacetime.</span></span><span class="sig-name descname"><span class="pre">space_norm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec_s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.space_norm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the space norm of a space-vector. This is simply the Euclidean
+norm, or more formally, the L-2 norm.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>vec_s<span class="classifier">array</span></dt><dd><p>Any space-vector
+Shape: (…, N)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="spacetime.spacetime_norm2">
+<span class="sig-prename descclassname"><span class="pre">spacetime.</span></span><span class="sig-name descname"><span class="pre">spacetime_norm2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec_st</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.spacetime_norm2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the square of the norm of a spacetime-vector.</p>
+<p>Given an N+1 spacetime-vector <cite>A = (a0, …, aN)</cite>, the square norm is
+calculated by <cite>a0^2 - … - aN^2</cite>.</p>
+<p>For instance, if the spacetime-vector represents the difference between the
+coordinates of two events, then its norm represents the proper time
+distance (also called the time-like interval) between the events.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>vec_st<span class="classifier">array</span></dt><dd><p>Any spacetime-vector
+Shape: (…, N+1)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="spacetime.spacetime_velocity">
+<span class="sig-prename descclassname"><span class="pre">spacetime.</span></span><span class="sig-name descname"><span class="pre">spacetime_velocity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vel_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">light_speed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.spacetime_velocity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the spacetime-velocity vector from a space-velocity vector.</p>
+<p>Given a space-velocity <cite>v = (v1, …, vN)</cite>, the spacetime-velocity is
+calculated by <cite>(1 , v1, …, vN) / sqrt(1 - |v|**2)</cite>.</p>
+<p>Args:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>vel_s<span class="classifier">array_like</span></dt><dd><p>Space-velocity of a particle, given by the derivative of each space
+dimension with respect to coordinate time.
+Shape: (…, N)</p>
+</dd>
+</dl>
+<p>light_speed : array_like, optional scalar Speed of light. Default: 1</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="spacetime.space_velocity">
+<span class="sig-prename descclassname"><span class="pre">spacetime.</span></span><span class="sig-name descname"><span class="pre">space_velocity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vel_st</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.space_velocity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the space-velocity vector from a spacetime-velocity vector.</p>
+<p>Args:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>vel_st<span class="classifier">array_like</span></dt><dd><p>Spacetime-velocity of a particle, given by the derivative of each
+dimension of spacetime (coordinate time dimension comes first) with
+respect to proper time.
+Shape: (…, N+1)</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="spacetime.boost">
 <span class="sig-prename descclassname"><span class="pre">spacetime.</span></span><span class="sig-name descname"><span class="pre">boost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boost_velocity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">light_speed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.boost" title="Permalink to this definition">¶</a></dt>
@@ -205,10 +273,14 @@ Default: False</p>
 
 <h3>Navigation</h3>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="start-here.html">Start here</a></li>
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#spacetime.space_norm"><code class="docutils literal notranslate"><span class="pre">space_norm()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#spacetime.spacetime_norm2"><code class="docutils literal notranslate"><span class="pre">spacetime_norm2()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#spacetime.spacetime_velocity"><code class="docutils literal notranslate"><span class="pre">spacetime_velocity()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#spacetime.space_velocity"><code class="docutils literal notranslate"><span class="pre">space_velocity()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#spacetime.boost"><code class="docutils literal notranslate"><span class="pre">boost()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#spacetime.Worldline"><code class="docutils literal notranslate"><span class="pre">Worldline</span></code></a></li>
 </ul>
@@ -219,7 +291,7 @@ Default: False</p>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="getting-started.html" title="previous chapter">Getting Started</a></li>
+      <li>Previous: <a href="start-here.html" title="previous chapter">Start here</a></li>
   </ul></li>
 </ul>
 </div>

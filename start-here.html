@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Getting Started &#8212; spacetime 0.0.0 documentation</title>
+    <title>Start here &#8212; spacetime 0.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
@@ -35,24 +35,25 @@
 
           <div class="body" role="main">
             
-  <section id="getting-started">
-<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">¶</a></h1>
+  <section id="start-here">
+<h1>Start here<a class="headerlink" href="#start-here" title="Permalink to this heading">¶</a></h1>
 <section id="welcome-to-spacetimelib">
 <h2>Welcome to SpacetimeLib<a class="headerlink" href="#welcome-to-spacetimelib" title="Permalink to this heading">¶</a></h2>
 <p>SpacetimeLib is an open source Python library for special relativity physics.
 You can use it for things like solving textbook special relativity problems and
-creating physics simulations that follow relativistic principles like time
+creating physics simulations that exhibit relativistic effects like time
 dilation, length contraction, and the relativity of simultaneity.</p>
-<p>This document describes the main concepts required to start using SpacetimeLib.
-A few of the fundamental ideas of special relativity are explained briefly, but
-we will not start from the very beginning or do any derivations–there are many
-exising resources for that. (TODO: Create and link to page with recommended
-learning resources)</p>
-<p>Readers who haven’t studied special relativity before can probably learn
-a little bit by reading some of this document. However, it is recommended to
-have a basic prior understanding of the subject. If you know how to calculate
-Lorentz transformations with one spatial dimension, then you probably know
-enough, or almost enough, to learn everything in this document.</p>
+<p>This page describes the main concepts, terminology, and library features
+required to start using SpacetimeLib. A few of the basic ideas of special
+relativity are explained briefly, but we will not start from the very beginning
+or do any derivations–there are many exising resources for that. (TODO: Create
+and link to page with recommended learning resources)</p>
+<p>Readers who haven’t studied special relativity before may learn something by
+reading this page and experimenting with SpacetimeLib in the interactive Python
+CLI. However, it would certainly be helpful to have a basic understanding of
+the subject. If you know how to calculate Lorentz transformations with one
+spatial dimension, then you probably know enough to understand everything in
+this document.</p>
 </section>
 <section id="installing-spacetimelib">
 <h2>Installing SpacetimeLib<a class="headerlink" href="#installing-spacetimelib" title="Permalink to this heading">¶</a></h2>
@@ -70,48 +71,106 @@ name.</p>
 </section>
 <section id="spacetime">
 <h2>Spacetime<a class="headerlink" href="#spacetime" title="Permalink to this heading">¶</a></h2>
-<p>SpacetimeLib is named after the mathematical concept of spacetime, which is
-a type of topological space that has one time dimension and one or more spatial
-dimensions. If a spacetime has N spatial dimensions, it can be called an N+1
-spacetime. The “+1” is for the time dimension.</p>
+<p>SpacetimeLib is named after the mathematical concept of
+<a class="reference external" href="https://en.wikipedia.org/wiki/Spacetime">spacetime</a>, which is a type of
+topological space that has one time dimension and number of spatial dimensions.
+If a spacetime has N spatial dimensions, it can be called an N+1 spacetime. The
+“+1” is for the time dimension.</p>
 <p>Special relativity focuses on a particular type of N+1 spacetime called
-a Minkowski spacetime. A defining rule of Minkowski spacetime is that the speed
-of light has a limit and nothing can travel faster than light.</p>
+a <a class="reference external" href="https://en.wikipedia.org/wiki/Minkowski_space">Minkowski spacetime</a>.
+A defining rule of Minkowski spacetime is that light always travels at the same
+constant speed in every inertial reference frame, and nothing can travel faster
+than light.</p>
 <p>SpacetimeLib provides operations for manipulating events, velocities, and
 worldlines in an N+1 Minkowski spacetime.</p>
 </section>
-<section id="event-vectors">
-<h2>Event vectors<a class="headerlink" href="#event-vectors" title="Permalink to this heading">¶</a></h2>
-<p>An event is a single point in spacetime. We can locate an event using
-a coordinate system that tracks the position and time of the event, which we
-combine into a vector of N+1 elements. The first element is the time
-coordinate and the remaining elements are coordinates in each dimension of
-space. For example, given the event <code class="docutils literal notranslate"><span class="pre">(t,</span> <span class="pre">x,</span> <span class="pre">y,</span> <span class="pre">z)</span></code>, <code class="docutils literal notranslate"><span class="pre">t</span></code> is the time of the
-event and <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, and <code class="docutils literal notranslate"><span class="pre">z</span></code> are spatial coordinates along the x-, y-, and
-z-axes in a 3+1 spacetime.</p>
+<section id="events">
+<h2>Events<a class="headerlink" href="#events" title="Permalink to this heading">¶</a></h2>
+<p>An event is a single point in spacetime. We can describe the location of an
+event in spacetime using a coordinate system embedded in the N+1 dimensions of
+the spacetime. An event’s N+1 coordinates are combined into a vector. The first
+element is the time coordinate and the remaining elements are coordinates in
+each dimension of space. For example, given the event <code class="docutils literal notranslate"><span class="pre">(t,</span> <span class="pre">x,</span> <span class="pre">y,</span> <span class="pre">z)</span></code>, <code class="docutils literal notranslate"><span class="pre">t</span></code> is
+the time coordinate of the event and <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, and <code class="docutils literal notranslate"><span class="pre">z</span></code> are spatial coordinates
+along the x-, y-, and z-axes in a 3+1 spacetime.</p>
 <p>In SpacetimeLib, we represent an event with a one dimensional arraylike
-(<code class="docutils literal notranslate"><span class="pre">list</span></code>, <code class="docutils literal notranslate"><span class="pre">tuple</span></code>, or <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code>) containing real numbers. For example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">q</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+(<code class="docutils literal notranslate"><span class="pre">list</span></code>, <code class="docutils literal notranslate"><span class="pre">tuple</span></code>, or <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code>) containing N+1 real numbers. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">q</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">q</span></code> is an event at time <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">=</span> <span class="pre">10</span></code> and spatial position <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">2</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">z</span> <span class="pre">=</span> <span class="pre">0</span></code>.</p>
 </section>
-<section id="velocity-vectors">
-<h2>Velocity vectors<a class="headerlink" href="#velocity-vectors" title="Permalink to this heading">¶</a></h2>
-<p>A velocity vector keeps track of how fast something is moving a particular
-instant in time. It is a vector of N elements. Each element is the derivative
-of a spatial dimension with respect to time. For example, if a particle has the
-velocity vector <code class="docutils literal notranslate"><span class="pre">(v_x,</span> <span class="pre">v_y,</span> <span class="pre">v_z)</span></code>, then it is moving with velocity <code class="docutils literal notranslate"><span class="pre">v_x</span></code> along
-the x-axis, <code class="docutils literal notranslate"><span class="pre">v_y</span></code> along the y-axis, and <code class="docutils literal notranslate"><span class="pre">v_z</span></code> along the z-axis. We can show
-these in Leibniz notation as <code class="docutils literal notranslate"><span class="pre">dx/dt</span> <span class="pre">=</span> <span class="pre">v_x</span></code>, <code class="docutils literal notranslate"><span class="pre">dy/dt</span> <span class="pre">=</span> <span class="pre">v_y</span></code>, and <code class="docutils literal notranslate"><span class="pre">dz/dt</span> <span class="pre">=</span> <span class="pre">v_z</span></code>.</p>
-<p>A velocity vector is represented in SpacetimeLib as a one dimensional arraylike
-containing real numbers. For example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<section id="spacetime-vectors-and-space-vectors-classically-called-four-vectors-and-three-vectors">
+<h2>Spacetime-vectors and space-vectors (classically called four-vectors and three-vectors)<a class="headerlink" href="#spacetime-vectors-and-space-vectors-classically-called-four-vectors-and-three-vectors" title="Permalink to this heading">¶</a></h2>
+<p>In SpacetimeLib, we use the term “spacetime-vector” to mean any vector that has
+N+1 elements, each corresponding to a different time or space dimension of an
+N+1 spacetime. An event vector is an example of a spacetime-vector. Typically
+in classical special relativity, the real world is modelled as a 3+1 Minkowski
+spacetime, so in that context, a spacetime-vector is called
+a <a class="reference external" href="https://en.wikipedia.org/wiki/Four-vector">“four-vector”</a>. Breaking from
+traditional terminology in this case makes it easier to think with any number
+of spatial dimensions.</p>
+<p>Similarly, we use the term “space-vector” to mean any vector that has
+N elements, each corresponding to a different space dimension in an N+1
+spacetime. So, for instance, if we want to indicate a position in space without
+including a time coordinate, we would use a space-vector. In classical physics,
+a space-vector is called a “three-vector”, and again we break from traditional
+terminology.</p>
+</section>
+<section id="spacetime-norm">
+<h2>Spacetime norm<a class="headerlink" href="#spacetime-norm" title="Permalink to this heading">¶</a></h2>
+<p>TODO</p>
+</section>
+<section id="velocity">
+<h2>Velocity<a class="headerlink" href="#velocity" title="Permalink to this heading">¶</a></h2>
+<p>If some particle is moving through space over time relative to some other
+entity (like another particle, a fixed position in space, etc), then the
+particle has a nonzero velocity with respect to that entity. We can choose to
+quantify the relative velocity of a particle using either a space-vector which
+we call a “space-velocity”, or a spacetime-vector which we call
+a “spacetime-velocity”. Both types of velocity vectors convey the same
+information, but they have different mathematical properties, so choosing which
+one to use will depend on the context.</p>
+<p>In traditional terminology, a space-velocity is called a “three-velocity” and
+a spacetime-velocity is called
+a <a class="reference external" href="https://en.wikipedia.org/wiki/Four-velocity">“four-velocity”</a>.</p>
+<p>Each element of a space-velocity is the derivative of each space dimension with
+respect to coordinate time. For example, if a particle in a 3+1 spacetime has
+the space-velocity <code class="docutils literal notranslate"><span class="pre">(v_x,</span> <span class="pre">v_y,</span> <span class="pre">v_z)</span></code>, then it is moving with velocity <code class="docutils literal notranslate"><span class="pre">v_x</span></code>
+along the x-axis, <code class="docutils literal notranslate"><span class="pre">v_y</span></code> along the y-axis, and <code class="docutils literal notranslate"><span class="pre">v_z</span></code> along the z-axis. We can
+also write the space-velocity in Leibniz notation as <code class="docutils literal notranslate"><span class="pre">(dx/dt,</span> <span class="pre">dy/dt,</span> <span class="pre">dz/dt)</span></code>.
+The norm of a space-velocity must always be less than or equal to the speed of
+light.</p>
+<p>Each element of a spacetime-velocity is the derivative of each dimension of
+spacetime with respect to proper time. For instance, the space-velocity
+<code class="docutils literal notranslate"><span class="pre">(dx/dt,</span> <span class="pre">dy/dt,</span> <span class="pre">dz/dt)</span></code> can be converted to the spacetime-velocity <code class="docutils literal notranslate"><span class="pre">(dt/dτ,</span> <span class="pre">dx/dτ,</span> <span class="pre">dy/dτ,</span> <span class="pre">dz/dτ)</span></code>, where <code class="docutils literal notranslate"><span class="pre">τ</span></code> is the proper time.</p>
+<p>We won’t go through the derivation, but there is a simple way to calculate the
+spacetime-velocity from a space-velocity vector. Given a space-velocity <code class="docutils literal notranslate"><span class="pre">v</span> <span class="pre">=</span> <span class="pre">(v1,</span> <span class="pre">...,</span> <span class="pre">vN)</span></code>, the spacetime-velocity is calculated by <code class="docutils literal notranslate"><span class="pre">(1</span> <span class="pre">,</span> <span class="pre">v1,</span> <span class="pre">...,</span> <span class="pre">vN)</span> <span class="pre">/</span> <span class="pre">sqrt(1</span> <span class="pre">-</span> <span class="pre">space_norm(v)**2)</span></code>.</p>
+<p>The norm of a spacetime-velocity must always be equal to the speed of light.</p>
+<p>SpacetimeLib has the functions <a class="reference internal" href="api-reference.html#spacetime.space_velocity" title="spacetime.space_velocity"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">spacetime.space_velocity</span></code></span></a>
+and <a class="reference internal" href="api-reference.html#spacetime.spacetime_velocity" title="spacetime.spacetime_velocity"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">spacetime.spacetime_velocity</span></code></span></a> for converting
+between the two kinds of velocity vectors.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vel_s</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">]</span>
+
+<span class="go"># The norm of the space-velocity must be less than 1, the speed of light</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">st</span><span class="o">.</span><span class="n">space_norm</span><span class="p">(</span><span class="n">vel_s</span><span class="p">)</span>
+<span class="go">0.223606797749979</span>
+
+<span class="go"># Convert the space-velocity into a spacetime-velocity</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vel_st</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">spacetime_velocity</span><span class="p">(</span><span class="n">vel_s</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vel_st</span>
+<span class="go">array([ 1.02597835,  0.10259784, -0.20519567])</span>
+
+<span class="go"># Converting the spacetime-velocity back into a space-velocity gives the same</span>
+<span class="go"># space-velocity that we started with</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">st</span><span class="o">.</span><span class="n">space_velocity</span><span class="p">(</span><span class="n">vel_st</span><span class="p">)</span>
+<span class="go">array([ 0.1, -0.2])</span>
+
+<span class="go"># The norm of the spacetime-velocity is equal to 1, with some small error</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">st</span><span class="o">.</span><span class="n">spacetime_norm2</span><span class="p">(</span><span class="n">vel_st</span><span class="p">)</span>
+<span class="go">1.0000000000000002</span>
 </pre></div>
 </div>
-<p>A particle with the above velocity is moves along the x-axis with velocity
-<code class="docutils literal notranslate"><span class="pre">0.5</span></code> and stays fixed along the y- and z-axes, since the corresponding elements
-are <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
 </section>
 <section id="units-of-measurement">
 <h2>Units of measurement<a class="headerlink" href="#units-of-measurement" title="Permalink to this heading">¶</a></h2>
@@ -147,11 +206,10 @@ but <code class="docutils literal notranslate"><span class="pre">v1</span></code
 </section>
 <section id="frames-of-reference">
 <h2>Frames of reference<a class="headerlink" href="#frames-of-reference" title="Permalink to this heading">¶</a></h2>
-<p>As we said before, an event vector is described by a coordinate within
-a particular frame of reference. A frame of reference is a description of
-the point of view of an observer. An observer moving at a constant velocity
-describes their frame of reference as a coordinate system with themself
-positioned at the spatial origin, x=0, y=0, etc., for all time coordinates.</p>
+<p>A frame of reference is a description of the state of a spacetime from point of
+view of an observer. An observer moving at a constant velocity describes their
+frame of reference as a coordinate system with themself positioned at the
+spatial origin, x=0, y=0, etc., for all time coordinates.</p>
 <p>From the point of view of two different observers moving at different
 velocities, the same event will be described by different event vectors. This
 is just because of the fact that two different observers have different
@@ -244,7 +302,7 @@ worldline with respect to time is discrete.</p>
 
 <h3>Navigation</h3>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Start here</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api-reference.html">API Reference</a></li>
@@ -289,7 +347,7 @@ worldline with respect to time is discrete.</p>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
       
       |
-      <a href="_sources/getting-started.md.txt"
+      <a href="_sources/start-here.md.txt"
           rel="nofollow">Page source</a>
     </div>
 
