@@ -117,9 +117,35 @@ including a time coordinate, we would use a space-vector. In classical physics,
 a space-vector is called a “three-vector”, and again we break from traditional
 terminology.</p>
 </section>
-<section id="spacetime-norm">
-<h2>Spacetime norm<a class="headerlink" href="#spacetime-norm" title="Permalink to this heading">¶</a></h2>
-<p>TODO</p>
+<section id="distance-and-norms">
+<h2>Distance and norms<a class="headerlink" href="#distance-and-norms" title="Permalink to this heading">¶</a></h2>
+<p>To find the distance between two points, we take the norm of the difference between
+them, and in general, we can take the norm of any vector.</p>
+<p>We can use <a class="reference internal" href="api-reference.html#spacetime.norm_s" title="spacetime.norm_s"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">spacetime.norm_s</span></code></span></a> to calculate the norm of any
+space-vector.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">st</span><span class="o">.</span><span class="n">norm_s</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+<span class="go">5.0</span>
+
+<span class="go"># Distance between two points in space</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">st</span><span class="o">.</span><span class="n">norm_s</span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span>
+<span class="go">5.0</span>
+</pre></div>
+</div>
+<p>We can use <a class="reference internal" href="api-reference.html#spacetime.norm_st2" title="spacetime.norm_st2"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">spacetime.norm_st2</span></code></span></a> to calculate the square
+norm of any spacetime-vector. The square norm is more convenient than the norm
+itself, because the square norm of a spacetime-vector can be negative.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">st</span><span class="o">.</span><span class="n">norm_st2</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+<span class="go">24.0</span>
+
+<span class="go"># Square of proper distance between two points in space</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">st</span><span class="o">.</span><span class="n">norm_st2</span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span>
+<span class="go">16.0</span>
+</pre></div>
+</div>
 </section>
 <section id="velocity">
 <h2>Velocity<a class="headerlink" href="#velocity" title="Permalink to this heading">¶</a></h2>
@@ -145,30 +171,32 @@ light.</p>
 spacetime with respect to proper time. For instance, the space-velocity
 <code class="docutils literal notranslate"><span class="pre">(dx/dt,</span> <span class="pre">dy/dt,</span> <span class="pre">dz/dt)</span></code> can be converted to the spacetime-velocity <code class="docutils literal notranslate"><span class="pre">(dt/dτ,</span> <span class="pre">dx/dτ,</span> <span class="pre">dy/dτ,</span> <span class="pre">dz/dτ)</span></code>, where <code class="docutils literal notranslate"><span class="pre">τ</span></code> is the proper time.</p>
 <p>We won’t go through the derivation, but there is a simple way to calculate the
-spacetime-velocity from a space-velocity vector. Given a space-velocity <code class="docutils literal notranslate"><span class="pre">v</span> <span class="pre">=</span> <span class="pre">(v1,</span> <span class="pre">...,</span> <span class="pre">vN)</span></code>, the spacetime-velocity is calculated by <code class="docutils literal notranslate"><span class="pre">(1</span> <span class="pre">,</span> <span class="pre">v1,</span> <span class="pre">...,</span> <span class="pre">vN)</span> <span class="pre">/</span> <span class="pre">sqrt(1</span> <span class="pre">-</span> <span class="pre">space_norm(v)**2)</span></code>.</p>
-<p>The norm of a spacetime-velocity must always be equal to the speed of light.</p>
-<p>SpacetimeLib has the functions <a class="reference internal" href="api-reference.html#spacetime.space_velocity" title="spacetime.space_velocity"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">spacetime.space_velocity</span></code></span></a>
-and <a class="reference internal" href="api-reference.html#spacetime.spacetime_velocity" title="spacetime.spacetime_velocity"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">spacetime.spacetime_velocity</span></code></span></a> for converting
+spacetime-velocity from a space-velocity vector. Given a space-velocity <code class="docutils literal notranslate"><span class="pre">v</span> <span class="pre">=</span> <span class="pre">(v1,</span> <span class="pre">...,</span> <span class="pre">vN)</span></code>, the spacetime-velocity is calculated by <code class="docutils literal notranslate"><span class="pre">(1</span> <span class="pre">,</span> <span class="pre">v1,</span> <span class="pre">...,</span> <span class="pre">vN)</span> <span class="pre">/</span> <span class="pre">sqrt(1</span> <span class="pre">-</span> <span class="pre">norm_s(v)**2)</span></code>.</p>
+<p>The squared norm of a spacetime-velocity must always be equal to the negative
+of the speed of light.</p>
+<p>SpacetimeLib has the functions <a class="reference internal" href="api-reference.html#spacetime.velocity_st" title="spacetime.velocity_st"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">spacetime.velocity_st</span></code></span></a>
+and <a class="reference internal" href="api-reference.html#spacetime.velocity_s" title="spacetime.velocity_s"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">spacetime.velocity_s</span></code></span></a> for converting
 between the two kinds of velocity vectors.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vel_s</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Velocity of 0.1 in the x-dimension and -0.2 in the y-dimension</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">vel_s</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">]</span>
 
-<span class="go"># The norm of the space-velocity must be less than 1, the speed of light</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">st</span><span class="o">.</span><span class="n">space_norm</span><span class="p">(</span><span class="n">vel_s</span><span class="p">)</span>
-<span class="go">0.223606797749979</span>
+<span class="c1"># The norm of the space-velocity must be less than 1, the speed of light</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">st</span><span class="o">.</span><span class="n">norm_s</span><span class="p">(</span><span class="n">vel_s</span><span class="p">)</span>
+<span class="mf">0.223606797749979</span>
 
-<span class="go"># Convert the space-velocity into a spacetime-velocity</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">vel_st</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">spacetime_velocity</span><span class="p">(</span><span class="n">vel_s</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">vel_st</span>
-<span class="go">array([ 1.02597835,  0.10259784, -0.20519567])</span>
+<span class="c1"># Convert the space-velocity into a spacetime-velocity</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">vel_st</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">velocity_st</span><span class="p">(</span><span class="n">vel_s</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">vel_st</span>
+<span class="n">array</span><span class="p">([</span> <span class="mf">1.02597835</span><span class="p">,</span>  <span class="mf">0.10259784</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.20519567</span><span class="p">])</span>
 
-<span class="go"># Converting the spacetime-velocity back into a space-velocity gives the same</span>
-<span class="go"># space-velocity that we started with</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">st</span><span class="o">.</span><span class="n">space_velocity</span><span class="p">(</span><span class="n">vel_st</span><span class="p">)</span>
-<span class="go">array([ 0.1, -0.2])</span>
+<span class="c1"># The square norm of the spacetime-velocity is equal to 1, with some small error</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">st</span><span class="o">.</span><span class="n">norm_st2</span><span class="p">(</span><span class="n">vel_st</span><span class="p">)</span>
+<span class="o">-</span><span class="mf">1.0000000000000002</span>
 
-<span class="go"># The norm of the spacetime-velocity is equal to 1, with some small error</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">st</span><span class="o">.</span><span class="n">spacetime_norm2</span><span class="p">(</span><span class="n">vel_st</span><span class="p">)</span>
-<span class="go">1.0000000000000002</span>
+<span class="c1"># Converting the spacetime-velocity back into a space-velocity gives the same</span>
+<span class="c1"># space-velocity that we started with, with some small error</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">st</span><span class="o">.</span><span class="n">velocity_s</span><span class="p">(</span><span class="n">vel_st</span><span class="p">)</span>
+<span class="n">array</span><span class="p">([</span> <span class="mf">0.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">])</span>
 </pre></div>
 </div>
 </section>
@@ -188,21 +216,6 @@ a time, then the our units of velocity would be light-seconds per second.</p>
 frames must always be less than or equal to the speed of light, <code class="docutils literal notranslate"><span class="pre">1</span></code>. If you
 attempt to perform some operation using a velocity whose magnitude is greater
 than the speed of light, an error will be thrown.</p>
-<p>You can always use NumPy’s <code class="docutils literal notranslate"><span class="pre">norm</span></code> function to find the magnitude of a velocity
-vector like so:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">v0</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v0</span><span class="p">)</span>
-<span class="go">0.5099019513592785</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">v1</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.9</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span>
-<span class="go">1.5588457268119895</span>
-</pre></div>
-</div>
-<p>Notice that <code class="docutils literal notranslate"><span class="pre">v0</span></code> is a valid velocity vector because its magnitude is less than <code class="docutils literal notranslate"><span class="pre">1</span></code>,
-but <code class="docutils literal notranslate"><span class="pre">v1</span></code> is not valid because its magnitude is greater than <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p>
 </section>
 <section id="frames-of-reference">
 <h2>Frames of reference<a class="headerlink" href="#frames-of-reference" title="Permalink to this heading">¶</a></h2>
