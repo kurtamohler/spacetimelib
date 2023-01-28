@@ -90,9 +90,40 @@ including a time coordinate, we would use a space-vector. In classical physics,
 a space-vector is called a "three-vector", and again we break from traditional
 terminology.
 
-## Spacetime norm
+## Distance and norms
 
-TODO
+To find the distance between two points, we take the norm of the difference between
+them, and in general, we can take the norm of any vector.
+
+We can use [`spacetime.norm_s`](spacetime.norm_s) to calculate the norm of any
+space-vector.
+
+```python
+>>> st.norm_s([3, 4])
+5.0
+
+# Distance between two points in space
+>>> a = st.asarray([-2, -1])
+>>> b = st.asarray([-6, 2])
+>>> st.norm_s(a - b)
+5.0
+```
+
+We can use [`spacetime.norm_st2`](spacetime.norm_st2) to calculate the square
+norm of any spacetime-vector. The square norm is more convenient than the norm
+itself, because the square norm of a spacetime-vector can be negative.
+
+```python
+>>> st.norm_st2([1, 3, 4])
+24.0
+
+# Square of proper distance between two points in space
+>>> a = st.asarray([0, 0])
+>>> b = st.asarray([3, 5])
+>>> st.norm_st2(a - b)
+16.0
+```
+
 
 ## Velocity
 
@@ -125,34 +156,36 @@ dx/dτ, dy/dτ, dz/dτ)`, where `τ` is the proper time.
 We won't go through the derivation, but there is a simple way to calculate the
 spacetime-velocity from a space-velocity vector. Given a space-velocity `v
 = (v1, ..., vN)`, the spacetime-velocity is calculated by `(1 , v1, ...,
-vN) / sqrt(1 - space_norm(v)**2)`.
+vN) / sqrt(1 - norm_s(v)**2)`.
 
-The norm of a spacetime-velocity must always be equal to the speed of light.
+The squared norm of a spacetime-velocity must always be equal to the negative
+of the speed of light.
 
-SpacetimeLib has the functions [`spacetime.space_velocity`](spacetime.space_velocity)
-and [`spacetime.spacetime_velocity`](spacetime.spacetime_velocity) for converting
+SpacetimeLib has the functions [`spacetime.velocity_st`](spacetime.velocity_st)
+and [`spacetime.velocity_s`](spacetime.velocity_s) for converting
 between the two kinds of velocity vectors.
 
 ```python
+# Velocity of 0.1 in the x-dimension and -0.2 in the y-dimension
 >>> vel_s = [0.1, -0.2]
 
 # The norm of the space-velocity must be less than 1, the speed of light
->>> st.space_norm(vel_s)
+>>> st.norm_s(vel_s)
 0.223606797749979
 
 # Convert the space-velocity into a spacetime-velocity
->>> vel_st = st.spacetime_velocity(vel_s)
+>>> vel_st = st.velocity_st(vel_s)
 >>> vel_st
 array([ 1.02597835,  0.10259784, -0.20519567])
 
-# Converting the spacetime-velocity back into a space-velocity gives the same
-# space-velocity that we started with
->>> st.space_velocity(vel_st)
-array([ 0.1, -0.2])
+# The square norm of the spacetime-velocity is equal to 1, with some small error
+>>> st.norm_st2(vel_st)
+-1.0000000000000002
 
-# The norm of the spacetime-velocity is equal to 1, with some small error
->>> st.spacetime_norm2(vel_st)
-1.0000000000000002
+# Converting the spacetime-velocity back into a space-velocity gives the same
+# space-velocity that we started with, with some small error
+>>> st.velocity_s(vel_st)
+array([ 0.1, -0.2])
 ```
 
 ## Units of measurement
@@ -172,24 +205,6 @@ The velocities of particles and the relative velocities between two reference
 frames must always be less than or equal to the speed of light, `1`. If you
 attempt to perform some operation using a velocity whose magnitude is greater
 than the speed of light, an error will be thrown.
-
-You can always use NumPy's `norm` function to find the magnitude of a velocity
-vector like so:
-
-```python
->>> import numpy as np
-
->>> v0 = (0.5, -0.1, 0)
->>> np.linalg.norm(v0)
-0.5099019513592785
-
->>> v1 = (-0.9, 0.9, -0.9)
->>> np.linalg.norm(v1)
-1.5588457268119895
-```
-
-Notice that `v0` is a valid velocity vector because its magnitude is less than `1`,
-but `v1` is not valid because its magnitude is greater than `1`.
 
 ## Frames of reference
 

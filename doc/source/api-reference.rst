@@ -1,13 +1,13 @@
 API Reference
 =============
 
-.. autofunction:: spacetime.space_norm
+.. autofunction:: spacetime.norm_s
 
-.. autofunction:: spacetime.spacetime_norm2
+.. autofunction:: spacetime.norm_st2
 
-.. autofunction:: spacetime.spacetime_velocity
+.. autofunction:: spacetime.velocity_st
 
-.. autofunction:: spacetime.space_velocity
+.. autofunction:: spacetime.velocity_s
 
 .. autofunction:: spacetime.boost
 

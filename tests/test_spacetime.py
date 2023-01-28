@@ -1,6 +1,7 @@
 import spacetime as st
 import numpy as np
 import unittest
+from itertools import product
 
 def check_boost_event_1D(v, event):
     t = event[0]
@@ -16,6 +17,66 @@ def check_boost_velocity_1D(v, u):
     return (u - v) / (1 - u * v)
 
 class SpacetimeTestSuite(unittest.TestCase):
+
+    def test_norm_s(self):
+        test_sizes = [
+            (1,),
+            (2,),
+            (3,),
+            (4,),
+            (10,),
+            (3, 10),
+            (3, 4, 5),
+        ]
+
+        # Check against a few different implementations
+        check_funcs = [
+            lambda vec_s: np.linalg.norm(vec_s, axis=-1),
+            lambda vec_s: np.sum(vec_s ** 2, axis=-1) ** 0.5,
+        ]
+
+        for test_size, check_func in product(test_sizes, check_funcs):
+            a = 100 * np.random.randn(*test_size)
+
+            res = st.norm_s(a)
+            res_check = check_func(a)
+
+            self.assertTrue(np.isclose(res, res_check).all())
+
+    def test_norm_st2(self):
+        test_sizes = [
+            (1+1,),
+            (2+1,),
+            (3+1,),
+            (4+1,),
+            (10+1,),
+            (3, 10+1),
+            (3, 4, 5+1),
+        ]
+
+        def check_func_0(vec_s):
+            metric = np.eye(vec_s.shape[-1])
+            metric[0][0] = -1
+            return np.sum(np.matmul(vec_s ** 2, metric), axis=-1)
+
+        def check_func_1(vec_s):
+            tmp = vec_s ** 2
+            tmp[..., 0] *= -1
+            return np.sum(tmp, axis=-1)
+
+        # Check against a few different implementations
+        check_funcs = [
+            check_func_0,
+            check_func_1,
+        ]
+
+        for test_size, check_func in product(test_sizes, check_funcs):
+            a = 100 * np.random.randn(*test_size)
+
+            res = st.norm_st2(a)
+            res_check = check_func(a)
+
+            self.assertTrue(np.isclose(res, res_check).all())
 
     # Test boosting events in one spatial dimension with randomized inputs
     def test_boost_event_1D_random(self):

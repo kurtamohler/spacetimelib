@@ -191,7 +191,7 @@ def boost(boost_velocity, event, velocity=None, light_speed=1):
 
 
 # TODO: Probably get rid of this, in favor of just taking the difference between the
-# two events and calling `spacetime_norm2` on the difference.
+# two events and calling `norm_st2` on the difference.
 def _proper_time(event0, event1):
     '''
     Calculate the proper time between two events.
@@ -213,12 +213,18 @@ def _proper_time(event0, event1):
     check(event0.ndim == 1, ValueError, "expected exactly two dimensions")
     check(event0.shape[0] >= 2, ValueError, "expected at least 2 dims")
 
-    return np.sqrt(spacetime_norm2(event1 - event0))
+    return np.sqrt(-norm_st2(event1 - event0))
 
-def space_norm(vec_s):
+def norm_s(vec_s):
     '''
-    Calculate the space norm of a space-vector. This is simply the Euclidean
-    norm, or more formally, the L-2 norm.
+    Calculate the norm of a space-vector. This is simply the Euclidean norm, or
+    more formally, the L-2 norm.
+
+    Given an N-dimensional space-vector `a = (a1, ..., aN)`, the norm is
+    `norm_s(a) = sqrt(a1^2 + ... + aN^2)`.
+
+    For instance, if the space-vector is the difference between the coordinates
+    of two positions in space, then its norm is the distance between the events.
 
     Args:
         vec_s : array
@@ -227,16 +233,21 @@ def space_norm(vec_s):
     '''
     return np.linalg.norm(vec_s, axis=-1)
 
-def spacetime_norm2(vec_st):
+def norm_st2(vec_st):
     '''
     Calculate the square of the norm of a spacetime-vector.
 
-    Given an N+1 spacetime-vector `A = (a0, ..., aN)`, the square norm is
-    calculated by `a0^2 - ... - aN^2`.
+    Given an N+1-dimensional spacetime-vector `a = (a0, a1, ..., aN)`, the
+    square norm is `norm_st2(a) = - a0^2 + a1^2 + ... + aN^2`.
 
-    For instance, if the spacetime-vector represents the difference between the
-    coordinates of two events, then its norm represents the proper time
-    distance (also called the time-like interval) between the events.
+    This is traditionally called the [squared norm of
+    a four-vector](https://mathworld.wolfram.com/Four-VectorNorm.html)
+
+    For instance, if the spacetime-vector is the difference between the
+    coordinates of two events, then its squared norm is the square of proper
+    distance (or the space-like interval) between the events. The negative of
+    the squared norm is the proper time (or the time-like interval) between the
+    events.
 
     Args:
         vec_st : array
@@ -244,11 +255,9 @@ def spacetime_norm2(vec_st):
             Shape: (..., N+1)
     '''
     vec_st = np.array(vec_st)
+    return -vec_st[..., 0]**2 + np.linalg.norm(vec_st[..., 1:], axis=-1)**2
 
-    return vec_st[..., 0]**2 - np.sum(vec_st[..., 1:]**2, axis=-1)
-
-
-def spacetime_velocity(vel_s, light_speed=1):
+def velocity_st(vel_s, light_speed=1):
     '''
     Calculates the spacetime-velocity vector from a space-velocity vector.
 
@@ -285,7 +294,7 @@ def spacetime_velocity(vel_s, light_speed=1):
     vel_st[..., 1:] = vel_s / np.sqrt(1 - np.expand_dims(speed, -1)**2)
 
     # TODO: Find out if this should be light_speed**2 or light_speed**-2 or whatever.
-    if not np.allclose(spacetime_norm2(vel_st), light_speed, atol=0.01):
+    if not np.allclose(-norm_st2(vel_st), light_speed, atol=0.01):
         raise ValueError(
             'Due to floating point error, one of the given space-velocities '
             'gave a spacetime-velocity whose proper time is not 1. I hope this '
@@ -293,9 +302,11 @@ def spacetime_velocity(vel_s, light_speed=1):
 
     return vel_st
 
-def space_velocity(vel_st):
+def velocity_s(vel_st):
     '''
     Calculates the space-velocity vector from a spacetime-velocity vector.
+
+    This is the reverse of [`spacetime.velocity_st`](spacetime.velocity_st).
 
     Args:
 

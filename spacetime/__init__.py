@@ -1,14 +1,16 @@
 from .basic_ops import (
     boost,
     _proper_time,
-    space_norm,
-    spacetime_norm2,
-    space_velocity,
-    spacetime_velocity,
+    norm_s,
+    norm_st2,
+    velocity_s,
+    velocity_st,
 )
 from .frame import Frame2D, Clock
 from .worldline import Worldline
 from .error_checking import check
+
+from numpy import asarray
 
 del basic_ops
 del frame
