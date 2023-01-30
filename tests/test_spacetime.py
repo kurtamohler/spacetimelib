@@ -78,6 +78,64 @@ class SpacetimeTestSuite(unittest.TestCase):
 
             self.assertTrue(np.isclose(res, res_check).all())
 
+    # Test `velocity_st` and `velocity_s`
+    def test_velocity(self):
+        def velocity_st_check(vel_s):
+            speed = np.expand_dims(st.norm_s(vel_s), -1)
+            t = np.ones(vel_s.shape[:-1] + (1,), dtype=vel_s.dtype)
+
+            return np.concatenate([t, vel_s], axis=-1) / (1 - speed ** 2)**0.5
+
+        test_cases = [
+            # Input, expected result
+            (np.asarray([0, 0, 0]), np.asarray([1, 0, 0, 0])),
+            (np.asarray([.9]), velocity_st_check(np.array([.9]))),
+            (np.asarray([0, -.8]), velocity_st_check(np.array([0, -.8]))),
+        ]
+
+        for vel_s, vel_st_check in test_cases:
+            vel_st = st.velocity_st(vel_s)
+            self.assertTrue(np.isclose(vel_st, vel_st_check).all())
+
+            # The norm of a spacetime-velocity should always be very close to -1
+            norm2_vel_st = st.norm_st2(vel_st)
+            self.assertTrue(np.isclose(norm2_vel_st, -1).all())
+
+            # Converting back to a space-velocity should give the original value
+            vel_s_check = st.velocity_s(vel_st)
+            self.assertTrue(np.isclose(vel_s, vel_s_check).all())
+
+        rand_input_sizes = [
+            (1,),
+            (2,),
+            (3,),
+            (4,),
+            (100,),
+            (1, 2),
+            (10, 2),
+        ]
+
+        for _ in range(10):
+            for input_size in rand_input_sizes:
+                max_rand_norm = (input_size[-1] * 4) ** 0.5
+
+                rand_vec = np.random.rand(*input_size) - 0.5
+                rand_norm_target = 0.9 * np.random.rand(*input_size[:-1])
+
+                vel_s = np.expand_dims(rand_norm_target, -1) * rand_vec / np.expand_dims(st.norm_s(rand_vec), -1)
+
+                vel_st_check = velocity_st_check(vel_s)
+                vel_st = st.velocity_st(vel_s)
+                self.assertTrue(np.isclose(vel_st, vel_st_check).all())
+
+                # The norm of a spacetime-velocity should always be very close to -1
+                norm2_vel_st = st.norm_st2(vel_st)
+                self.assertTrue(np.isclose(norm2_vel_st, -1).all())
+
+                # Converting back to a space-velocity should give the original value
+                vel_s_check = st.velocity_s(vel_st)
+                self.assertTrue(np.isclose(vel_s, vel_s_check).all())
+
     # Test boosting events in one spatial dimension with randomized inputs
     def test_boost_event_1D_random(self):
         v_batch = []

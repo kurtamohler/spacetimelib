@@ -218,7 +218,7 @@ def _proper_time(event0, event1):
 def norm_s(vec_s):
     '''
     Calculate the norm of a space-vector. This is simply the Euclidean norm, or
-    more formally, the L-2 norm.
+    more formally, the [L-2 norm](https://mathworld.wolfram.com/L2-Norm.html).
 
     Given an N-dimensional space-vector `a = (a1, ..., aN)`, the norm is
     `norm_s(a) = sqrt(a1^2 + ... + aN^2)`.
@@ -264,11 +264,18 @@ def velocity_st(vel_s, light_speed=1):
     Given a space-velocity `v = (v1, ..., vN)`, the spacetime-velocity is
     calculated by `(1 , v1, ..., vN) / sqrt(1 - |v|**2)`.
 
+    Spacetime-velocity is traditionally called four-velocity in the context of
+    3+1 Minkowski spacetime.
+
+    This is the reverse of [`spacetime.velocity_s`](spacetime.velocity_s).
+
     Args:
 
       vel_s : array_like
           Space-velocity of a particle, given by the derivative of each space
-          dimension with respect to coordinate time.
+          dimension with respect to coordinate time. If the norm of the
+          space-velocity is equal to or greater than the speed of light, then
+          the spacetime-velocity is undefined and an error will raise.
           Shape: (..., N)
 
       light_speed : array_like, optional scalar Speed of light. Default: 1
@@ -282,16 +289,17 @@ def velocity_st(vel_s, light_speed=1):
         vel_s = np.array([vel_s])
 
     speed = np.linalg.norm(vel_s, axis=-1)
-    check((speed <= light_speed).all(), ValueError,
-        "the norm of 'vel_s' must be less than or equal to ",
+    check((speed < light_speed).all(), ValueError,
+        "the norm of 'vel_s' must be less than ",
         f"'light_speed' ({light_speed}), but got {speed}")
 
     shape = list(vel_s.shape)
     shape[-1] += 1
     vel_st = np.empty(shape, dtype=vel_s.dtype)
 
-    vel_st[..., 0] = 1 / np.sqrt(1 - speed**2)
-    vel_st[..., 1:] = vel_s / np.sqrt(1 - np.expand_dims(speed, -1)**2)
+    vel_st[..., 0] = 1
+    vel_st[..., 1:] = vel_s
+    vel_st = vel_st / np.sqrt(1 - np.expand_dims(speed, -1)**2)
 
     # TODO: Find out if this should be light_speed**2 or light_speed**-2 or whatever.
     if not np.allclose(-norm_st2(vel_st), light_speed, atol=0.01):
