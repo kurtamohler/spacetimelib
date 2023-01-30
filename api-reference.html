@@ -40,7 +40,7 @@
 <dt class="sig sig-object py" id="spacetime.norm_s">
 <span class="sig-prename descclassname"><span class="pre">spacetime.</span></span><span class="sig-name descname"><span class="pre">norm_s</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec_s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.norm_s" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the norm of a space-vector. This is simply the Euclidean norm, or
-more formally, the L-2 norm.</p>
+more formally, the [L-2 norm](<a class="reference external" href="https://mathworld.wolfram.com/L2-Norm.html">https://mathworld.wolfram.com/L2-Norm.html</a>).</p>
 <p>Given an N-dimensional space-vector <cite>a = (a1, …, aN)</cite>, the norm is
 <cite>norm_s(a) = sqrt(a1^2 + … + aN^2)</cite>.</p>
 <p>For instance, if the space-vector is the difference between the coordinates
@@ -84,11 +84,16 @@ Shape: (…, N+1)</p>
 <dd><p>Calculates the spacetime-velocity vector from a space-velocity vector.</p>
 <p>Given a space-velocity <cite>v = (v1, …, vN)</cite>, the spacetime-velocity is
 calculated by <cite>(1 , v1, …, vN) / sqrt(1 - |v|**2)</cite>.</p>
+<p>Spacetime-velocity is traditionally called four-velocity in the context of
+3+1 Minkowski spacetime.</p>
+<p>This is the reverse of [<cite>spacetime.velocity_s</cite>](spacetime.velocity_s).</p>
 <p>Args:</p>
 <blockquote>
 <div><dl class="simple">
 <dt>vel_s<span class="classifier">array_like</span></dt><dd><p>Space-velocity of a particle, given by the derivative of each space
-dimension with respect to coordinate time.
+dimension with respect to coordinate time. If the norm of the
+space-velocity is equal to or greater than the speed of light, then
+the spacetime-velocity is undefined and an error will raise.
 Shape: (…, N)</p>
 </dd>
 </dl>
