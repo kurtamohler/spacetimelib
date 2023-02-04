@@ -2,13 +2,18 @@ from .error_checking import check
 
 import numpy as np
 
+# TODO: Change "event" to "spacetime-vector", since we can boost any
+# spacetime-vector, not just ones that represet events. Also, I think
+# it would be better design to separate out velocity boosting into its
+# own function.
 def boost(boost_velocity, event, velocity=None, light_speed=1):
     '''
     Boost the coordinates of one or more events by a specified velocity.
     Optionally, velocities can also be boosted.
 
     This operation uses the Lorentz vector transformations as described here:
-    https://en.wikipedia.org/wiki/Lorentz_transformation#Vector_transformations
+    `Lorentz Transformation: Vector transformations - Wikipedia
+    <https://en.wikipedia.org/wiki/Lorentz_transformation#Vector_transformations>`_
 
     Batched inputs are supported, to allow boosting multiple events and velocities
     by multiple boost velocities in one call.
@@ -16,38 +21,42 @@ def boost(boost_velocity, event, velocity=None, light_speed=1):
     A single event is given by a 1-D array of N+1 elements, where N is the
     number of spatial dimensions. The first element is the time coordinate, and
     the remaining elements are spatial coordinates. For example, if the event
-    is `(t, x, y, z)`, `t` is the time coordinate and `x`, `y`, and `z` are
-    spatial coordinates in a three dimensional space.
+    is ``(t, x, y, z)``, ``t`` is the time coordinate and ``x``, ``y``, and
+    ``z`` are spatial coordinates in a three dimensional space.
 
     A single velocity is given by a 1-D array of N elements, derivatives of the
     spatial dimensions with respect to coordinate time. For example, the
-    velocity `(v_x, v_y, v_z)` can also be written `(dx/dt, dy/dt, dz/dt)`.
+    velocity ``(v_x, v_y, v_z)`` can also be written ``(dx/dt, dy/dt, dz/dt)``.
 
     Args:
 
-      boost_velocity : array_like
-          Boost velocity to use for the transformation.
-          Shape: (..., N)
+      boost_velocity (array_like):
+        Boost velocity to use for the transformation.
 
-      event : array_like or None
-          Coordinates of events (or any 4-vector) to be boosted.
-          Shape: (..., N+1)
+        Shape: (..., N)
 
-      velocity : array_like, optional
-          Velocities to be boosted.
-          Shape: (..., N)
-          Default: None
+      event (array_like or None):
+        Coordinates of events (or any 4-vector) to be boosted.
 
-      light_speed : array_like, optional scalar speed of light. Default: 1
+        Shape: (..., N+1)
+
+      velocity (array_like, optional):
+        Velocities to be boosted.
+
+        Shape: (..., N)
+
+        Default: None
+
+      light_speed (array_like, optional):
+        scalar speed of light.
+
+        Default: 1
 
     Returns:
-
-      If `velocity is None`:
-          `event_boosted` : ndarray
-
-      If `velocity is not None`:
-          (`event_boosted`, `velocity_boosted`) : tuple of ndarray
-
+      ndarray or 2-tuple of ndarray:
+        If ``velocity is None``, this is the boosted event. If ``velocity is
+        not None``, this is the boosted event and boosted velocity combined in
+        a tuple.
     '''
     check(event is not None or velocity is not None, ValueError,
         "expected either `event` or `velocity` to be given, but both are `None`")
@@ -197,13 +206,12 @@ def _proper_time(event0, event1):
     Calculate the proper time between two events.
 
     Args:
-        event0 : array
-            First event
 
-        event1 : array
-            Second event
+      event0 (array_like):
+        First event
 
-    Returns: number
+      event1 (array_like):
+        Second event
     '''
     event0 = np.array(event0)
     event1 = np.array(event1)
@@ -218,18 +226,20 @@ def _proper_time(event0, event1):
 def norm_s(vec_s):
     '''
     Calculate the norm of a space-vector. This is simply the Euclidean norm, or
-    more formally, the [L-2 norm](https://mathworld.wolfram.com/L2-Norm.html).
+    more formally, the `L-2 norm <https://mathworld.wolfram.com/L2-Norm.html>`_.
 
-    Given an N-dimensional space-vector `a = (a1, ..., aN)`, the norm is
-    `norm_s(a) = sqrt(a1^2 + ... + aN^2)`.
+    Given an N-dimensional space-vector ``a = (a1, ..., aN)``, the norm is
+    ``norm_s(a) = sqrt(a1^2 + ... + aN^2)``.
 
     For instance, if the space-vector is the difference between the coordinates
     of two positions in space, then its norm is the distance between the events.
 
     Args:
-        vec_s : array
-            Any space-vector
-            Shape: (..., N)
+
+      vec_s (array_like):
+        Any space-vector
+
+        Shape: (..., N)
     '''
     return np.linalg.norm(vec_s, axis=-1)
 
@@ -237,11 +247,11 @@ def norm_st2(vec_st):
     '''
     Calculate the square of the norm of a spacetime-vector.
 
-    Given an N+1-dimensional spacetime-vector `a = (a0, a1, ..., aN)`, the
-    square norm is `norm_st2(a) = - a0^2 + a1^2 + ... + aN^2`.
+    Given an N+1-dimensional spacetime-vector ``a = (a0, a1, ..., aN)``, the
+    square norm is ``norm_st2(a) = - a0^2 + a1^2 + ... + aN^2``.
 
-    This is traditionally called the [squared norm of
-    a four-vector](https://mathworld.wolfram.com/Four-VectorNorm.html)
+    This is traditionally called the `squared norm of a four-vector
+    <https://mathworld.wolfram.com/Four-VectorNorm.html>`_
 
     For instance, if the spacetime-vector is the difference between the
     coordinates of two events, then its squared norm is the square of proper
@@ -250,9 +260,11 @@ def norm_st2(vec_st):
     events.
 
     Args:
-        vec_st : array
-            Any spacetime-vector
-            Shape: (..., N+1)
+
+      vec_st (array_like):
+        Any spacetime-vector
+
+        Shape: (..., N+1)
     '''
     vec_st = np.array(vec_st)
     return -vec_st[..., 0]**2 + np.linalg.norm(vec_st[..., 1:], axis=-1)**2
@@ -261,24 +273,28 @@ def velocity_st(vel_s, light_speed=1):
     '''
     Calculates the spacetime-velocity vector from a space-velocity vector.
 
-    Given a space-velocity `v = (v1, ..., vN)`, the spacetime-velocity is
-    calculated by `(1 , v1, ..., vN) / sqrt(1 - |v|**2)`.
+    Given a space-velocity ``v = (v1, ..., vN)``, the spacetime-velocity is
+    calculated by ``(1 , v1, ..., vN) / sqrt(1 - |v|**2)``.
 
     Spacetime-velocity is traditionally called four-velocity in the context of
     3+1 Minkowski spacetime.
 
-    This is the reverse of [`spacetime.velocity_s`](spacetime.velocity_s).
+    This is the reverse of :func:`spacetime.velocity_s`.
 
     Args:
 
-      vel_s : array_like
-          Space-velocity of a particle, given by the derivative of each space
-          dimension with respect to coordinate time. If the norm of the
-          space-velocity is equal to or greater than the speed of light, then
-          the spacetime-velocity is undefined and an error will raise.
-          Shape: (..., N)
+      vel_s (array_like):
+        Space-velocity of a particle, given by the derivative of each space
+        dimension with respect to coordinate time. If the norm of the
+        space-velocity is equal to or greater than the speed of light, then
+        the spacetime-velocity is undefined and an error will raise.
 
-      light_speed : array_like, optional scalar Speed of light. Default: 1
+        Shape: (..., N)
+
+      light_speed (array_like, optional):
+        Scalar Speed of light.
+
+        Default: 1
     '''
 
     if light_speed != 1:
@@ -314,14 +330,15 @@ def velocity_s(vel_st):
     '''
     Calculates the space-velocity vector from a spacetime-velocity vector.
 
-    This is the reverse of [`spacetime.velocity_st`](spacetime.velocity_st).
+    This is the reverse of :func:`spacetime.velocity_st`.
 
     Args:
 
-      vel_st : array_like
-          Spacetime-velocity of a particle, given by the derivative of each
-          dimension of spacetime (coordinate time dimension comes first) with
-          respect to proper time.
-          Shape: (..., N+1)
+      vel_st (array_like):
+        Spacetime-velocity of a particle, given by the derivative of each
+        dimension of spacetime (coordinate time dimension comes first) with
+        respect to proper time.
+
+        Shape: (..., N+1)
     '''
     return vel_st[..., 1:] / np.expand_dims(vel_st[..., 0], -1)

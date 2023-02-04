@@ -16,7 +16,8 @@ release = '0.0.0'
 
 extensions = [
     'myst_parser',
-    'sphinx.ext.autodoc'
+    'sphinx.ext.autodoc',
+    'sphinx.ext.napoleon',
 ]
 
 templates_path = ['_templates']

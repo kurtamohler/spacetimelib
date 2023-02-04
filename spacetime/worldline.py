@@ -13,8 +13,9 @@ class Worldline:
 
     By default, the first and last vertices are treated as end point
     boundaries, past which events cannot be evaluated. Alternatively, the
-    `vel_ends`, `vel_past`, or `vel_future` arguments can be specified to enable linear
-    extrapolation of events that fall outside of these boundaries.
+    ``vel_ends``, ``vel_past``, or ``vel_future`` arguments can be specified to
+    enable linear extrapolation of events that fall outside of these
+    boundaries.
     '''
 
     # TODO: Would be cool to add an option to enable infinite loops over the
@@ -26,25 +27,31 @@ class Worldline:
         '''
         Args:
 
-            vertices : array
-                Set of events to use as the vertices of the worldline. Events
-                must be sorted by increasing time coordinate, and each pair of
-                events must have time-like separation.
+          vertices (array_like):
+            Set of events to use as the vertices of the worldline. Events
+            must be sorted by increasing time coordinate, and each pair of
+            events must have time-like separation.
 
-            vel_ends : array, optional
-                Velocity of the worldline before and after the first and last
-                vertices. This enables the extrapolation of events that occur
-                before and after the first and last `vertices`. Default: `None`.
+          vel_ends (array_like, optional):
+            Velocity of the worldline before and after the first and last
+            vertices. This enables the extrapolation of events that occur
+            before and after the first and last ``vertices``.
+
+            Default: ``None``
 
         Keyword args:
 
-            vel_past : array, optional
-                Velocity of the worldline before the first vertex. If specified,
-                `vel_ends` must be `None`. Default: `None`.
+          vel_past (array_like, optional):
+            Velocity of the worldline before the first vertex. If specified,
+            ``vel_ends`` must be ``None``.
 
-            vel_future : array, optional
-                Velocity of the worldline after the last vertex. If specified,
-                `vel_ends` must be `None`. Default: `None`.
+            Default: ``None``
+
+          vel_future (array_like, optional):
+            Velocity of the worldline after the last vertex. If specified,
+            ``vel_ends`` must be ``None``.
+
+            Default: ``None``
         '''
         vertices = np.array(vertices)
 
@@ -110,19 +117,18 @@ class Worldline:
 
         Args:
 
-          time : number
-              The time coordinate.
+          time (number):
+            The time coordinate.
 
         Returns:
-          idx_before, idx_after : tuple of int
-              Indices into `self._vertices`.
+          tuple of int: (idx_before, idx_after), indices into ``self._vertices``.
 
-        If a vertex is at exactly `time`, then it is returned as both `idx_before`
-        and `idx_after`, so `idx_before == idx_after`.
+            If a vertex is at exactly ``time``, then it is returned as both
+            ``idx_before`` and ``idx_after``, so ``idx_before == idx_after``.
 
-        If there is no vertex before `time`, then `idx_before = None`.
+            If there is no vertex before ``time``, then ``idx_before = None``.
 
-        If there is no vertex after `time`, then `idx_after = None`.
+            If there is no vertex after ``time``, then ``idx_after = None``.
         '''
         idx_after = np.searchsorted(self._vertices[..., 0], time)
 
@@ -143,20 +149,22 @@ class Worldline:
         Returns the event at a specified time on the worldline.
 
         Args:
-          time : number
-              Time at which to evaluate the worldline.
 
-          return_indices : bool, optional
-              Whether to return the indices of vertices surrounding the specified time.
-              Default: False
+          time (number):
+            Time at which to evaluate the worldline.
+
+          return_indices (bool, optional):
+            Whether to return the indices of vertices surrounding the specified time.
+
+            Default: ``False``
 
         Returns:
+          ``ndarray`` or ``tuple(ndarray, tuple(int, int))``:
 
-          If `return_indices == False`:
-              event : array
-
-          If `return_indices == True:
-              event, (idx_before, idx_after) : array, (int, int)
+            If ``return_indices == False``, just the evaluated event is
+            returned.  If ``return_indices == True``, returns a 2-tuple
+            containing the event combined with a 2-tuple of ints for the
+            indices of vertices surrounding the specified ``time``.
         '''
         idx_before, idx_after = self._find_surrounding_vertices(time)
 
@@ -201,13 +209,15 @@ class Worldline:
         two specified time coordinates.
 
         Args:
-            time0 : number
-                First time coordinate
 
-            time1 : number
-                Second time coordinate
+          time0 (number):
+            First time coordinate
 
-        Returns: number
+          time1 (number):
+            Second time coordinate
+
+        Returns:
+          number:
         '''
         if time0 > time1:
             tmp = time0
@@ -241,10 +251,12 @@ class Worldline:
         Boost the worldline to a different inertial reference frame.
 
         Args:
-            frame_velocity : array
-                Velocity to boost the worldline by.
 
-        Returns: Worldline
+          frame_velocity (array_like):
+            Velocity to boost the worldline by.
+
+        Returns:
+          spacetime.Worldline:
         '''
         vertices = boost(frame_velocity, self._vertices)
         vel_ends = [None, None]
@@ -263,10 +275,12 @@ class Worldline:
         Add a displacement to all events in the worldline.
 
         Args:
-            event_delta : array
-                Displacements to add to each dimension.
 
-        Returns: Worldline
+          event_delta (array_like):
+            Displacements to add to each dimension.
+
+        Returns:
+          spacetime.Worldline:
         '''
         return Worldline(
             self._vertices + event_delta,
@@ -277,9 +291,11 @@ class Worldline:
         Subtract a displacement from all events in the worldline.
 
         Args:
-            event_delta : array
-                Displacements to subtract from each dimension.
 
-        Returns: Worldline
+          event_delta (array_like):
+            Displacements to subtract from each dimension.
+
+        Returns:
+          spacetime.Worldline:
         '''
         return self + (-event_delta)
