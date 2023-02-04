@@ -40,17 +40,16 @@
 <dt class="sig sig-object py" id="spacetime.norm_s">
 <span class="sig-prename descclassname"><span class="pre">spacetime.</span></span><span class="sig-name descname"><span class="pre">norm_s</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec_s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.norm_s" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the norm of a space-vector. This is simply the Euclidean norm, or
-more formally, the [L-2 norm](<a class="reference external" href="https://mathworld.wolfram.com/L2-Norm.html">https://mathworld.wolfram.com/L2-Norm.html</a>).</p>
-<p>Given an N-dimensional space-vector <cite>a = (a1, …, aN)</cite>, the norm is
-<cite>norm_s(a) = sqrt(a1^2 + … + aN^2)</cite>.</p>
+more formally, the <a class="reference external" href="https://mathworld.wolfram.com/L2-Norm.html">L-2 norm</a>.</p>
+<p>Given an N-dimensional space-vector <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">(a1,</span> <span class="pre">...,</span> <span class="pre">aN)</span></code>, the norm is
+<code class="docutils literal notranslate"><span class="pre">norm_s(a)</span> <span class="pre">=</span> <span class="pre">sqrt(a1^2</span> <span class="pre">+</span> <span class="pre">...</span> <span class="pre">+</span> <span class="pre">aN^2)</span></code>.</p>
 <p>For instance, if the space-vector is the difference between the coordinates
 of two positions in space, then its norm is the distance between the events.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
-<dt>vec_s<span class="classifier">array</span></dt><dd><p>Any space-vector
-Shape: (…, N)</p>
-</dd>
-</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vec_s</strong> (<em>array_like</em>) – <p>Any space-vector</p>
+<p>Shape: (…, N)</p>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -59,21 +58,19 @@ Shape: (…, N)</p>
 <dt class="sig sig-object py" id="spacetime.norm_st2">
 <span class="sig-prename descclassname"><span class="pre">spacetime.</span></span><span class="sig-name descname"><span class="pre">norm_st2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec_st</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.norm_st2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the square of the norm of a spacetime-vector.</p>
-<p>Given an N+1-dimensional spacetime-vector <cite>a = (a0, a1, …, aN)</cite>, the
-square norm is <cite>norm_st2(a) = - a0^2 + a1^2 + … + aN^2</cite>.</p>
-<p>This is traditionally called the [squared norm of
-a four-vector](<a class="reference external" href="https://mathworld.wolfram.com/Four-VectorNorm.html">https://mathworld.wolfram.com/Four-VectorNorm.html</a>)</p>
+<p>Given an N+1-dimensional spacetime-vector <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">(a0,</span> <span class="pre">a1,</span> <span class="pre">...,</span> <span class="pre">aN)</span></code>, the
+square norm is <code class="docutils literal notranslate"><span class="pre">norm_st2(a)</span> <span class="pre">=</span> <span class="pre">-</span> <span class="pre">a0^2</span> <span class="pre">+</span> <span class="pre">a1^2</span> <span class="pre">+</span> <span class="pre">...</span> <span class="pre">+</span> <span class="pre">aN^2</span></code>.</p>
+<p>This is traditionally called the <a class="reference external" href="https://mathworld.wolfram.com/Four-VectorNorm.html">squared norm of a four-vector</a></p>
 <p>For instance, if the spacetime-vector is the difference between the
 coordinates of two events, then its squared norm is the square of proper
 distance (or the space-like interval) between the events. The negative of
 the squared norm is the proper time (or the time-like interval) between the
 events.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
-<dt>vec_st<span class="classifier">array</span></dt><dd><p>Any spacetime-vector
-Shape: (…, N+1)</p>
-</dd>
-</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vec_st</strong> (<em>array_like</em>) – <p>Any spacetime-vector</p>
+<p>Shape: (…, N+1)</p>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -82,40 +79,42 @@ Shape: (…, N+1)</p>
 <dt class="sig sig-object py" id="spacetime.velocity_st">
 <span class="sig-prename descclassname"><span class="pre">spacetime.</span></span><span class="sig-name descname"><span class="pre">velocity_st</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vel_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">light_speed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.velocity_st" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the spacetime-velocity vector from a space-velocity vector.</p>
-<p>Given a space-velocity <cite>v = (v1, …, vN)</cite>, the spacetime-velocity is
-calculated by <cite>(1 , v1, …, vN) / sqrt(1 - |v|**2)</cite>.</p>
+<p>Given a space-velocity <code class="docutils literal notranslate"><span class="pre">v</span> <span class="pre">=</span> <span class="pre">(v1,</span> <span class="pre">...,</span> <span class="pre">vN)</span></code>, the spacetime-velocity is
+calculated by <code class="docutils literal notranslate"><span class="pre">(1</span> <span class="pre">,</span> <span class="pre">v1,</span> <span class="pre">...,</span> <span class="pre">vN)</span> <span class="pre">/</span> <span class="pre">sqrt(1</span> <span class="pre">-</span> <span class="pre">|v|**2)</span></code>.</p>
 <p>Spacetime-velocity is traditionally called four-velocity in the context of
 3+1 Minkowski spacetime.</p>
-<p>This is the reverse of [<cite>spacetime.velocity_s</cite>](spacetime.velocity_s).</p>
-<p>Args:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>vel_s<span class="classifier">array_like</span></dt><dd><p>Space-velocity of a particle, given by the derivative of each space
+<p>This is the reverse of <a class="reference internal" href="#spacetime.velocity_s" title="spacetime.velocity_s"><code class="xref py py-func docutils literal notranslate"><span class="pre">spacetime.velocity_s()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vel_s</strong> (<em>array_like</em>) – <p>Space-velocity of a particle, given by the derivative of each space
 dimension with respect to coordinate time. If the norm of the
 space-velocity is equal to or greater than the speed of light, then
-the spacetime-velocity is undefined and an error will raise.
-Shape: (…, N)</p>
+the spacetime-velocity is undefined and an error will raise.</p>
+<p>Shape: (…, N)</p>
+</p></li>
+<li><p><strong>light_speed</strong> (<em>array_like</em><em>, </em><em>optional</em>) – <p>Scalar Speed of light.</p>
+<p>Default: 1</p>
+</p></li>
+</ul>
 </dd>
 </dl>
-<p>light_speed : array_like, optional scalar Speed of light. Default: 1</p>
-</div></blockquote>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="spacetime.velocity_s">
 <span class="sig-prename descclassname"><span class="pre">spacetime.</span></span><span class="sig-name descname"><span class="pre">velocity_s</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vel_st</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.velocity_s" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the space-velocity vector from a spacetime-velocity vector.</p>
-<p>This is the reverse of [<cite>spacetime.velocity_st</cite>](spacetime.velocity_st).</p>
-<p>Args:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>vel_st<span class="classifier">array_like</span></dt><dd><p>Spacetime-velocity of a particle, given by the derivative of each
+<p>This is the reverse of <a class="reference internal" href="#spacetime.velocity_st" title="spacetime.velocity_st"><code class="xref py py-func docutils literal notranslate"><span class="pre">spacetime.velocity_st()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vel_st</strong> (<em>array_like</em>) – <p>Spacetime-velocity of a particle, given by the derivative of each
 dimension of spacetime (coordinate time dimension comes first) with
-respect to proper time.
-Shape: (…, N+1)</p>
+respect to proper time.</p>
+<p>Shape: (…, N+1)</p>
+</p>
 </dd>
 </dl>
-</div></blockquote>
 </dd></dl>
 
 <dl class="py function">
@@ -124,42 +123,44 @@ Shape: (…, N+1)</p>
 <dd><p>Boost the coordinates of one or more events by a specified velocity.
 Optionally, velocities can also be boosted.</p>
 <p>This operation uses the Lorentz vector transformations as described here:
-<a class="reference external" href="https://en.wikipedia.org/wiki/Lorentz_transformation#Vector_transformations">https://en.wikipedia.org/wiki/Lorentz_transformation#Vector_transformations</a></p>
+<a class="reference external" href="https://en.wikipedia.org/wiki/Lorentz_transformation#Vector_transformations">Lorentz Transformation: Vector transformations - Wikipedia</a></p>
 <p>Batched inputs are supported, to allow boosting multiple events and velocities
 by multiple boost velocities in one call.</p>
 <p>A single event is given by a 1-D array of N+1 elements, where N is the
 number of spatial dimensions. The first element is the time coordinate, and
 the remaining elements are spatial coordinates. For example, if the event
-is <cite>(t, x, y, z)</cite>, <cite>t</cite> is the time coordinate and <cite>x</cite>, <cite>y</cite>, and <cite>z</cite> are
-spatial coordinates in a three dimensional space.</p>
+is <code class="docutils literal notranslate"><span class="pre">(t,</span> <span class="pre">x,</span> <span class="pre">y,</span> <span class="pre">z)</span></code>, <code class="docutils literal notranslate"><span class="pre">t</span></code> is the time coordinate and <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">z</span></code> are spatial coordinates in a three dimensional space.</p>
 <p>A single velocity is given by a 1-D array of N elements, derivatives of the
 spatial dimensions with respect to coordinate time. For example, the
-velocity <cite>(v_x, v_y, v_z)</cite> can also be written <cite>(dx/dt, dy/dt, dz/dt)</cite>.</p>
-<p>Args:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>boost_velocity<span class="classifier">array_like</span></dt><dd><p>Boost velocity to use for the transformation.
-Shape: (…, N)</p>
+velocity <code class="docutils literal notranslate"><span class="pre">(v_x,</span> <span class="pre">v_y,</span> <span class="pre">v_z)</span></code> can also be written <code class="docutils literal notranslate"><span class="pre">(dx/dt,</span> <span class="pre">dy/dt,</span> <span class="pre">dz/dt)</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>boost_velocity</strong> (<em>array_like</em>) – <p>Boost velocity to use for the transformation.</p>
+<p>Shape: (…, N)</p>
+</p></li>
+<li><p><strong>event</strong> (<em>array_like</em><em> or </em><em>None</em>) – <p>Coordinates of events (or any 4-vector) to be boosted.</p>
+<p>Shape: (…, N+1)</p>
+</p></li>
+<li><p><strong>velocity</strong> (<em>array_like</em><em>, </em><em>optional</em>) – <p>Velocities to be boosted.</p>
+<p>Shape: (…, N)</p>
+<p>Default: None</p>
+</p></li>
+<li><p><strong>light_speed</strong> (<em>array_like</em><em>, </em><em>optional</em>) – <p>scalar speed of light.</p>
+<p>Default: 1</p>
+</p></li>
+</ul>
 </dd>
-<dt>event<span class="classifier">array_like or None</span></dt><dd><p>Coordinates of events (or any 4-vector) to be boosted.
-Shape: (…, N+1)</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>If <code class="docutils literal notranslate"><span class="pre">velocity</span> <span class="pre">is</span> <span class="pre">None</span></code>, this is the boosted event. If <code class="docutils literal notranslate"><span class="pre">velocity</span> <span class="pre">is</span>
+<span class="pre">not</span> <span class="pre">None</span></code>, this is the boosted event and boosted velocity combined in
+a tuple.</p>
 </dd>
-<dt>velocity<span class="classifier">array_like, optional</span></dt><dd><p>Velocities to be boosted.
-Shape: (…, N)
-Default: None</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray or 2-tuple of ndarray</p>
 </dd>
 </dl>
-<p>light_speed : array_like, optional scalar speed of light. Default: 1</p>
-</div></blockquote>
-<p>Returns:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>If <cite>velocity is None</cite>:</dt><dd><p><cite>event_boosted</cite> : ndarray</p>
-</dd>
-<dt>If <cite>velocity is not None</cite>:</dt><dd><p>(<cite>event_boosted</cite>, <cite>velocity_boosted</cite>) : tuple of ndarray</p>
-</dd>
-</dl>
-</div></blockquote>
 </dd></dl>
 
 <dl class="py class">
@@ -172,97 +173,100 @@ evaluated using basic linear interpolation. Continuous worldlines can be
 approximated, with accuracy proportional to the density of vertices.</p>
 <p>By default, the first and last vertices are treated as end point
 boundaries, past which events cannot be evaluated. Alternatively, the
-<cite>vel_ends</cite>, <cite>vel_past</cite>, or <cite>vel_future</cite> arguments can be specified to enable linear
-extrapolation of events that fall outside of these boundaries.</p>
-<p>Args:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>vertices<span class="classifier">array</span></dt><dd><p>Set of events to use as the vertices of the worldline. Events
+<code class="docutils literal notranslate"><span class="pre">vel_ends</span></code>, <code class="docutils literal notranslate"><span class="pre">vel_past</span></code>, or <code class="docutils literal notranslate"><span class="pre">vel_future</span></code> arguments can be specified to
+enable linear extrapolation of events that fall outside of these
+boundaries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vertices</strong> (<em>array_like</em>) – Set of events to use as the vertices of the worldline. Events
 must be sorted by increasing time coordinate, and each pair of
-events must have time-like separation.</p>
-</dd>
-<dt>vel_ends<span class="classifier">array, optional</span></dt><dd><p>Velocity of the worldline before and after the first and last
+events must have time-like separation.</p></li>
+<li><p><strong>vel_ends</strong> (<em>array_like</em><em>, </em><em>optional</em>) – <p>Velocity of the worldline before and after the first and last
 vertices. This enables the extrapolation of events that occur
-before and after the first and last <cite>vertices</cite>. Default: <cite>None</cite>.</p>
+before and after the first and last <code class="docutils literal notranslate"><span class="pre">vertices</span></code>.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>vel_past</strong> (<em>array_like</em><em>, </em><em>optional</em>) – <p>Velocity of the worldline before the first vertex. If specified,
+<code class="docutils literal notranslate"><span class="pre">vel_ends</span></code> must be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</p></li>
+<li><p><strong>vel_future</strong> (<em>array_like</em><em>, </em><em>optional</em>) – <p>Velocity of the worldline after the last vertex. If specified,
+<code class="docutils literal notranslate"><span class="pre">vel_ends</span></code> must be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</p></li>
+</ul>
 </dd>
 </dl>
-</div></blockquote>
-<p>Keyword args:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>vel_past<span class="classifier">array, optional</span></dt><dd><p>Velocity of the worldline before the first vertex. If specified,
-<cite>vel_ends</cite> must be <cite>None</cite>. Default: <cite>None</cite>.</p>
-</dd>
-<dt>vel_future<span class="classifier">array, optional</span></dt><dd><p>Velocity of the worldline after the last vertex. If specified,
-<cite>vel_ends</cite> must be <cite>None</cite>. Default: <cite>None</cite>.</p>
-</dd>
-</dl>
-</div></blockquote>
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetime.Worldline.__add__">
 <span class="sig-name descname"><span class="pre">__add__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_delta</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline.__add__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a displacement to all events in the worldline.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
-<dt>event_delta<span class="classifier">array</span></dt><dd><p>Displacements to add to each dimension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event_delta</strong> (<em>array_like</em>) – Displacements to add to each dimension.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#spacetime.Worldline" title="spacetime.Worldline">spacetime.Worldline</a></p>
 </dd>
 </dl>
-</dd>
-</dl>
-<p>Returns: Worldline</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetime.Worldline.__sub__">
 <span class="sig-name descname"><span class="pre">__sub__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_delta</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline.__sub__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Subtract a displacement from all events in the worldline.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
-<dt>event_delta<span class="classifier">array</span></dt><dd><p>Displacements to subtract from each dimension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event_delta</strong> (<em>array_like</em>) – Displacements to subtract from each dimension.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#spacetime.Worldline" title="spacetime.Worldline">spacetime.Worldline</a></p>
 </dd>
 </dl>
-</dd>
-</dl>
-<p>Returns: Worldline</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetime.Worldline.boost">
 <span class="sig-name descname"><span class="pre">boost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame_velocity</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline.boost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Boost the worldline to a different inertial reference frame.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
-<dt>frame_velocity<span class="classifier">array</span></dt><dd><p>Velocity to boost the worldline by.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>frame_velocity</strong> (<em>array_like</em>) – Velocity to boost the worldline by.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#spacetime.Worldline" title="spacetime.Worldline">spacetime.Worldline</a></p>
 </dd>
 </dl>
-</dd>
-</dl>
-<p>Returns: Worldline</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetime.Worldline.eval">
 <span class="sig-name descname"><span class="pre">eval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline.eval" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the event at a specified time on the worldline.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
-<dt>time<span class="classifier">number</span></dt><dd><p>Time at which to evaluate the worldline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> (<em>number</em>) – Time at which to evaluate the worldline.</p></li>
+<li><p><strong>return_indices</strong> (<em>bool</em><em>, </em><em>optional</em>) – <p>Whether to return the indices of vertices surrounding the specified time.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">False</span></code></p>
+</p></li>
+</ul>
 </dd>
-<dt>return_indices<span class="classifier">bool, optional</span></dt><dd><p>Whether to return the indices of vertices surrounding the specified time.
-Default: False</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>If <code class="docutils literal notranslate"><span class="pre">return_indices</span> <span class="pre">==</span> <span class="pre">False</span></code>, just the evaluated event is
+returned.  If <code class="docutils literal notranslate"><span class="pre">return_indices</span> <span class="pre">==</span> <span class="pre">True</span></code>, returns a 2-tuple
+containing the event combined with a 2-tuple of ints for the
+indices of vertices surrounding the specified <code class="docutils literal notranslate"><span class="pre">time</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">ndarray</span></code> or <code class="docutils literal notranslate"><span class="pre">tuple(ndarray,</span> <span class="pre">tuple(int,</span> <span class="pre">int))</span></code></p>
 </dd>
 </dl>
-</dd>
-</dl>
-<p>Returns:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>If <cite>return_indices == False</cite>:</dt><dd><p>event : array</p>
-</dd>
-<dt>If <a href="#id1"><span class="problematic" id="id2">`</span></a>return_indices == True:</dt><dd><p>event, (idx_before, idx_after) : array, (int, int)</p>
-</dd>
-</dl>
-</div></blockquote>
 </dd></dl>
 
 </dd></dl>
