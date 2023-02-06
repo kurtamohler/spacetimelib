@@ -152,8 +152,8 @@ while running:
                 event0_ = observer_frame_state[-1][1]
 
                 new_clock_event0 = boost(
-                    -velocity,
-                    event0_)
+                    event0_,
+                    -velocity)
 
                 new_clock_velocity = boost_velocity_s(new_clock_velocity_, -velocity)
 
@@ -221,8 +221,8 @@ while running:
         observer_velocity = observer_clock._worldline._vel_ends[0]
 
         clock_event = boost(
-            -observer_velocity,
-            clock_event_)
+            clock_event_,
+            -observer_velocity)
 
         clock_velocity = boost_velocity_s(clock_velocity_, -observer_velocity)
 
@@ -278,8 +278,8 @@ while running:
             # `Worldline` that gives the velocity at a particular time
             velocity = observer_clock._worldline._vel_ends[0]
             rest_pos = boost(
-                -velocity,
-                event
+                event,
+                -velocity
             # TODO: I thought this should be a subtraction, but addition
             # gives the correct result?? Need to figure out why
             )[..., 1:] + observer_frame_disp[1:]

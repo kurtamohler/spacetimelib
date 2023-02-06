@@ -1,6 +1,6 @@
 import numpy as np
 
-from .basic_ops import boost
+from .basic_ops import boost, boost_velocity_s
 from .worldline import Worldline
 from .error_checking import check
 
@@ -111,10 +111,13 @@ class Frame2D:
 
             batched_events = np.concatenate([vertices, clock_time0_events])
 
-            new_batched_events, new_batched_velocities = boost(
-                velocity_delta,
+            new_batched_events = boost(
                 batched_events - event_delta,
-                batched_velocities)
+                velocity_delta)
+
+            new_batched_velocities = boost_velocity_s(
+                batched_velocities,
+                velocity_delta)
 
             new_vertices = new_batched_events[:len(vertices)]
             new_clock_time0_events = new_batched_events[len(vertices):]
@@ -153,8 +156,8 @@ class Frame2D:
                 #new_time0 = (worldline.eval(clock._time0) - event_delta).boost(velocity_delta)[0]
 
                 new_time0 = boost(
-                    velocity_delta,
-                    worldline.eval(clock._time0) - event_delta)[0]
+                    worldline.eval(clock._time0) - event_delta,
+                    velocity_delta)[0]
 
                 clock_time0 = clock._clock_time0
                 new_clocks.append(Clock(

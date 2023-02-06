@@ -146,7 +146,7 @@ class SpacetimeTestSuite(unittest.TestCase):
             v = np.random.uniform(low=0.1, high=1.0, size=()).astype(np.double)
             event = np.random.uniform(low=-1000, high=1000, size=(2,)).astype(np.double)
 
-            event_out = st.boost(v, event)
+            event_out = st.boost(event, v)
 
             event_out_check = check_boost_event_1D(v, event)
             assert np.isclose(event_out, event_out_check).all()
@@ -160,7 +160,7 @@ class SpacetimeTestSuite(unittest.TestCase):
         event = np.array(event_batch, dtype=np.double)
         event_out_check = np.array(event_out_batch, dtype=np.double)
 
-        event_out = st.boost(v, event)
+        event_out = st.boost(event, v)
 
         assert np.isclose(event_out, event_out_check).all()
 
@@ -283,7 +283,7 @@ class SpacetimeTestSuite(unittest.TestCase):
             x = np.random.randn(*x_shape)
             u = 0.1 * np.random.randn(*u_shape)
 
-            x_out = st.boost(frame_v, x)
+            x_out = st.boost(x, frame_v)
             u_out = st.boost_velocity_s(u, frame_v)
 
             self.assertEqual(x_out_shape_check, x_out.shape)

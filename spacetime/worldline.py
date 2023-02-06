@@ -263,10 +263,9 @@ class Worldline:
 
         for idx in [0, 1]:
             if self._vel_ends[idx] is not None:
-                _, vel_ends[idx] = boost(
-                    frame_velocity,
-                    np.zeros_like(vertices[0]),
-                    self._vel_ends[idx])
+                vel_ends[idx] = boost_velocity_s(
+                    self._vel_ends[idx],
+                    frame_velocity)
 
         return Worldline(vertices, vel_ends)
 

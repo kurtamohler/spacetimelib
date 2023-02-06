@@ -2,10 +2,9 @@ from .error_checking import check
 
 import numpy as np
 
-def boost(boost_vel_s, vec_st, vel_s=None, light_speed=1):
+def boost(vec_st, boost_vel_s, light_speed=1):
     '''
     Boost a spacetime-vector by a specified space-velocity.
-    Optionally, other space-velocities can also be boosted.
 
     This operation uses the Lorentz vector transformations as described here:
     `Lorentz Transformation: Vector transformations - Wikipedia
@@ -28,23 +27,16 @@ def boost(boost_vel_s, vec_st, vel_s=None, light_speed=1):
 
     Args:
 
+      vec_st (array_like):
+        Spacetime-vectors to be boosted.
+
+        Shape: (..., N+1)
+
       boost_vel_s (array_like):
         Space-velocity to use as the boost velocity of the Lorentz
         transformation.
 
         Shape: (..., N)
-
-      vec_st (array_like or None):
-        Spacetime-vectors to be boosted.
-
-        Shape: (..., N+1)
-
-      vel_s (array_like, optional):
-        Space-velocities to be boosted.
-
-        Shape: (..., N)
-
-        Default: None
 
       light_speed (array_like, optional):
         Scalar speed of light.
@@ -52,33 +44,26 @@ def boost(boost_vel_s, vec_st, vel_s=None, light_speed=1):
         Default: 1
 
     Returns:
-      ndarray or 2-tuple of ndarray:
-
-        If ``vel_s is None``, this is the boosted spacetime-vector. If
-        ``vel_s is not None``, this is the boosted spacetime-vector and
-        boosted space-velocity combined in a tuple.
+      ndarray: The boosted spacetime-vector
     '''
-    check(vec_st is not None or vel_s is not None, ValueError,
-        "expected either `vec_st` or `vel_s` to be given, but both are `None`")
     boost_vel_s = np.array(boost_vel_s)
     light_speed = np.array(light_speed)
 
     if boost_vel_s.ndim == 0:
         boost_vel_s = np.array([boost_vel_s])
 
-    if vec_st is not None:
-        vec_st = np.array(vec_st)
-        check(vec_st.ndim > 0, ValueError,
-            "expected 'vec_st' to have one or more dimensions, ",
-            f"but got {vec_st.ndim}")
+    vec_st = np.array(vec_st)
+    check(vec_st.ndim > 0, ValueError,
+        "expected 'vec_st' to have one or more dimensions, ",
+        f"but got {vec_st.ndim}")
 
-        # TODO: Need to think more about the logic here. It might be a bit wrong
-        if vec_st.shape[-1] == 2 and boost_vel_s.shape[-1] > 1:
-            boost_vel_s = np.expand_dims(boost_vel_s, -1)
-        else:
-            check(vec_st.shape[-1] - 1 == boost_vel_s.shape[-1], ValueError,
-                "expected 'vec_st.shape[-1] - 1 == boost_vel_s.shape[-1]', but ",
-                f"got '{vec_st.shape[-1]} - 1 != {boost_vel_s.shape[-1]}'")
+    # TODO: Need to think more about the logic here. It might be a bit wrong
+    if vec_st.shape[-1] == 2 and boost_vel_s.shape[-1] > 1:
+        boost_vel_s = np.expand_dims(boost_vel_s, -1)
+    else:
+        check(vec_st.shape[-1] - 1 == boost_vel_s.shape[-1], ValueError,
+            "expected 'vec_st.shape[-1] - 1 == boost_vel_s.shape[-1]', but ",
+            f"got '{vec_st.shape[-1]} - 1 != {boost_vel_s.shape[-1]}'")
 
     frame_speed = np.linalg.norm(boost_vel_s, axis=-1)
 
@@ -98,46 +83,18 @@ def boost(boost_vel_s, vec_st, vel_s=None, light_speed=1):
 
     dtype = np.find_common_type([boost_vel_s.dtype, light_speed.dtype], [])
 
-    if vec_st is not None:
-        dtype = np.find_common_type([vec_st.dtype, dtype], [])
-
-    if vel_s is not None:
-        vel_s = np.array(vel_s)
-        if vel_s.ndim == 0:
-            vel_s = np.array([vel_s])
-
-        # TODO: Need to think more about the logic here. It might be a bit wrong
-        if vec_st is not None:
-            if vec_st.shape[-1] == 2 and vel_s.shape[-1] > 1:
-                vel_s = np.expand_dims(vel_s, -1)
-            else:
-                check(vec_st.shape[-1] - 1 == vel_s.shape[-1], ValueError,
-                    "expected 'vec_st.shape[-1] - 1 == vel_s.shape[-1]', but ",
-                    "got '{vec_st.shape[-1]} - 1 != {vel_s.shape[-1]'")
-
-        speed = np.linalg.norm(vel_s, axis=-1)
-        check((speed <= light_speed).all(), ValueError,
-            "the norm of 'vel_s' must be less than or equal to ",
-            f"'light_speed' ({light_speed}), but got {speed}")
-
-        dtype = np.find_common_type([dtype, vel_s.dtype], [])
+    dtype = np.find_common_type([vec_st.dtype, dtype], [])
 
     # Change dtypes to match each other
     boost_vel_s = boost_vel_s.astype(dtype)
     light_speed = light_speed.astype(dtype)
-    if vec_st is not None:
-        vec_st = vec_st.astype(dtype)
-    if vel_s is not None:
-        vel_s = vel_s.astype(dtype)
+    vec_st = vec_st.astype(dtype)
 
     # TODO: Need to check up front whether the args can broadcast with each other.
 
     if frame_speed.ndim == 0:
         if frame_speed == 0:
-            if vel_s is None:
-                return vec_st
-            else:
-                return vec_st, vel_s
+            return vec_st
     else:
         # TODO: This case should be supported, but will require a condition
         # below to prevent the division by zero
@@ -147,56 +104,26 @@ def boost(boost_vel_s, vec_st, vel_s=None, light_speed=1):
     # γ = 1 / √(1 - v ⋅ v / c²)
     lorentz_factor = 1 / np.sqrt(1 - np.square(frame_speed / light_speed))
     
-    if vec_st is not None:
-        position = vec_st[..., 1:]
-        time = vec_st[..., 0]
+    position = vec_st[..., 1:]
+    time = vec_st[..., 0]
 
-        # r' = r + v ((r ⋅ v) (γ - 1) / v² - tγ)
-        position_ = position + boost_vel_s * np.expand_dims(
-            np.sum(position * boost_vel_s, axis=-1) * (lorentz_factor - 1)
-                / np.square(frame_speed)    # TODO: fix division by zero case
-            - time * lorentz_factor,
-            axis=-1)
+    # r' = r + v ((r ⋅ v) (γ - 1) / v² - tγ)
+    position_ = position + boost_vel_s * np.expand_dims(
+        np.sum(position * boost_vel_s, axis=-1) * (lorentz_factor - 1)
+            / np.square(frame_speed)    # TODO: fix division by zero case
+        - time * lorentz_factor,
+        axis=-1)
 
-        # t' = γ (t - (r ⋅ v) / c²)
-        time_ = lorentz_factor * (time - np.sum(position * boost_vel_s, axis=-1)
-            / np.square(light_speed))
+    # t' = γ (t - (r ⋅ v) / c²)
+    time_ = lorentz_factor * (time - np.sum(position * boost_vel_s, axis=-1)
+        / np.square(light_speed))
 
-        event_ = np.empty(time_.shape + (position_.shape[-1] + 1,), dtype=dtype)
+    event_ = np.empty(time_.shape + (position_.shape[-1] + 1,), dtype=dtype)
 
-        event_[..., 0] = time_
-        event_[..., 1:] = position_
+    event_[..., 0] = time_
+    event_[..., 1:] = position_
 
-    else:
-        event_ = None
-
-    if vel_s is not None:
-        # u' = (u / γ - v + (γ (u ⋅ v) v) / (c² (γ + 1)))
-        #      / (1 - u ⋅ v / c²)
-
-        u_dot_v = np.expand_dims(
-            np.sum(vel_s * boost_vel_s, axis=-1),
-            axis=-1)
-
-        outer_factor = 1 / (1 - (u_dot_v / (light_speed**2)))
-        inner_factor = np.expand_dims(
-            (lorentz_factor / (lorentz_factor + 1)) / (light_speed**2),
-            axis=-1)
-
-        # TODO: Probably should expand this above, where it's first calculated
-        L = np.expand_dims(lorentz_factor, axis=-1)
-
-        velocity_ = outer_factor * (vel_s / L - boost_vel_s + inner_factor * u_dot_v * boost_vel_s)
-
-        # TODO: Need to broadcast `velocity_` and `event_` together here
-
-    else:
-        velocity_ = None
-
-    if vel_s is None:
-        return event_
-    else:
-        return event_, velocity_
+    return event_
 
 def boost_velocity_s(vel_s, boost_vel_s, light_speed=1):
     '''
