@@ -255,7 +255,7 @@ the coordinates of the event in Bob's reference frame.
 ```python
 >>> bob_vel = 0.8
 >>> finish_coords = (12.5, 10)
->>> st.boost(bob_vel, finish_coords)
+>>> st.boost(finish_coords, bob_vel)
 array([7.5, 0. ])
 ```
 
