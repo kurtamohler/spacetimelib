@@ -119,46 +119,79 @@ respect to proper time.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="spacetime.boost">
-<span class="sig-prename descclassname"><span class="pre">spacetime.</span></span><span class="sig-name descname"><span class="pre">boost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boost_velocity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">light_speed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.boost" title="Permalink to this definition">¶</a></dt>
-<dd><p>Boost the coordinates of one or more events by a specified velocity.
-Optionally, velocities can also be boosted.</p>
+<span class="sig-prename descclassname"><span class="pre">spacetime.</span></span><span class="sig-name descname"><span class="pre">boost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec_st</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boost_vel_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">light_speed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.boost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Boost a spacetime-vector by a specified space-velocity.</p>
 <p>This operation uses the Lorentz vector transformations as described here:
 <a class="reference external" href="https://en.wikipedia.org/wiki/Lorentz_transformation#Vector_transformations">Lorentz Transformation: Vector transformations - Wikipedia</a></p>
-<p>Batched inputs are supported, to allow boosting multiple events and velocities
-by multiple boost velocities in one call.</p>
-<p>A single event is given by a 1-D array of N+1 elements, where N is the
-number of spatial dimensions. The first element is the time coordinate, and
-the remaining elements are spatial coordinates. For example, if the event
-is <code class="docutils literal notranslate"><span class="pre">(t,</span> <span class="pre">x,</span> <span class="pre">y,</span> <span class="pre">z)</span></code>, <code class="docutils literal notranslate"><span class="pre">t</span></code> is the time coordinate and <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, and
-<code class="docutils literal notranslate"><span class="pre">z</span></code> are spatial coordinates in a three dimensional space.</p>
-<p>A single velocity is given by a 1-D array of N elements, derivatives of the
-spatial dimensions with respect to coordinate time. For example, the
-velocity <code class="docutils literal notranslate"><span class="pre">(v_x,</span> <span class="pre">v_y,</span> <span class="pre">v_z)</span></code> can also be written <code class="docutils literal notranslate"><span class="pre">(dx/dt,</span> <span class="pre">dy/dt,</span> <span class="pre">dz/dt)</span></code>.</p>
+<p>Batched inputs are supported, to allow boosting multiple spacetime-vectors
+or space-velocities by multiple boost space-velocities in one call.</p>
+<p>A single spacetime-vector is given by a 1-D array of N+1 elements, where
+N is the number of spatial dimensions. The first element is the time
+coordinate, and the remaining elements are spatial coordinates. For
+example, if the spacetime-vector represents an event <code class="docutils literal notranslate"><span class="pre">(t,</span> <span class="pre">x,</span> <span class="pre">y,</span> <span class="pre">z)</span></code> in
+3+1 spacetime, <code class="docutils literal notranslate"><span class="pre">t</span></code> is the time coordinate and <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, and <code class="docutils literal notranslate"><span class="pre">z</span></code> are
+spatial coordinates in a three dimensional space.</p>
+<p>A single space-velocity is given by a 1-D array of N elements, derivatives
+of the spatial dimensions with respect to coordinate time. For example, the
+space-velocity <code class="docutils literal notranslate"><span class="pre">(v_x,</span> <span class="pre">v_y,</span> <span class="pre">v_z)</span></code> can also be written <code class="docutils literal notranslate"><span class="pre">(dx/dt,</span> <span class="pre">dy/dt,</span>
+<span class="pre">dz/dt)</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>boost_velocity</strong> (<em>array_like</em>) – <p>Boost velocity to use for the transformation.</p>
-<p>Shape: (…, N)</p>
-</p></li>
-<li><p><strong>event</strong> (<em>array_like</em><em> or </em><em>None</em>) – <p>Coordinates of events (or any 4-vector) to be boosted.</p>
+<li><p><strong>vec_st</strong> (<em>array_like</em>) – <p>Spacetime-vectors to be boosted.</p>
 <p>Shape: (…, N+1)</p>
 </p></li>
-<li><p><strong>velocity</strong> (<em>array_like</em><em>, </em><em>optional</em>) – <p>Velocities to be boosted.</p>
+<li><p><strong>boost_vel_s</strong> (<em>array_like</em>) – <p>Space-velocity to use as the boost velocity of the Lorentz
+transformation.</p>
 <p>Shape: (…, N)</p>
-<p>Default: None</p>
 </p></li>
-<li><p><strong>light_speed</strong> (<em>array_like</em><em>, </em><em>optional</em>) – <p>scalar speed of light.</p>
+<li><p><strong>light_speed</strong> (<em>array_like</em><em>, </em><em>optional</em>) – <p>Scalar speed of light.</p>
 <p>Default: 1</p>
 </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>If <code class="docutils literal notranslate"><span class="pre">velocity</span> <span class="pre">is</span> <span class="pre">None</span></code>, this is the boosted event. If <code class="docutils literal notranslate"><span class="pre">velocity</span> <span class="pre">is</span>
-<span class="pre">not</span> <span class="pre">None</span></code>, this is the boosted event and boosted velocity combined in
-a tuple.</p>
+<dd class="field-even"><p>The boosted spacetime-vector</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray or 2-tuple of ndarray</p>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="spacetime.boost_velocity_s">
+<span class="sig-prename descclassname"><span class="pre">spacetime.</span></span><span class="sig-name descname"><span class="pre">boost_velocity_s</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vel_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boost_vel_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">light_speed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.boost_velocity_s" title="Permalink to this definition">¶</a></dt>
+<dd><p>Boost a space-velocity by a specified space-velocity.</p>
+<p>This operation uses the Lorentz vector transformations as described here:
+<a class="reference external" href="https://en.wikipedia.org/wiki/Lorentz_transformation#Transformation_of_velocities">Lorentz Transformation: Transformation of velocities - Wikipedia</a></p>
+<p>Batched inputs are supported, to allow boosting multiple space-velocities
+by multiple boost space-velocities in one call.</p>
+<p>A single space-velocity is given by a 1-D array of N elements, derivatives
+of the spatial dimensions with respect to coordinate time. For example, the
+space-velocity <code class="docutils literal notranslate"><span class="pre">(v_x,</span> <span class="pre">v_y,</span> <span class="pre">v_z)</span></code> can also be written <code class="docutils literal notranslate"><span class="pre">(dx/dt,</span> <span class="pre">dy/dt,</span>
+<span class="pre">dz/dt)</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vel_s</strong> (<em>array_like</em><em>, </em><em>optional</em>) – <p>Space-velocities to be boosted.</p>
+<p>Shape: (…, N)</p>
+<p>Default: None</p>
+</p></li>
+<li><p><strong>boost_vel_s</strong> (<em>array_like</em>) – <p>Space-velocity to use as the boost velocity of the Lorentz
+transformation.</p>
+<p>Shape: (…, N)</p>
+</p></li>
+<li><p><strong>light_speed</strong> (<em>array_like</em><em>, </em><em>optional</em>) – <p>Scalar speed of light.</p>
+<p>Default: 1</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The boosted space-velocity</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -300,6 +333,7 @@ indices of vertices surrounding the specified <code class="docutils literal notr
 <li class="toctree-l2"><a class="reference internal" href="#spacetime.velocity_st"><code class="docutils literal notranslate"><span class="pre">velocity_st()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#spacetime.velocity_s"><code class="docutils literal notranslate"><span class="pre">velocity_s()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#spacetime.boost"><code class="docutils literal notranslate"><span class="pre">boost()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#spacetime.boost_velocity_s"><code class="docutils literal notranslate"><span class="pre">boost_velocity_s()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#spacetime.Worldline"><code class="docutils literal notranslate"><span class="pre">Worldline</span></code></a></li>
 </ul>
 </li>

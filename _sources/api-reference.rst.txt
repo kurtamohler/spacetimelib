@@ -11,6 +11,8 @@ API Reference
 
 .. autofunction:: spacetime.boost
 
+.. autofunction:: spacetime.boost_velocity_s
+
 .. autoclass:: spacetime.Worldline
    :members:
 
