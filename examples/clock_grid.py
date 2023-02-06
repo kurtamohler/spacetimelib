@@ -202,6 +202,11 @@ while running:
         norm = np.linalg.norm(add_velocity_direction)
         add_velocity = (control_speed / norm) * add_velocity_direction 
 
+    # Reset observer velocity to 0 wrt rest frame
+    if keys_pressed[pygame.K_r]:
+        velocity = observer_clock._worldline._vel_ends[0]
+        add_velocity = -velocity
+
     observer_frame_state = observer_frame.get_state_at_time(observer_frame_time)
     observer_clock_face_time = observer_frame_state[-1][0]
 
