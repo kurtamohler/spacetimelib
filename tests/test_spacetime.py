@@ -43,7 +43,7 @@ class SpacetimeTestSuite(unittest.TestCase):
 
             self.assertTrue(np.isclose(res, res_check).all())
 
-    def test_norm_st2(self):
+    def test_norm2_st(self):
         test_sizes = [
             (1+1,),
             (2+1,),
@@ -73,7 +73,7 @@ class SpacetimeTestSuite(unittest.TestCase):
         for test_size, check_func in product(test_sizes, check_funcs):
             a = 100 * np.random.randn(*test_size)
 
-            res = st.norm_st2(a)
+            res = st.norm2_st(a)
             res_check = check_func(a)
 
             self.assertTrue(np.isclose(res, res_check).all())
@@ -98,7 +98,7 @@ class SpacetimeTestSuite(unittest.TestCase):
             self.assertTrue(np.isclose(vel_st, vel_st_check).all())
 
             # The norm of a spacetime-velocity should always be very close to -1
-            norm2_vel_st = st.norm_st2(vel_st)
+            norm2_vel_st = st.norm2_st(vel_st)
             self.assertTrue(np.isclose(norm2_vel_st, -1).all())
 
             # Converting back to a space-velocity should give the original value
@@ -129,7 +129,7 @@ class SpacetimeTestSuite(unittest.TestCase):
                 self.assertTrue(np.isclose(vel_st, vel_st_check).all())
 
                 # The norm of a spacetime-velocity should always be very close to -1
-                norm2_vel_st = st.norm_st2(vel_st)
+                norm2_vel_st = st.norm2_st(vel_st)
                 self.assertTrue(np.isclose(norm2_vel_st, -1).all())
 
                 # Converting back to a space-velocity should give the original value

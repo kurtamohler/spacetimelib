@@ -247,7 +247,7 @@ def boost_velocity_s(vel_s, boost_vel_s, light_speed=1):
 
 
 # TODO: Probably get rid of this, in favor of just taking the difference between the
-# two events and calling `norm_st2` on the difference.
+# two events and calling `norm2_st` on the difference.
 def _proper_time(event0, event1):
     '''
     Calculate the proper time between two events.
@@ -268,7 +268,7 @@ def _proper_time(event0, event1):
     check(event0.ndim == 1, ValueError, "expected exactly two dimensions")
     check(event0.shape[0] >= 2, ValueError, "expected at least 2 dims")
 
-    return np.sqrt(-norm_st2(event1 - event0))
+    return np.sqrt(-norm2_st(event1 - event0))
 
 def norm_s(vec_s):
     '''
@@ -290,12 +290,12 @@ def norm_s(vec_s):
     '''
     return np.linalg.norm(vec_s, axis=-1)
 
-def norm_st2(vec_st):
+def norm2_st(vec_st):
     '''
     Calculate the square of the norm of a spacetime-vector.
 
     Given an N+1-dimensional spacetime-vector ``a = (a0, a1, ..., aN)``, the
-    square norm is ``norm_st2(a) = - a0^2 + a1^2 + ... + aN^2``.
+    square norm is ``norm2_st(a) = - a0^2 + a1^2 + ... + aN^2``.
 
     This is traditionally called the `squared norm of a four-vector
     <https://mathworld.wolfram.com/Four-VectorNorm.html>`_
@@ -365,7 +365,7 @@ def velocity_st(vel_s, light_speed=1):
     vel_st = vel_st / np.sqrt(1 - np.expand_dims(speed, -1)**2)
 
     # TODO: Find out if this should be light_speed**2 or light_speed**-2 or whatever.
-    if not np.allclose(-norm_st2(vel_st), light_speed, atol=0.01):
+    if not np.allclose(-norm2_st(vel_st), light_speed, atol=0.01):
         raise ValueError(
             'Due to floating point error, one of the given space-velocities '
             'gave a spacetime-velocity whose proper time is not 1. I hope this '

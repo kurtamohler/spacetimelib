@@ -3,7 +3,7 @@ API Reference
 
 .. autofunction:: spacetime.norm_s
 
-.. autofunction:: spacetime.norm_st2
+.. autofunction:: spacetime.norm2_st
 
 .. autofunction:: spacetime.velocity_st
 

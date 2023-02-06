@@ -109,18 +109,18 @@ space-vector.
 5.0
 ```
 
-We can use [`spacetime.norm_st2`](spacetime.norm_st2) to calculate the square
+We can use [`spacetime.norm2_st`](spacetime.norm2_st) to calculate the square
 norm of any spacetime-vector. The square norm is more convenient than the norm
 itself, because the square norm of a spacetime-vector can be negative.
 
 ```python
->>> st.norm_st2([1, 3, 4])
+>>> st.norm2_st([1, 3, 4])
 24.0
 
 # Square of proper distance between two points in space
 >>> a = st.asarray([0, 0])
 >>> b = st.asarray([3, 5])
->>> st.norm_st2(a - b)
+>>> st.norm2_st(a - b)
 16.0
 ```
 
@@ -179,7 +179,7 @@ between the two kinds of velocity vectors.
 array([ 1.02597835,  0.10259784, -0.20519567])
 
 # The square norm of the spacetime-velocity is equal to 1, with some small error
->>> st.norm_st2(vel_st)
+>>> st.norm2_st(vel_st)
 -1.0000000000000002
 
 # Converting the spacetime-velocity back into a space-velocity gives the same
