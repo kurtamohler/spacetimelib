@@ -164,49 +164,82 @@ class SpacetimeTestSuite(unittest.TestCase):
 
         assert np.isclose(event_out, event_out_check).all()
 
+    def test_boost_velocity(self):
+        test_cases = [
+            # vel_s, boost_vel_s, check_res
+            (0.1, 0.2, (0.1 - 0.2) / (1 - 0.1 * 0.2)),
+
+            # Boosting 0 vel to anything should result in the negative of the
+            # boost vel
+            (0, 0.99, -0.99),
+            (0, -0.9581, 0.9581),
+            ([0], [-0.9581], [0.9581]),
+
+            # When boosting low velocities by a low velocity, result should
+            # just be the difference between the two, since it approximates
+            # Galilean transformation
+            (0.001, -0.001, 0.002),
+            (0.001, 0.001, 0),
+            (0.001, 0.999, -0.999),
+
+            # At sufficiently high velocity, boosting further in opposite
+            # direction gives almost the same result
+            (0.99999, -0.99999, 0.99999),
+
+            # Batched boost at low velocities
+            (
+                [[[0.001], [-0.0008], [0]],
+                 [[-.001], [0.0002],  [-0.0001234]]],
+                0.001,
+                [[[0], [-0.0018], [-0.001]],
+                 [[-.002], [-0.0008],  [-0.0011234]]]
+            ),
+            (
+                0.001,
+                [0.001, -0.001],
+                [0, 0.002]
+            ),
+        ]
+
+        for vel_s, boost_vel_s, check_res in test_cases:
+            vel_s = np.array(vel_s)
+            boost_vel_s = np.array(boost_vel_s)
+            check_res = np.array(check_res)
+            res = st.boost_velocity_s(vel_s, boost_vel_s)
+            
+            msg = f'res: {res}\ncheck_res: {check_res}'
+
+            self.assertTrue(res.shape == check_res.shape, msg=msg)
+            self.assertTrue(np.isclose(res, check_res).all(), msg=msg)
+
     # Test boosting velocities in one spatial dimension with randomized inputs
     def test_boost_velocity_1D_random(self):
         v_batch = []
-        event_batch = []
-        event_out_batch = []
         u_batch = []
         u_out_batch = []
 
         for _ in range(10):
             v = np.random.uniform(low=0.1, high=1.0, size=()).astype(np.double)
             u = np.random.uniform(low=0.1, high=1.0, size=()).astype(np.double)
-            event = np.random.uniform(low=-1000, high=1000, size=(2,)).astype(np.double)
 
             u_out_check = check_boost_velocity_1D(v, u)
-            event_out_check = check_boost_event_1D(v, event)
 
-            # Check boosting velocity without event
-            _, u_out = st.boost(v, None, u)
-            assert np.isclose(u_out, u_out_check).all()
-
-            # Check boosting velocity with event
-            event_out, u_out = st.boost(v, event, u)
+            u_out = st.boost_velocity_s(u, v)
 
             assert np.isclose(u_out, u_out_check).all()
-            assert np.isclose(event_out, event_out_check).all()
 
-
-            v_batch.append(v)
-            event_batch.append(event)
-            event_out_batch.append(event_out)
-            u_batch.append(u)
-            u_out_batch.append(u_out)
+            v_batch.append([v])
+            u_batch.append([u])
+            # TODO: Need to avoid adding a dim to output if inputs are scalar
+            u_out_batch.append([u_out])
 
         # Test batched mode
         v = np.array(v_batch, dtype=np.double)
-        event = np.array(event_batch, dtype=np.double)
-        event_out_check = np.array(event_out_batch, dtype=np.double)
         u = np.array(u_batch, dtype=np.double)
         u_out_check = np.array(u_out_batch, dtype=np.double)
 
-        event_out, u_out = st.boost(v, event, u)
+        u_out = st.boost_velocity_s(u, v)
 
-        assert np.isclose(event_out, event_out_check).all()
         assert np.isclose(u_out, u_out_check).all()
 
     # Test `spacetime.boost` with lots of different input shapes
@@ -250,7 +283,8 @@ class SpacetimeTestSuite(unittest.TestCase):
             x = np.random.randn(*x_shape)
             u = 0.1 * np.random.randn(*u_shape)
 
-            x_out, u_out = st.boost(frame_v, x, u)
+            x_out = st.boost(frame_v, x)
+            u_out = st.boost_velocity_s(u, frame_v)
 
             self.assertEqual(x_out_shape_check, x_out.shape)
             self.assertEqual(u_out_shape_check, u_out.shape)

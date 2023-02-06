@@ -2,7 +2,7 @@ import itertools
 import pygame
 import numpy as np
 
-from spacetime import Frame2D, Clock, boost, Worldline
+from spacetime import Frame2D, Clock, boost, boost_velocity_s, Worldline
 
 rest_frame = Frame2D()
 
@@ -151,10 +151,13 @@ while running:
                 velocity = rest_frame._clocks[-1]._worldline._vel_ends[0]
                 event0_ = observer_frame_state[-1][1]
 
-                new_clock_event0, new_clock_velocity = boost(
+                new_clock_event0 = boost(
                     -velocity,
-                    event0_,
-                    new_clock_velocity_)
+                    event0_)
+
+                new_clock_velocity = boost_velocity_s(new_clock_velocity_, -velocity)
+
+
 
                 event0 = new_clock_event0 + observer_frame_disp
 
@@ -212,10 +215,11 @@ while running:
         # `Worldline` that gives the velocity at a particular time
         observer_velocity = observer_clock._worldline._vel_ends[0]
 
-        clock_event, clock_velocity = boost(
+        clock_event = boost(
             -observer_velocity,
-            clock_event_,
-            clock_velocity_)
+            clock_event_)
+
+        clock_velocity = boost_velocity_s(clock_velocity_, -observer_velocity)
 
         # Need to add the current observer frame's displacement to get the
         # correct event from the rest frame's perspective
