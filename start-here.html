@@ -133,16 +133,16 @@ space-vector.</p>
 <span class="go">5.0</span>
 </pre></div>
 </div>
-<p>We can use <a class="reference internal" href="api-reference.html#spacetime.norm_st2" title="spacetime.norm_st2"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">spacetime.norm_st2</span></code></span></a> to calculate the square
+<p>We can use <a class="reference internal" href="api-reference.html#spacetime.norm2_st" title="spacetime.norm2_st"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">spacetime.norm2_st</span></code></span></a> to calculate the square
 norm of any spacetime-vector. The square norm is more convenient than the norm
 itself, because the square norm of a spacetime-vector can be negative.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">st</span><span class="o">.</span><span class="n">norm_st2</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">st</span><span class="o">.</span><span class="n">norm2_st</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
 <span class="go">24.0</span>
 
 <span class="go"># Square of proper distance between two points in space</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">st</span><span class="o">.</span><span class="n">norm_st2</span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">st</span><span class="o">.</span><span class="n">norm2_st</span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span>
 <span class="go">16.0</span>
 </pre></div>
 </div>
@@ -190,7 +190,7 @@ between the two kinds of velocity vectors.</p>
 <span class="n">array</span><span class="p">([</span> <span class="mf">1.02597835</span><span class="p">,</span>  <span class="mf">0.10259784</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.20519567</span><span class="p">])</span>
 
 <span class="c1"># The square norm of the spacetime-velocity is equal to 1, with some small error</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">st</span><span class="o">.</span><span class="n">norm_st2</span><span class="p">(</span><span class="n">vel_st</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">st</span><span class="o">.</span><span class="n">norm2_st</span><span class="p">(</span><span class="n">vel_st</span><span class="p">)</span>
 <span class="o">-</span><span class="mf">1.0000000000000002</span>
 
 <span class="c1"># Converting the spacetime-velocity back into a space-velocity gives the same</span>
