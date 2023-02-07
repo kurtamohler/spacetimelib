@@ -5,17 +5,17 @@ import numpy as np
 
 class Worldline:
     '''
-    The worldline of an object. It is represented as a finite set of events,
-    called vertices, within an inertial reference frame connected together by
-    straight time-like line segments. Events between a pair of vertices are
-    evaluated using basic linear interpolation. Continuous worldlines can be
+    The worldline of a particle is the path that the particle takes through
+    spacetime. In SpacetimeLib, it is represented as a finite list of
+    spacetime-vectors containing coordinates of events, called vertices,
+    in an intertial reference frame.
+
+    We can evaluate events along the worldline at any time between the vertices
+    with :func:`Worldline.eval`. Continuous worldlines can only be
     approximated, with accuracy proportional to the density of vertices.
 
-    By default, the first and last vertices are treated as end point
-    boundaries, past which events cannot be evaluated. Alternatively, the
-    ``vel_ends``, ``vel_past``, or ``vel_future`` arguments can be specified to
-    enable linear extrapolation of events that fall outside of these
-    boundaries.
+    We can also boost an entire worldline into a different reference frame
+    with :func:`Worldline.boost`.
     '''
 
     # TODO: Would be cool to add an option to enable infinite loops over the
@@ -28,28 +28,43 @@ class Worldline:
         Args:
 
           vertices (array_like):
-            Set of events to use as the vertices of the worldline. Events
-            must be sorted by increasing time coordinate, and each pair of
-            events must have time-like separation.
+            A list of spacetime-vectors to use as the vertices of the worldline.
+
+            Events must be sorted by increasing time coordinate.
+
+            Adjacent vertices must be separated by time-like or light-like
+            intervals, since particles are limited by the speed of light. In
+            other words, ``st.norm2_st(vertices[i+1] - vertices[i]) <= 0`` for
+            all ``i``.
+
+            By default, the first and last vertices are treated as end point
+            boundaries, past which events simply cannot be evaluated. The
+            ``vel_ends``, ``vel_past``, or ``vel_future`` arguments can be
+            specified to enable linear extrapolation of events that fall
+            outside of these boundaries.
+
+            Size: (M, N+1) for M vertices that each have N+1 dimensions
 
           vel_ends (array_like, optional):
-            Velocity of the worldline before and after the first and last
+            Space-velocity of the worldline before and after the first and last
             vertices. This enables the extrapolation of events that occur
             before and after the first and last ``vertices``.
+
+            If specified, ``vel_past`` and ``vel_future`` must be ``None``.
 
             Default: ``None``
 
         Keyword args:
 
           vel_past (array_like, optional):
-            Velocity of the worldline before the first vertex. If specified,
-            ``vel_ends`` must be ``None``.
+            Space-velocity of the worldline before the first vertex. If
+            specified, ``vel_ends`` must be ``None``.
 
             Default: ``None``
 
           vel_future (array_like, optional):
-            Velocity of the worldline after the last vertex. If specified,
-            ``vel_ends`` must be ``None``.
+            Space-velocity of the worldline after the last vertex. If
+            specified, ``vel_ends`` must be ``None``.
 
             Default: ``None``
         '''
@@ -146,7 +161,14 @@ class Worldline:
 
     def eval(self, time, return_indices=False):
         '''
-        Returns the event at a specified time on the worldline.
+
+        Calculates the event at a specified time on the worldline. The particle
+        travels in straight lines between vertices, so we use simple linear
+        interpolation for this.
+
+        To evaluate times that are before or after all of the vertices,
+        ``vel_ends``, ``vel_past``, or ``vel_future`` must have been
+        specified in :func:`Worldline`.
 
         Args:
 
@@ -205,7 +227,7 @@ class Worldline:
 
     def _proper_time(self, time0, time1):
         '''
-        Measure the proper time span across a section of the worldline between
+        Measure the proper time along a section of the worldline between
         two specified time coordinates.
 
         Args:
@@ -256,7 +278,7 @@ class Worldline:
             Velocity to boost the worldline by.
 
         Returns:
-          spacetime.Worldline:
+          :class:`spacetime.Worldline`:
         '''
         vertices = boost(frame_velocity, self._vertices)
         vel_ends = [None, None]
@@ -279,7 +301,7 @@ class Worldline:
             Displacements to add to each dimension.
 
         Returns:
-          spacetime.Worldline:
+          :class:`spacetime.Worldline`:
         '''
         return Worldline(
             self._vertices + event_delta,
@@ -295,6 +317,6 @@ class Worldline:
             Displacements to subtract from each dimension.
 
         Returns:
-          spacetime.Worldline:
+          :class:`spacetime.Worldline`:
         '''
         return self + (-event_delta)
