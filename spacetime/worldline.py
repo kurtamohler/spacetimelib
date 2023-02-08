@@ -5,14 +5,15 @@ import numpy as np
 
 class Worldline:
     '''
-    The worldline of a particle is the path that the particle takes through
-    spacetime. In SpacetimeLib, it is represented as a finite list of
-    spacetime-vectors containing coordinates of events, called vertices,
-    in an intertial reference frame.
+    The worldline of a particle is represented as a finite list of events,
+    called "vertices", through which the particle passes in an inertial
+    reference frame. The particle moves in straight lines between the vertices.
+
+    Continuous worldlines can only be approximated, with accuracy proportional
+    to the density of vertices.
 
     We can evaluate events along the worldline at any time between the vertices
-    with :func:`Worldline.eval`. Continuous worldlines can only be
-    approximated, with accuracy proportional to the density of vertices.
+    with :func:`Worldline.eval`.
 
     We can also boost an entire worldline into a different reference frame
     with :func:`Worldline.boost`.
