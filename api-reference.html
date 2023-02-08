@@ -199,13 +199,13 @@ transformation.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="spacetime.Worldline">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">spacetime.</span></span><span class="sig-name descname"><span class="pre">Worldline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vel_ends</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vel_past</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vel_future</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline" title="Permalink to this definition">¶</a></dt>
-<dd><p>The worldline of a particle is the path that the particle takes through
-spacetime. In SpacetimeLib, it is represented as a finite list of
-spacetime-vectors containing coordinates of events, called vertices,
-in an intertial reference frame.</p>
+<dd><p>The worldline of a particle is represented as a finite list of events,
+called “vertices”, through which the particle passes in an inertial
+reference frame. The particle moves in straight lines between the vertices.</p>
+<p>Continuous worldlines can only be approximated, with accuracy proportional
+to the density of vertices.</p>
 <p>We can evaluate events along the worldline at any time between the vertices
-with <a class="reference internal" href="#spacetime.Worldline.eval" title="spacetime.Worldline.eval"><code class="xref py py-func docutils literal notranslate"><span class="pre">Worldline.eval()</span></code></a>. Continuous worldlines can only be
-approximated, with accuracy proportional to the density of vertices.</p>
+with <a class="reference internal" href="#spacetime.Worldline.eval" title="spacetime.Worldline.eval"><code class="xref py py-func docutils literal notranslate"><span class="pre">Worldline.eval()</span></code></a>.</p>
 <p>We can also boost an entire worldline into a different reference frame
 with <a class="reference internal" href="#spacetime.Worldline.boost" title="spacetime.Worldline.boost"><code class="xref py py-func docutils literal notranslate"><span class="pre">Worldline.boost()</span></code></a>.</p>
 <dl class="field-list simple">
