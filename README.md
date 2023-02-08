@@ -23,9 +23,18 @@ Then install SpacetimeLib.
 python setup.py install
 ```
 
-## Run
+## Learn to use SpacetimeLib
 
-There is just one small interactive demo at the moment. Use the arrow keys to
+The [Start Here](https://kurtamohler.github.io/spacetimelib/start-here.html)
+page in the API documentation explains how to use SpacetimeLib.
+
+Also, be sure to check out the [Worldline
+Tutorial](<notebooks/Worldline Tutorial.ipynb>) notebook to see
+a demonstration of one of the main features of SpacetimeLib.
+
+## Interactive demo
+
+There is also a small interactive demo. Use the arrow keys to
 move around. Click the spacebar to freeze time. You can also shoot projectiles
 with the WASD keys. Be careful shooting too many though, performance decreases
 with each new object.
@@ -48,7 +57,7 @@ is exactly at the speed of light.
 What you see on the screen are the positions and time readings of the clocks
 from your ship's frame of reference, on its plane of simultaneity.
 
-![Animated gif of a topdown view of a Minkowski space with two spatial dimensions. In the animation, space and time warp when an observer frame changes velocity.](./images/demo_animation0.gif)
+[//]: # (Fix this gif ![Animated gif of a topdown view of a Minkowski space with two spatial dimensions. In the animation, space and time warp when an observer frame changes velocity.](./images/demo_animation0.gif))
 
 ## Build documentation
 
