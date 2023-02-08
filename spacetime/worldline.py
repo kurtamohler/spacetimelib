@@ -281,7 +281,7 @@ class Worldline:
         Returns:
           :class:`spacetime.Worldline`:
         '''
-        vertices = boost(frame_velocity, self._vertices)
+        vertices = boost(self._vertices, frame_velocity)
         vel_ends = [None, None]
 
         for idx in [0, 1]:
@@ -290,7 +290,7 @@ class Worldline:
                     self._vel_ends[idx],
                     frame_velocity)
 
-        return Worldline(vertices, vel_ends)
+        return Worldline(vertices, vel_past=vel_ends[0], vel_future=vel_ends[1])
 
     def __add__(self, event_delta):
         '''

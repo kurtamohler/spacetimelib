@@ -10,3 +10,5 @@ dependencies:
     - sphinx
     - myst-parser
     - setuptools
+    - jupyter
+    - matplotlib
