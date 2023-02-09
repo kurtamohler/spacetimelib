@@ -57,8 +57,6 @@ is exactly at the speed of light.
 What you see on the screen are the positions and time readings of the clocks
 from your ship's frame of reference, on its plane of simultaneity.
 
-[//]: # (Fix this gif ![Animated gif of a topdown view of a Minkowski space with two spatial dimensions. In the animation, space and time warp when an observer frame changes velocity.](./images/demo_animation0.gif))
-
 ## Build documentation
 
 ```bash
