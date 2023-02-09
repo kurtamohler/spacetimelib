@@ -9,6 +9,7 @@ dependencies:
     - numpy
     - sphinx
     - myst-parser
+    - myst-nb
     - setuptools
     - jupyter
     - matplotlib

@@ -8,7 +8,7 @@ The [Start Here](https://kurtamohler.github.io/spacetimelib/start-here.html)
 page in the API documentation explains how to get started with using
 SpacetimeLib.
 
-Be sure to check out the [Worldline Tutorial](<notebooks/Worldline Tutorial.ipynb>)
+Be sure to check out the [Worldline Tutorial](<doc/source/notebooks/Worldline Tutorial.ipynb>)
 notebook to see a demonstration of one of the main features of SpacetimeLib,
 boosting worldlines.
 
