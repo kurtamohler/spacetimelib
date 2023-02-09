@@ -22,6 +22,11 @@ Contents
    start-here
 
 .. toctree::
+   :maxdepth: 1
+
+   notebooks/Worldline Tutorial
+
+.. toctree::
    :maxdepth: 2
 
    api-reference
