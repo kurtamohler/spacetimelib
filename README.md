@@ -1,21 +1,22 @@
 # SpacetimeLib
 
-Very early stages of a tool that can calculate motion of objects in special relativity.
+SpacetimeLib is a special relativity physics library for Python.
 
-## Learn about SpacetimeLib
+With SpacetimeLib, you can easily calculate Lorentz transformations, time
+dilation, length contraction, and more.
 
-The [Start Here](https://kurtamohler.github.io/spacetimelib/start-here.html)
-page in the API documentation explains how to get started with using
-SpacetimeLib.
-
-Be sure to check out the [Worldline Tutorial](<doc/source/notebooks/Worldline Tutorial.ipynb>)
-notebook to see a demonstration of one of the main features of SpacetimeLib,
-boosting worldlines.
-
-## Documentation
+## Documentation and getting started
 
 The documentation for the latest `main` branch is found here:
 [https://kurtamohler.github.io/spacetimelib/](https://kurtamohler.github.io/spacetimelib/)
+
+The [Start Here](https://kurtamohler.github.io/spacetimelib/start-here.html)
+page teaches the basics of using SpacetimeLib.
+
+Be sure to check out the [Worldline
+Tutorial](<https://kurtamohler.github.io/spacetimelib/notebooks/Worldline%20Tutorial.html>)
+to see a demonstration of one of the main features of SpacetimeLib, boosting
+worldlines.
 
 ## Install
 
