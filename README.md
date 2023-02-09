@@ -2,6 +2,16 @@
 
 Very early stages of a tool that can calculate motion of objects in special relativity.
 
+## Learn about SpacetimeLib
+
+The [Start Here](https://kurtamohler.github.io/spacetimelib/start-here.html)
+page in the API documentation explains how to get started with using
+SpacetimeLib.
+
+Be sure to check out the [Worldline Tutorial](<notebooks/Worldline Tutorial.ipynb>)
+notebook to see a demonstration of one of the main features of SpacetimeLib,
+boosting worldlines.
+
 ## Documentation
 
 The documentation for the latest `main` branch is found here:
@@ -22,15 +32,6 @@ Then install SpacetimeLib.
 ```bash
 python setup.py install
 ```
-
-## Learn to use SpacetimeLib
-
-The [Start Here](https://kurtamohler.github.io/spacetimelib/start-here.html)
-page in the API documentation explains how to use SpacetimeLib.
-
-Also, be sure to check out the [Worldline
-Tutorial](<notebooks/Worldline Tutorial.ipynb>) notebook to see
-a demonstration of one of the main features of SpacetimeLib.
 
 ## Interactive demo
 
