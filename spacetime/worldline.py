@@ -321,3 +321,54 @@ class Worldline:
           :class:`spacetime.Worldline`:
         '''
         return self + (-event_delta)
+
+    # TODO: Should probably take a list (or array_like potentially) of dim
+    # indices instead, to support extracting fewer or more dims than two,
+    # if that is ever useful for people.
+    def plot(self, dim0=1, dim1=0):
+        '''
+        Get an array that can be given directly to `matplotlib.pyplot.plot()
+        <https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html>`_,
+        to generate a 2D plot of the worldline in two of its N+1 dimensions.
+
+        You will need to expand the array with `*`, like so:
+        ``matplotlib.pyplot.plot(*worldline.plot())``
+
+        Args:
+
+          dim0 (int):
+            First dimension to plot
+
+            Default: 1
+
+          dim1 (int):
+            Second dimension to plot
+
+            Default: 0
+
+        Returns:
+
+          ndarray: Size: (2, M) for M vertices
+        '''
+        check(isinstance(dim0, int), TypeError,
+            f'dim0 must be an int, but got {type(dim0)}')
+        check(isinstance(dim1, int), TypeError,
+            f'dim1 must be an int, but got {type(dim1)}')
+
+        num_dims = self._vertices.shape[1]
+        check(
+            dim0 >= 0 and dim0 < num_dims,
+            TypeError,
+            f'dim0 must be >=0 or <{num_dims}, but got {dim0}')
+        check(
+            dim1 >= 0 and dim1 < num_dims,
+            TypeError,
+            f'dim1 must be >=0 or <{num_dims}, but got {dim1}')
+
+        vertices_t = self._vertices.transpose()
+
+        return np.stack([
+            vertices_t[dim0],
+            vertices_t[dim1]])
+
+
