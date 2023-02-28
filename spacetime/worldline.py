@@ -226,7 +226,7 @@ class Worldline:
         else:
             return event
 
-    def _proper_time(self, time0, time1):
+    def proper_time(self, time0, time1):
         '''
         Measure the proper time along a section of the worldline between
         two specified time coordinates.
