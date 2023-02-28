@@ -6,8 +6,10 @@
 SpacetimeLib documentation
 ==========================
 
-**SpacetimeLib** is a Python library for performing calculations and solving
-problems in special relativity physics.
+**SpacetimeLib** is a special relativity physics library for Python.
+
+With SpacetimeLib, you can easily calculate Lorentz transformations, time
+dilation, length contraction, and more.
 
 .. note::
 
