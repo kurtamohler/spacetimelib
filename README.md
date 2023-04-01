@@ -62,7 +62,7 @@ from your ship's frame of reference, on its plane of simultaneity.
 ## Build documentation
 
 ```bash
-python setup.py sphinx_build
+python setup.py build_sphinx
 ```
 
 ## Good resources for learning special relativity
