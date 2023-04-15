@@ -276,11 +276,11 @@ specified, <code class="docutils literal notranslate"><span class="pre">vel_ends
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetime.Worldline.boost">
-<span class="sig-name descname"><span class="pre">boost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame_velocity</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline.boost" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">boost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boost_vel_s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline.boost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Boost the worldline to a different inertial reference frame.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>frame_velocity</strong> (<em>array_like</em>) – Velocity to boost the worldline by.</p>
+<dd class="field-odd"><p><strong>boost_vel_s</strong> (<em>array_like</em>) – Space-velocity to boost the worldline by.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#spacetime.Worldline" title="spacetime.Worldline"><code class="xref py py-class docutils literal notranslate"><span class="pre">spacetime.Worldline</span></code></a></p>
@@ -359,6 +359,23 @@ two specified time coordinates.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>number</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spacetime.Worldline.vertex">
+<span class="sig-name descname"><span class="pre">vertex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline.vertex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the vertex at the specified index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>idx</strong> (<em>int</em>) – The index of the vertex to get.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Size: (N+1,)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
 </dd>
 </dl>
 </dd></dl>
