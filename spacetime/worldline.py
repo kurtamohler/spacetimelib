@@ -1,4 +1,4 @@
-from .basic_ops import boost, _proper_time
+from .basic_ops import boost, _proper_time, boost_velocity_s
 from .error_checking import check, internal_assert
 
 import numpy as np
@@ -269,26 +269,26 @@ class Worldline:
 
             return res
 
-    def boost(self, frame_velocity):
+    def boost(self, boost_vel_s):
         '''
         Boost the worldline to a different inertial reference frame.
 
         Args:
 
-          frame_velocity (array_like):
-            Velocity to boost the worldline by.
+          boost_vel_s (array_like):
+            Space-velocity to boost the worldline by.
 
         Returns:
           :class:`spacetime.Worldline`:
         '''
-        vertices = boost(self._vertices, frame_velocity)
+        vertices = boost(self._vertices, boost_vel_s)
         vel_ends = [None, None]
 
         for idx in [0, 1]:
             if self._vel_ends[idx] is not None:
                 vel_ends[idx] = boost_velocity_s(
                     self._vel_ends[idx],
-                    frame_velocity)
+                    boost_vel_s)
 
         return Worldline(vertices, vel_past=vel_ends[0], vel_future=vel_ends[1])
 
@@ -321,6 +321,31 @@ class Worldline:
           :class:`spacetime.Worldline`:
         '''
         return self + (-event_delta)
+
+    def __len__(self):
+        '''
+        Get the number of vertices in the worldline.
+
+        Returns:
+          int:
+        '''
+        return len(self._vertices)
+
+    def vertex(self, idx):
+        '''
+        Get the vertex at the specified index.
+
+        Args:
+
+            idx (int):
+              The index of the vertex to get.
+
+        Returns:
+          ndarray: Size: (N+1,)
+        '''
+        check(isinstance(idx, int), TypeError,
+            f'idx must be an int, but got {type(idx)}')
+        return self._vertices[idx].copy()
 
     # TODO: Should probably take a list (or array_like potentially) of dim
     # indices instead, to support extracting fewer or more dims than two,

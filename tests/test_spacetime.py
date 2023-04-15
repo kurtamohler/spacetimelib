@@ -289,6 +289,37 @@ class SpacetimeTestSuite(unittest.TestCase):
             self.assertEqual(x_out_shape_check, x_out.shape)
             self.assertEqual(u_out_shape_check, u_out.shape)
 
+    def test_Worldline_vertex(self):
+        test_cases = [
+            [   [0, 0],
+                [10, 4.5],
+            ],
+            [   [-1000, 100],
+                [-304, -100],
+                [-10, -250],
+            ],
+            [   [1, 2, 3],
+                [10, -2, 4],
+                [20, 0, 0],
+            ]
+        ]
+        for vertices in test_cases:
+            w = st.Worldline(vertices)
+            self.assertEqual(len(vertices), len(w))
+
+            for idx in range(len(w)):
+                self.assertTrue((w.vertex(idx) == vertices[idx]).all())
+
+                # Check index wrapping
+                self.assertTrue((w.vertex(idx) == w.vertex(-len(w) + idx)).all())
+
+            # Test that error is thrown if index is out of bounds
+            with self.assertRaisesRegex(IndexError, r'out of bounds'):
+                w.vertex(len(w))
+
+            with self.assertRaisesRegex(IndexError, r'out of bounds'):
+                w.vertex(-len(w) - 1)
+
     def test_Worldline_eval(self):
         w0 = st.Worldline(
             [[0, 0]],
@@ -355,6 +386,54 @@ class SpacetimeTestSuite(unittest.TestCase):
         for w, time0, time1, tau_check in test_cases:
             self.assertAlmostEqual(w.proper_time(time0, time1), tau_check)
             self.assertAlmostEqual(w.proper_time(time1, time0), tau_check)
+
+    def test_Worldline_boost(self):
+        # TODO: Should test `vel_ends` too
+        test_worldlines = [
+            st.Worldline([
+                [0, 0],
+                [10, 4.5],
+            ]),
+            st.Worldline([
+                [-1000, 100],
+                [-304, -100],
+                [-10, -250],
+            ]),
+            st.Worldline([
+                [1, 2, 3],
+                [10, -2, 4],
+                [20, 0, 0],
+            ])
+        ]
+
+        # TODO: This is probably a generally useful function for testing.
+        # Should probably create a place to put testing utils
+        def random_vel_s(n_space_dims):
+            # Pick a random direction
+            direction_s = np.random.randn(n_space_dims)
+            direction_s /= np.linalg.norm(direction_s)
+
+            # Pick a random speed, 0.1 to 0.9
+            speed = 0.1 + 0.8 * np.random.rand(1)
+
+            return speed * direction_s
+
+        for w0 in test_worldlines:
+            boost_vel_s = random_vel_s(len(w0.vertex(0)) - 1)
+            w1 = w0.boost(boost_vel_s)
+
+            self.assertEqual(len(w0), len(w1))
+
+            for v_idx in range(len(w0)):
+                v0 = w0.vertex(v_idx)
+                v1 = w1.vertex(v_idx)
+
+                v1_check = st.boost(v0, boost_vel_s)
+                v0_check = st.boost(v1, -boost_vel_s)
+
+                self.assertTrue(np.isclose(v0, v0_check).all())
+                self.assertTrue(np.isclose(v1, v1_check).all())
+
 
 if __name__ == '__main__':
     unittest.main()
