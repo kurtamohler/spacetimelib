@@ -155,8 +155,8 @@ class Worldline:
 
         # Need to check that the proper time origin is actually within the bounds of
         # worldline
-        first_time = -float('inf') if self._vel_ends[0] else self._vertices[0][0].item()
-        last_time = float('inf') if self._vel_ends[1] else self._vertices[-1][0].item()
+        first_time = -float('inf') if self._vel_ends[0] is not None else self._vertices[0][0].item()
+        last_time = float('inf') if self._vel_ends[1] is not None else self._vertices[-1][0].item()
 
         check(proper_time_origin >= first_time and proper_time_origin <= last_time,
             ValueError,
@@ -271,10 +271,26 @@ class Worldline:
     # can just call `proper_time` twice with the two different coord times and
     # take the difference between them. Probably should make `proper_time_diff`
     # function that does that.
-    def proper_time(self, time0, time1):
+    def proper_time(self, time):
         '''
         Measure the proper time along a section of the worldline between
-        two specified time coordinates.
+        :attr:``Worldline.proper_time_origin`` and a specified time coordinate.
+
+        Args:
+
+          time (number):
+            Time coordinate
+
+        Returns:
+          number:
+        '''
+        self.proper_time_diff(self.proper_time_origin, time)
+
+    def proper_time_diff(self, time0, time1):
+        '''
+        Measure the proper time along a section of the worldline between two
+        specified time coordinates. Note that if ``time1 < time0``, result is
+        negative.
 
         Args:
 
@@ -287,16 +303,20 @@ class Worldline:
         Returns:
           number:
         '''
+        sign = 1
+
+        # TODO: I'm not a fan of this. Make it simpler
         if time0 > time1:
             tmp = time0
             time0 = time1
             time1 = tmp
+            sign = -1
 
         first_event, first_indices = self.eval(time0, return_indices=True)
         last_event, last_indices = self.eval(time1, return_indices=True)
 
         if first_indices == last_indices:
-            return _proper_time(first_event, last_event)
+            return sign * _proper_time(first_event, last_event)
 
         else:
             res = 0
@@ -312,11 +332,13 @@ class Worldline:
             if last_indices[0] != last_indices[1]:
                 res += _proper_time(self._vertices[last_indices[0]], last_event)
 
-            return res
+            return sign * res
 
     def boost(self, boost_vel_s):
         '''
-        Boost the worldline to a different inertial reference frame.
+        Boost the worldline to a different inertial reference frame. The vertices,
+        past and future velocities, and :attr:``Worldline.proper_time_origin`` are
+        all boosted.
 
         Args:
 
