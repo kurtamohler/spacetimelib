@@ -2,6 +2,7 @@ from .basic_ops import boost, _proper_time, boost_velocity_s
 from .error_checking import check, internal_assert
 
 import numpy as np
+import numbers
 
 class Worldline:
     '''
@@ -24,7 +25,7 @@ class Worldline:
 
     # TODO: Investigate using SymPy to enable continuous worldlines.
 
-    def __init__(self, vertices, vel_ends=None, *, vel_past=None, vel_future=None):
+    def __init__(self, vertices, vel_ends=None, *, vel_past=None, vel_future=None, proper_time_origin=None):
         '''
         Args:
 
@@ -53,6 +54,8 @@ class Worldline:
 
             If specified, ``vel_past`` and ``vel_future`` must be ``None``.
 
+            Size: (N+1)
+
             Default: ``None``
 
         Keyword args:
@@ -61,13 +64,25 @@ class Worldline:
             Space-velocity of the worldline before the first vertex. If
             specified, ``vel_ends`` must be ``None``.
 
+            Size: (N+1)
+
             Default: ``None``
 
           vel_future (array_like, optional):
             Space-velocity of the worldline after the last vertex. If
             specified, ``vel_ends`` must be ``None``.
 
+            Size: (N+1)
+
             Default: ``None``
+
+          proper_time_origin (number, optional):
+            The proper time origin for the worldline. This is the coordinate
+            time at which a stopwatch traveling along the worldline
+            reads `0`. By default, the coordinate time of the first vertex
+            in the worldline is chosen.
+
+            Default: ``vertices[0][0]``
         '''
         vertices = np.array(vertices)
 
@@ -113,6 +128,10 @@ class Worldline:
                 "expected `vel_past` and `vel_future` to be None, since `vel_ends` was given")
             vel_ends = np.array(vel_ends)
             check_vel_end('vel_ends', vel_ends)
+
+            # TODO: I may want to rename `_vel_ends` since its meaning is actually
+            # not the same as `vel_ends`. `vel_ends` is one velocity, and `_vel_ends`
+            # is two velocities
             self._vel_ends = [vel_ends, vel_ends]
         else:
             self._vel_ends = [None, None]
@@ -126,6 +145,26 @@ class Worldline:
                 vel_future = np.array(vel_future)
                 check_vel_end('vel_future', vel_future)
                 self._vel_ends[1] = vel_future
+
+        if proper_time_origin is None:
+            proper_time_origin = self._vertices[0][0].item()
+        else:
+            check(isinstance(proper_time_origin, numbers.Number), TypeError,
+                "expected 'proper_time_origin' to be float or int, but got ",
+                f"{type(proper_time_origin)}")
+
+        # Need to check that the proper time origin is actually within the bounds of
+        # worldline
+        first_time = -float('inf') if self._vel_ends[0] else self._vertices[0][0].item()
+        last_time = float('inf') if self._vel_ends[1] else self._vertices[-1][0].item()
+
+        check(proper_time_origin >= first_time and proper_time_origin <= last_time,
+            ValueError,
+            f"expected 'proper_time_origin' to be between {first_time} and ",
+            f"{last_time}, the first and last time coordinates in the worldline, ",
+            f"but got {proper_time_origin}")
+
+        self._proper_time_origin = proper_time_origin
 
     def _find_surrounding_vertices(self, time):
         '''
@@ -226,6 +265,12 @@ class Worldline:
         else:
             return event
 
+    # TODO: I suppose `proper_time` should now just take one arg and find the
+    # proper time between `proper_time_origin` and the specified time. Then to
+    # get the proper time between two arbitrary points on the worldline, you
+    # can just call `proper_time` twice with the two different coord times and
+    # take the difference between them. Probably should make `proper_time_diff`
+    # function that does that.
     def proper_time(self, time0, time1):
         '''
         Measure the proper time along a section of the worldline between
@@ -290,7 +335,13 @@ class Worldline:
                     self._vel_ends[idx],
                     boost_vel_s)
 
-        return Worldline(vertices, vel_past=vel_ends[0], vel_future=vel_ends[1])
+
+        return Worldline(
+            vertices,
+            # TODO: I guess only evaluating this once would be better
+            proper_time_origin=boost(self.eval(self._proper_time_origin), boost_vel_s)[0].item(),
+            vel_past=vel_ends[0],
+            vel_future=vel_ends[1])
 
     def __add__(self, event_delta):
         '''
@@ -304,9 +355,16 @@ class Worldline:
         Returns:
           :class:`spacetime.Worldline`:
         '''
+        event_delta = np.asarray(event_delta)
+        check(event_delta.shape == self._vertices[0].shape, ValueError,
+            f"'event_delta' must have shape {self._vertices[0].shape}, but got ",
+            f"{event_delta.shape}")
+
         return Worldline(
             self._vertices + event_delta,
-            self._vel_ends)
+            vel_past=self._vel_ends[0],
+            vel_future=self._vel_ends[1],
+            proper_time_origin=self._proper_time_origin + event_delta[0].item())
 
     def __sub__(self, event_delta):
         '''
@@ -395,5 +453,15 @@ class Worldline:
         return np.stack([
             vertices_t[dim0],
             vertices_t[dim1]])
+
+    @property
+    def proper_time_origin(self):
+        '''
+        Get the proper time origin of the worldline.
+
+        Returns:
+          int or float:
+        '''
+        return self._proper_time_origin
 
 
