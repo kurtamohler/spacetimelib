@@ -286,7 +286,9 @@ in the worldline is chosen.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetime.Worldline.boost">
 <span class="sig-name descname"><span class="pre">boost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boost_vel_s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline.boost" title="Permalink to this definition">¶</a></dt>
-<dd><p>Boost the worldline to a different inertial reference frame.</p>
+<dd><p>Boost the worldline to a different inertial reference frame. The vertices,
+past and future velocities, and :attr:<code class="docutils literal notranslate"><span class="pre">Worldline.proper_time_origin</span></code> are
+all boosted.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>boost_vel_s</strong> (<em>array_like</em>) – Space-velocity to boost the worldline by.</p>
@@ -327,6 +329,20 @@ indices of vertices surrounding the specified <code class="docutils literal notr
 </dl>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="spacetime.Worldline.ndim">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ndim</span></span><a class="headerlink" href="#spacetime.Worldline.ndim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of spatial plus time dimensions, N+1, for this worldline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>N+1</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetime.Worldline.plot">
 <span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline.plot" title="Permalink to this definition">¶</a></dt>
@@ -356,9 +372,25 @@ to generate a 2D plot of the worldline in two of its N+1 dimensions.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetime.Worldline.proper_time">
-<span class="sig-name descname"><span class="pre">proper_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline.proper_time" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">proper_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline.proper_time" title="Permalink to this definition">¶</a></dt>
 <dd><p>Measure the proper time along a section of the worldline between
-two specified time coordinates.</p>
+:attr:<code class="docutils literal notranslate"><span class="pre">Worldline.proper_time_origin</span></code> and a specified time coordinate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>time</strong> (<em>number</em>) – Time coordinate</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>number</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spacetime.Worldline.proper_time_diff">
+<span class="sig-name descname"><span class="pre">proper_time_diff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline.proper_time_diff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Measure the proper time along a section of the worldline between two
+specified time coordinates. Note that if <code class="docutils literal notranslate"><span class="pre">time1</span> <span class="pre">&lt;</span> <span class="pre">time0</span></code>, result is
+negative.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
