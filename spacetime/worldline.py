@@ -464,4 +464,12 @@ class Worldline:
         '''
         return self._proper_time_origin
 
+    @property
+    def ndim(self):
+        '''
+        Get the number of spatial plus time dimensions, N+1, for this worldline.
 
+        Returns:
+            int: N+1
+        '''
+        return self._vertices.shape[-1]
