@@ -17,7 +17,8 @@ if demo_number == 0:
             Clock(
                 Worldline(
                     [20 * np.array([0, i-5, j-5])],
-                    [0, 0]
+                    [0, 0],
+                    proper_time_origin=0
                 ),
                 0,
                 0
@@ -35,7 +36,8 @@ elif demo_number == 1:
             Clock(
                 Worldline(
                     [R * np.array([0, np.sin(angle), np.cos(angle)])],
-                    [0, 0]
+                    [0, 0],
+                    proper_time_origin=0
                 ),
                 0,
                 0
@@ -50,7 +52,8 @@ elif demo_number == 2:
                 Clock(
                     Worldline(
                         [(0, 10 * direction, (i - num_charges/2) * 5)],
-                        [0, 0.5 * direction]
+                        [0, 0.5 * direction],
+                        proper_time_origin=0
                     ),
                     0,
                     0
@@ -79,7 +82,8 @@ elif demo_number == 3:
                         [80, -4, 0],
                         [90, 4, 0],
                     ]) + (-40.5, 0, spacing * i - spacing * (N//2)),
-                    [0, 0]
+                    [0, 0],
+                    proper_time_origin=0
                 ),
                 0,
                 0))
@@ -98,7 +102,8 @@ rest_frame.append(
     Clock(
         Worldline(
             [observer_frame_disp],
-            observer_frame_velocity
+            observer_frame_velocity,
+            proper_time_origin=observer_frame_disp[0]
         ),
         observer_frame_disp[0],
         0))
@@ -166,7 +171,8 @@ while running:
                     Clock(
                         Worldline(
                             [event0],
-                            new_clock_velocity
+                            new_clock_velocity,
+                            proper_time_origin=event0[0],
                         ),
                         event0[0],
                         0))
@@ -240,7 +246,9 @@ while running:
         new_observer_clock = Clock(
             Worldline(
                 [clock_event],
-                clock_velocity
+                clock_velocity,
+                proper_time_origin=clock_event[0],
+                proper_time_offset=observer_clock_face_time
             ),
             clock_event[0],
             observer_clock_face_time)

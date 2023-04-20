@@ -25,7 +25,14 @@ class Worldline:
 
     # TODO: Investigate using SymPy to enable continuous worldlines.
 
-    def __init__(self, vertices, vel_ends=None, *, vel_past=None, vel_future=None, proper_time_origin=None):
+    def __init__(self,
+            vertices,
+            vel_ends=None,
+            *,
+            vel_past=None,
+            vel_future=None,
+            proper_time_origin=None,
+            proper_time_offset=0):
         '''
         Args:
 
@@ -78,11 +85,17 @@ class Worldline:
 
           proper_time_origin (number, optional):
             The proper time origin for the worldline. This is the coordinate
-            time at which a stopwatch traveling along the worldline
-            reads `0`. By default, the coordinate time of the first vertex
-            in the worldline is chosen.
+            time at which a stopwatch traveling along the worldline has the
+            value ``proper_time_offset``. By default, the coordinate time of
+            the first vertex in the worldline is chosen.
 
             Default: ``vertices[0][0]``
+
+          proper_time_offset (number, optional):
+            The value that a stopwatch traveling along the worldline has at
+            the coordinate time ``proper_time_origin``.
+
+            Default: ``0``
         '''
         vertices = np.array(vertices)
 
@@ -165,6 +178,11 @@ class Worldline:
             f"but got {proper_time_origin}")
 
         self._proper_time_origin = proper_time_origin
+
+        check(isinstance(proper_time_offset, numbers.Number), TypeError,
+            "expected 'proper_time_offset' to be float or int, but got ",
+            f"{type(proper_time_offset)}")
+        self._proper_time_offset = proper_time_offset
 
     def _find_surrounding_vertices(self, time):
         '''
@@ -485,6 +503,16 @@ class Worldline:
           int or float:
         '''
         return self._proper_time_origin
+
+    @property
+    def proper_time_offset(self):
+        '''
+        Get the proper time offset of the worldline.
+
+        Returns:
+          int or float:
+        '''
+        return self._proper_time_offset
 
     @property
     def ndim(self):
