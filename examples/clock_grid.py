@@ -2,9 +2,9 @@ import itertools
 import pygame
 import numpy as np
 
-from spacetime import Frame2D, boost, boost_velocity_s, Worldline
+from spacetime import Frame, boost, boost_velocity_s, Worldline
 
-rest_frame = Frame2D()
+rest_frame = Frame()
 
 render_proper_times = True
 

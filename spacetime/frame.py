@@ -6,10 +6,10 @@ from .worldline import Worldline
 from .error_checking import check
 
 
-class Frame2D:
+class Frame:
     '''
-    An inertial reference frame in Minkowski spacetime with two spatial
-    dimensions.
+    An inertial reference frame in Minkowski spacetime.
+    Only supports 2+1 spacetime at the moment.
     '''
 
     def __init__(self, worldlines=None):
@@ -159,4 +159,4 @@ class Frame2D:
 
                 new_worldlines.append(new_w)
 
-        return Frame2D(new_worldlines)
+        return Frame(new_worldlines)

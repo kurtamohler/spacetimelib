@@ -7,7 +7,7 @@ from .basic_ops import (
     velocity_s,
     velocity_st,
 )
-from .frame import Frame2D
+from .frame import Frame
 from .worldline import Worldline
 from .error_checking import check
 
