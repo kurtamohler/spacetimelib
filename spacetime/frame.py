@@ -1,4 +1,5 @@
 import numpy as np
+from copy import copy
 
 from .basic_ops import boost, boost_velocity_s
 from .worldline import Worldline
@@ -11,21 +12,22 @@ class Frame2D:
     dimensions.
     '''
 
-    def __init__(self, clocks=None):
-        if clocks is None:
-            self._clocks = []
+    def __init__(self, worldlines=None):
+        if worldlines is None:
+            self._worldlines = []
         else:
-            assert isinstance(clocks, (list, tuple))
-            for clock in clocks:
-                assert isinstance(clock, Clock)
-            self._clocks = clocks
+            assert isinstance(worldlines, (list, tuple))
+            for w in worldlines:
+                assert isinstance(w, Worldline)
+            self._worldlines = copy(worldlines)
 
-    def append(self, clock):
-        self._clocks.append(clock)
+    def append(self, worldline):
+        assert isinstance(worldline, Worldline)
+        self._worldlines.append(worldline)
 
     def get_state_at_time(self, time):
         '''
-        Returns the face times and events for all clocks at the specified time.
+        Returns the proper times and events for all worldlines at the specified time.
         '''
         state = []
 
@@ -33,9 +35,9 @@ class Frame2D:
         # I don't think that's very possible since worldlines can have all
         # different numbers of vertices. Still, there could be something that
         # would give better performance here.
-        for clock in self._clocks:
-            proper_time = clock._worldline.proper_time(time)
-            event = clock._worldline.eval(time)
+        for w in self._worldlines:
+            proper_time = w.proper_time(time)
+            event = w.eval(time)
             state.append((proper_time, event))
 
         return state
@@ -64,22 +66,22 @@ class Frame2D:
         # Don't allow faster than light transformations
         assert speed <= 1
 
-        new_clocks = []
+        new_worldlines = []
 
         batched = False
 
         # TODO: While this impl of batching is roughly 3x faster on my machine
         # than the non-batched path while uniformly accelerating in
         # `examples/clock_grid.py`, it is still pretty inefficient to copy all
-        # the events and velocities out of the clocks and then back into the
-        # new clocks. It would be much more efficient to always keep a batched
-        # representation of the frame cached. This would be very simple to
-        # implement, just separate the batched representation creation into
-        # a new function and use the `lru_cache` decorator (or whatever it's
-        # called) to auto-cache it.  Another possibility is that events and
-        # velocities of the individual clocks could potentially be views into
-        # the batched representation, but that seems harder to implement and
-        # prevent broken views.
+        # the events and velocities out of the worldlines and then back into
+        # the new worldlines. It would be much more efficient to always keep
+        # a batched representation of the frame cached. This would be very
+        # simple to implement, just separate the batched representation
+        # creation into a new function and use the `lru_cache` decorator (or
+        # whatever it's called) to auto-cache it. Another possibility is that
+        # events and velocities of the individual worldlines could potentially
+        # be views into the batched representation, but that seems harder to
+        # implement while preventing broken views.
         if batched:
             vertex_count = []
             vertices = []
@@ -87,28 +89,28 @@ class Frame2D:
 
             batched_velocities = []
 
-            # Map the clock index to an index into `velocities`, for both the
+            # Map the worldline index to an index into `velocities`, for both the
             # past and future velocity
             past_velocity_idx_map = {}
             future_velocity_idx_map = {}
 
-            # Need to grab all event vertices and velocities from all worldlines and combine
-            # them into two batched event and velocity arrays that can be boosted. Need
-            # to keep track of which vertices and velocities belong to which clocks.
-            for clock_idx, clock in enumerate(self._clocks):
-                worldline = clock._worldline
-                vertex_count.append(len(worldline._vertices))
-                vertices += [vertex for vertex in worldline._vertices]
+            # Need to grab all event vertices and velocities from all
+            # worldlines and combine them into two batched event and velocity
+            # arrays that can be boosted. Need to keep track of which vertices
+            # and velocities belong to which worldlines.
+            for w_idx, w in enumerate(self._worldlines):
+                vertex_count.append(len(w._vertices))
+                vertices += [vertex for vertex in w._vertices]
 
-                if worldline._vel_ends[0] is not None:
-                    past_velocity_idx_map[clock_idx] = len(batched_velocities)
-                    batched_velocities.append(worldline._vel_ends[0])
+                if w._vel_ends[0] is not None:
+                    past_velocity_idx_map[w_idx] = len(batched_velocities)
+                    batched_velocities.append(w._vel_ends[0])
 
-                if worldline._vel_ends[1] is not None:
-                    future_velocity_idx_map[clock_idx] = len(batched_velocities)
-                    batched_velocities.append(worldline._vel_ends[1])
+                if w._vel_ends[1] is not None:
+                    future_velocity_idx_map[w_idx] = len(batched_velocities)
+                    batched_velocities.append(w._vel_ends[1])
 
-                proper_time_origin_events.append(worldline.eval(worldline.proper_time_origin))
+                proper_time_origin_events.append(w.eval(w.proper_time_origin))
 
             batched_events = np.concatenate([vertices, proper_time_origin_events])
 
@@ -125,46 +127,36 @@ class Frame2D:
 
             cur_vertices_idx = 0
 
-            for clock_idx, clock in enumerate(self._clocks):
-                if clock_idx in past_velocity_idx_map:
-                    past_velocity = new_batched_velocities[past_velocity_idx_map[clock_idx]]
+            for w_idx, w in enumerate(self._worldlines):
+                if w_idx in past_velocity_idx_map:
+                    past_velocity = new_batched_velocities[past_velocity_idx_map[w_idx]]
                 else:
                     past_velocity = None
 
-                if clock_idx in future_velocity_idx_map:
-                    future_velocity = new_batched_velocities[future_velocity_idx_map[clock_idx]]
+                if w_idx in future_velocity_idx_map:
+                    future_velocity = new_batched_velocities[future_velocity_idx_map[w_idx]]
                 else:
                     future_velocity = None
 
-                num_vertices = vertex_count[clock_idx]
+                num_vertices = vertex_count[w_idx]
 
                 # TODO: Make Worldline accept 1-element ndarray to avoid this cast
-                new_proper_time_origin = float(new_proper_time_origin_events[clock_idx][0])
-                new_worldline = Worldline(
+                new_proper_time_origin = float(new_proper_time_origin_events[w_idx][0])
+                new_w = Worldline(
                         new_vertices[cur_vertices_idx : cur_vertices_idx + num_vertices],
                         vel_past=past_velocity,
                         vel_future=future_velocity,
                         proper_time_origin=new_proper_time_origin,
-                        proper_time_offset=clock._worldline.proper_time_offset)
+                        proper_time_offset=w.proper_time_offset)
 
                 cur_vertices_idx += num_vertices
 
-                new_clocks.append(Clock(new_worldline))
+                new_worldlines.append(new_w)
 
         else:
-            for clock_idx, clock in enumerate(self._clocks):
-                worldline = clock._worldline
-                new_worldline = (worldline - event_delta).boost(velocity_delta)
+            for w_idx, w in enumerate(self._worldlines):
+                new_w = (w - event_delta).boost(velocity_delta)
 
-                new_clocks.append(Clock(new_worldline))
+                new_worldlines.append(new_w)
 
-        return Frame2D(new_clocks)
-
-
-class Clock:
-    def __init__(self, worldline):
-        check(isinstance(worldline, Worldline), TypeError,
-            "expected `worldline` to be a `Worldline` type, but got ",
-            f"{type(worldline)} instead")
-
-        self._worldline = worldline
+        return Frame2D(new_worldlines)
