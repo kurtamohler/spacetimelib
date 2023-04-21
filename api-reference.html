@@ -199,7 +199,7 @@ transformation.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="spacetime.Worldline">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">spacetime.</span></span><span class="sig-name descname"><span class="pre">Worldline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vel_ends</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vel_past</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vel_future</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proper_time_origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">spacetime.</span></span><span class="sig-name descname"><span class="pre">Worldline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vel_ends</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vel_past</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vel_future</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proper_time_origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proper_time_offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline" title="Permalink to this definition">¶</a></dt>
 <dd><p>The worldline of a particle is represented as a finite list of events,
 called “vertices”, through which the particle passes in an inertial
 reference frame. The particle moves in straight lines between the vertices.</p>
@@ -247,10 +247,14 @@ specified, <code class="docutils literal notranslate"><span class="pre">vel_ends
 <p>Default: <code class="docutils literal notranslate"><span class="pre">None</span></code></p>
 </p></li>
 <li><p><strong>proper_time_origin</strong> (<em>number</em><em>, </em><em>optional</em>) – <p>The proper time origin for the worldline. This is the coordinate
-time at which a stopwatch traveling along the worldline
-reads <cite>0</cite>. By default, the coordinate time of the first vertex
-in the worldline is chosen.</p>
+time at which a stopwatch traveling along the worldline has the
+value <code class="docutils literal notranslate"><span class="pre">proper_time_offset</span></code>. By default, the coordinate time of
+the first vertex in the worldline is chosen.</p>
 <p>Default: <code class="docutils literal notranslate"><span class="pre">vertices[0][0]</span></code></p>
+</p></li>
+<li><p><strong>proper_time_offset</strong> (<em>number</em><em>, </em><em>optional</em>) – <p>The value that a stopwatch traveling along the worldline has at
+the coordinate time <code class="docutils literal notranslate"><span class="pre">proper_time_origin</span></code>.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">0</span></code></p>
 </p></li>
 </ul>
 </dd>
@@ -400,6 +404,17 @@ negative.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>number</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="spacetime.Worldline.proper_time_offset">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">proper_time_offset</span></span><a class="headerlink" href="#spacetime.Worldline.proper_time_offset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the proper time offset of the worldline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int or float</p>
 </dd>
 </dl>
 </dd></dl>
