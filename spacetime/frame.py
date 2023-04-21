@@ -65,7 +65,7 @@ class Frame2D:
 
         new_clocks = []
 
-        batched = True
+        batched = False
 
         # TODO: While this impl of batching is roughly 3x faster on my machine
         # than the non-batched path while uniformly accelerating in
@@ -139,62 +139,34 @@ class Frame2D:
 
                 # TODO: Make Worldline accept 1-element ndarray to avoid this cast
                 new_proper_time_origin = float(new_proper_time_origin_events[clock_idx][0])
-                new_proper_time_offset = float(clock._clock_time0)
-
-                # TODO: Why does this fail?
-                #if clock._clock_time0 != worldline.proper_time_offset:
-                #    print(f'{clock_idx}: {clock._clock_time0}, {worldline.proper_time_offset}')
-
                 new_worldline = Worldline(
                         new_vertices[cur_vertices_idx : cur_vertices_idx + num_vertices],
                         vel_past=past_velocity,
                         vel_future=future_velocity,
                         proper_time_origin=new_proper_time_origin,
-                        proper_time_offset=new_proper_time_offset)
-                        #proper_time_offset=worldline.proper_time_offset)
+                        proper_time_offset=clock._worldline.proper_time_offset)
 
                 cur_vertices_idx += num_vertices
 
-                new_clocks.append(Clock(
-                    new_worldline,
-                    new_proper_time_offset))
+                new_clocks.append(Clock(new_worldline))
 
         else:
             for clock_idx, clock in enumerate(self._clocks):
                 worldline = clock._worldline
                 new_worldline = (worldline - event_delta).boost(velocity_delta)
 
-                # TODO: Why does this fail?
-                #if clock._clock_time0 != new_worldline.proper_time_offset:
-                #    print(f'{clock_idx}: {clock._clock_time0}, {new_worldline.proper_time_offset}')
-
-                new_clocks.append(Clock(
-                    new_worldline,
-                    clock._clock_time0))
-                    #new_worldline.proper_time_offset))
+                new_clocks.append(Clock(new_worldline))
 
         return Frame2D(new_clocks)
 
 
 class Clock:
-    '''
-    A clock that moves at a constant velocity, and exists over the entire
-    time axis of a reference frame.
-    '''
-
-    def __init__(self, worldline, clock_time0):
+    def __init__(self, worldline):
         check(isinstance(worldline, Worldline), TypeError,
             "expected `worldline` to be a `Worldline` type, but got ",
             f"{type(worldline)} instead")
 
-        # Check `clock_time0` arg
-        clock_time0 = np.array(clock_time0)
-        check(clock_time0.ndim == 0, ValueError,
-            "expected `clock_time0` to be a scalar, but got array of size ",
-            f"{clock_time0.shape}")
-
         self._worldline = worldline
-        self._clock_time0 = clock_time0
 
     def get_state_at_time(self, time):
         '''
@@ -204,9 +176,6 @@ class Clock:
 
         tau = self._worldline.proper_time(time)
 
-        clock_time = self._clock_time0 + tau
-
-        #if self._clock_time0 != self._worldline.proper_time_offset:
-        #    print(f'{self._clock_time0}, {self._worldline.proper_time_offset}')
+        clock_time = self._worldline.proper_time_offset + tau
 
         return clock_time, event

@@ -18,11 +18,7 @@ if demo_number == 0:
                 Worldline(
                     [20 * np.array([0, i-5, j-5])],
                     [0, 0],
-                    proper_time_origin=0
-                ),
-                0
-            )
-        )
+                    proper_time_origin=0)))
 
 elif demo_number == 1:
     R = 20
@@ -36,11 +32,7 @@ elif demo_number == 1:
                 Worldline(
                     [R * np.array([0, np.sin(angle), np.cos(angle)])],
                     [0, 0],
-                    proper_time_origin=0
-                ),
-                0
-            )
-        )
+                    proper_time_origin=0)))
 
 elif demo_number == 2:
     num_charges = 100
@@ -51,11 +43,7 @@ elif demo_number == 2:
                     Worldline(
                         [(0, 10 * direction, (i - num_charges/2) * 5)],
                         [0, 0.5 * direction],
-                        proper_time_origin=0
-                    ),
-                    0
-                )
-            )
+                        proper_time_origin=0)))
 
 elif demo_number == 3:
     N = 100
@@ -80,9 +68,20 @@ elif demo_number == 3:
                         [90, 4, 0],
                     ]) + (-40.5, 0, spacing * i - spacing * (N//2)),
                     [0, 0],
-                    proper_time_origin=0
-                ),
-                0))
+                    proper_time_origin=0)))
+
+elif demo_number == 4:
+        rest_frame.append(
+            Clock(
+                Worldline(
+                    # TODO: If I use light speed line segments here, there's an NaN
+                    # error when calculating clock face time.
+                    np.array([
+                        [0, 0, 0]
+                    ]),
+                    vel_ends=[0, 0],
+                    proper_time_origin=0,
+                    proper_time_offset=123)))
 
 # Always keep the displacement of the current instantaneous
 # observer frame
@@ -99,9 +98,7 @@ rest_frame.append(
         Worldline(
             [observer_frame_disp],
             observer_frame_velocity,
-            proper_time_origin=observer_frame_disp[0]
-        ),
-        0))
+            proper_time_origin=observer_frame_disp[0])))
 
 observer_frame = rest_frame.boost(
     observer_frame_disp,
@@ -167,9 +164,7 @@ while running:
                         Worldline(
                             [event0],
                             new_clock_velocity,
-                            proper_time_origin=event0[0],
-                        ),
-                        0))
+                            proper_time_origin=event0[0])))
 
                 observer_frame = rest_frame.boost(
                     observer_frame_disp,
@@ -254,9 +249,8 @@ while running:
                 [clock_event],
                 clock_velocity,
                 proper_time_origin=clock_event[0],
-                proper_time_offset=observer_clock_face_time
-            ),
-            observer_clock_face_time)
+                proper_time_offset=observer_clock_face_time))
+
 
         rest_frame._clocks[-1] = new_observer_clock
 
