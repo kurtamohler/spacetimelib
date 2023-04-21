@@ -36,3 +36,8 @@ html_theme = 'alabaster'
 # -- Pull in public methods and `__init__` func docstrings for autoclasses. --
 # Doesn't pull in the other dunder methods, so they need to be added in doc source
 autoclass_content = 'both'
+
+
+# -- Options for myst_nb -----------------------------------------------------
+# Make docs build fail if there's an exception in a notebook
+nb_execution_raise_on_error=True
