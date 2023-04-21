@@ -179,7 +179,7 @@
     "I won't explain why this is the case, but I will show you how to calculate the amount of time that passes for Alice.\n",
     "\n",
     "\n",
-    "`spacetime.Worldline` has a function `spacetime.Worldline.proper_time()`, which can calculate this for us. We have to give it two time coordinates between which to calculate the proper time. Let's see how much time Alice and Bob both experience from the beginning to the end of Alice's journey."
+    "`spacetime.Worldline` has a function `spacetime.Worldline.proper_time_diff()`, which can calculate this for us. We have to give it two time coordinates between which to calculate the proper time. Let's see how much time Alice and Bob both experience from the beginning to the end of Alice's journey."
    ]
   },
   {
@@ -200,7 +200,7 @@
     }
    ],
    "source": [
-    "bob_0.proper_time(0, total_time)"
+    "bob_0.proper_time_diff(0, total_time)"
    ]
   },
   {
@@ -229,7 +229,7 @@
     }
    ],
    "source": [
-    "alice_0.proper_time(0, total_time)"
+    "alice_0.proper_time_diff(0, total_time)"
    ]
   },
   {

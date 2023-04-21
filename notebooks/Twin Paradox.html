@@ -132,20 +132,15 @@
 <p>In <a class="reference external" href="https://en.wikipedia.org/wiki/Newton%27s_laws_of_motion">Newtonian physics</a>, <a class="reference external" href="https://en.wikipedia.org/wiki/Absolute_space_and_time">time is universal</a>, meaning that time always marches forward at the same rate in every possible reference frame. One second for you is the same as one second for me, no matter what our relative velocities are. Intuitively, we always assume this in everyday life.</p>
 <p>Well, in special relativity, that’s not true. Alice actually experiences less time passing during her trip than Bob does. When Alice and Bob meet up after her journey to celebrate her return, Bob is older than Alice. This concept is called <a class="reference external" href="https://en.wikipedia.org/wiki/Time_dilation">time dilation</a>, and the amount of time that a person or object experiences between two points along their path of motion is called <a class="reference external" href="https://en.wikipedia.org/wiki/Proper_time">proper time</a>. This is the heart of the twin paradox.</p>
 <p>I won’t explain why this is the case, but I will show you how to calculate the amount of time that passes for Alice.</p>
-<p><code class="docutils literal notranslate"><span class="pre">spacetime.Worldline</span></code> has a function <code class="docutils literal notranslate"><span class="pre">spacetime.Worldline.proper_time()</span></code>, which can calculate this for us. We have to give it two time coordinates between which to calculate the proper time. Let’s see how much time Alice and Bob both experience from the beginning to the end of Alice’s journey.</p>
+<p><code class="docutils literal notranslate"><span class="pre">spacetime.Worldline</span></code> has a function <code class="docutils literal notranslate"><span class="pre">spacetime.Worldline.proper_time_diff()</span></code>, which can calculate this for us. We have to give it two time coordinates between which to calculate the proper time. Let’s see how much time Alice and Bob both experience from the beginning to the end of Alice’s journey.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bob_0</span><span class="o">.</span><span class="n">proper_time</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">total_time</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bob_0</span><span class="o">.</span><span class="n">proper_time_diff</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">total_time</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">TypeError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">bob_0</span><span class="o">.</span><span class="n">proper_time</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">total_time</span><span class="p">)</span>
-
-<span class="ne">TypeError</span>: Worldline.proper_time() takes 2 positional arguments but 3 were given
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>12.477142857142859
 </pre></div>
 </div>
 </div>
@@ -153,7 +148,7 @@
 <p>Not surprisingly, Bob experiences 12.477 years of time, since we defined the problem from his perspective. But what about Alice?</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">alice_0</span><span class="o">.</span><span class="n">proper_time</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">total_time</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">alice_0</span><span class="o">.</span><span class="n">proper_time_diff</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">total_time</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -196,7 +191,7 @@
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(0.0, 20.0)
 </pre></div>
 </div>
-<img alt="../_images/0cda8fa568fffe42b8f51c15ac6ae72be4b08d7311e3b683a13eb2646b1989be.png" src="../_images/0cda8fa568fffe42b8f51c15ac6ae72be4b08d7311e3b683a13eb2646b1989be.png" />
+<img alt="../_images/ddcb929a7fea0bc868d6b2d0c868fb4b5c8225181b91a63e92f96fed65d638f4.png" src="../_images/ddcb929a7fea0bc868d6b2d0c868fb4b5c8225181b91a63e92f96fed65d638f4.png" />
 </div>
 </div>
 <p>Here we see that Alice stays at rest during the first half of her journey, which is what we would expect. Bob is traveling away from alice, which we also would expect. We also see Alpha Centauri traveling toward Alice until she reaches it. Then Alice turns around and heads toward home again.</p>
