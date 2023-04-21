@@ -25,6 +25,9 @@ class Worldline:
 
     # TODO: Investigate using SymPy to enable continuous worldlines.
 
+    # TODO: Try to think of shorter names than `proper_time_origin` and
+    # `proper_time_offset`. Maybe `tau_origin` and `tau_offset`?
+
     def __init__(self,
             vertices,
             vel_ends=None,
@@ -283,26 +286,26 @@ class Worldline:
         else:
             return event
 
-    # TODO: I suppose `proper_time` should now just take one arg and find the
-    # proper time between `proper_time_origin` and the specified time. Then to
-    # get the proper time between two arbitrary points on the worldline, you
-    # can just call `proper_time` twice with the two different coord times and
-    # take the difference between them. Probably should make `proper_time_diff`
-    # function that does that.
     def proper_time(self, time):
         '''
-        Measure the proper time along a section of the worldline between
-        :attr:``Worldline.proper_time_origin`` and a specified time coordinate.
+
+        Calculate the proper time along a section of the worldline between
+        :attr:``Worldline.proper_time_origin`` and a specified time coordinate,
+        plus the :attr:``Worldline.proper_time_offset``. This is equivalent to
+        reading the value, at coordinate time :attr:`time`, on a stopwatch
+        which is traveling along the worldline, and the stopwatch's value was
+        set to :attr:``Worldline.proper_time_offset`` at coordinate time
+        :attr:``Worldline.proper_time_origin``.
 
         Args:
 
           time (number):
-            Time coordinate
+            Time coordinate along the worldline
 
         Returns:
           number:
         '''
-        return self.proper_time_diff(self.proper_time_origin, time)
+        return self.proper_time_diff(self.proper_time_origin, time) + self.proper_time_offset
 
     def proper_time_diff(self, time0, time1):
         '''
@@ -313,10 +316,10 @@ class Worldline:
         Args:
 
           time0 (number):
-            First time coordinate
+            First time coordinate along the worldline
 
           time1 (number):
-            Second time coordinate
+            Second time coordinate along the worldline
 
         Returns:
           number:

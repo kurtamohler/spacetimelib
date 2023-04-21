@@ -172,10 +172,7 @@ class Clock:
         '''
         Gives the event and face time of the clock at a particular time.
         '''
+        proper_time = self._worldline.proper_time(time)
         event = self._worldline.eval(time)
 
-        tau = self._worldline.proper_time(time)
-
-        clock_time = self._worldline.proper_time_offset + tau
-
-        return clock_time, event
+        return proper_time, event
