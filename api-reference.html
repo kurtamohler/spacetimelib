@@ -377,11 +377,16 @@ to generate a 2D plot of the worldline in two of its N+1 dimensions.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetime.Worldline.proper_time">
 <span class="sig-name descname"><span class="pre">proper_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline.proper_time" title="Permalink to this definition">¶</a></dt>
-<dd><p>Measure the proper time along a section of the worldline between
-:attr:<code class="docutils literal notranslate"><span class="pre">Worldline.proper_time_origin</span></code> and a specified time coordinate.</p>
+<dd><p>Calculate the proper time along a section of the worldline between
+:attr:<code class="docutils literal notranslate"><span class="pre">Worldline.proper_time_origin</span></code> and a specified time coordinate,
+plus the :attr:<code class="docutils literal notranslate"><span class="pre">Worldline.proper_time_offset</span></code>. This is equivalent to
+reading the value, at coordinate time <code class="xref py py-attr docutils literal notranslate"><span class="pre">time</span></code>, on a stopwatch
+which is traveling along the worldline, and the stopwatch’s value was
+set to :attr:<code class="docutils literal notranslate"><span class="pre">Worldline.proper_time_offset</span></code> at coordinate time
+:attr:<code class="docutils literal notranslate"><span class="pre">Worldline.proper_time_origin</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>time</strong> (<em>number</em>) – Time coordinate</p>
+<dd class="field-odd"><p><strong>time</strong> (<em>number</em>) – Time coordinate along the worldline</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>number</p>
@@ -398,8 +403,8 @@ negative.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>time0</strong> (<em>number</em>) – First time coordinate</p></li>
-<li><p><strong>time1</strong> (<em>number</em>) – Second time coordinate</p></li>
+<li><p><strong>time0</strong> (<em>number</em>) – First time coordinate along the worldline</p></li>
+<li><p><strong>time1</strong> (<em>number</em>) – Second time coordinate along the worldline</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
