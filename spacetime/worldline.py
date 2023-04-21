@@ -302,7 +302,7 @@ class Worldline:
         Returns:
           number:
         '''
-        self.proper_time_diff(self.proper_time_origin, time)
+        return self.proper_time_diff(self.proper_time_origin, time)
 
     def proper_time_diff(self, time0, time1):
         '''
@@ -378,10 +378,11 @@ class Worldline:
 
         return Worldline(
             vertices,
+            vel_past=vel_ends[0],
+            vel_future=vel_ends[1],
             # TODO: I guess only evaluating this once would be better
             proper_time_origin=boost(self.eval(self._proper_time_origin), boost_vel_s)[0].item(),
-            vel_past=vel_ends[0],
-            vel_future=vel_ends[1])
+            proper_time_offset=self.proper_time_offset)
 
     def __add__(self, event_delta):
         '''
@@ -404,7 +405,8 @@ class Worldline:
             self._vertices + event_delta,
             vel_past=self._vel_ends[0],
             vel_future=self._vel_ends[1],
-            proper_time_origin=self._proper_time_origin + event_delta[0].item())
+            proper_time_origin=self._proper_time_origin + event_delta[0].item(),
+            proper_time_offset=self._proper_time_offset)
 
     def __sub__(self, event_delta):
         '''

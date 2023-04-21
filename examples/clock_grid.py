@@ -20,7 +20,6 @@ if demo_number == 0:
                     [0, 0],
                     proper_time_origin=0
                 ),
-                0,
                 0
             )
         )
@@ -39,7 +38,6 @@ elif demo_number == 1:
                     [0, 0],
                     proper_time_origin=0
                 ),
-                0,
                 0
             )
         )
@@ -55,7 +53,6 @@ elif demo_number == 2:
                         [0, 0.5 * direction],
                         proper_time_origin=0
                     ),
-                    0,
                     0
                 )
             )
@@ -85,7 +82,6 @@ elif demo_number == 3:
                     [0, 0],
                     proper_time_origin=0
                 ),
-                0,
                 0))
 
 # Always keep the displacement of the current instantaneous
@@ -105,7 +101,6 @@ rest_frame.append(
             observer_frame_velocity,
             proper_time_origin=observer_frame_disp[0]
         ),
-        observer_frame_disp[0],
         0))
 
 observer_frame = rest_frame.boost(
@@ -174,7 +169,6 @@ while running:
                             new_clock_velocity,
                             proper_time_origin=event0[0],
                         ),
-                        event0[0],
                         0))
 
                 observer_frame = rest_frame.boost(
@@ -189,6 +183,16 @@ while running:
     add_velocity_direction = np.array([0, 0])
 
     control_speed = 0.05
+
+    # TODO: There's something wrong about how I'm adding velocities to the
+    # observer. If the observer is going at velocity, say (0.1, 0.1) wrt the
+    # rest frame and shoots a particle to the right, then tries to catch up to
+    # it by accelerating to the right, the particle starts moving vertically
+    # upward. That should not happen, since I want the acceleration direction
+    # to map correctly to the observer's frame. This problem doesn't happen
+    # when the orthogonal component of the observer's velocity in the rest
+    # frame is zero. The issue doesn't seem like it could be just floating point
+    # error, since it happens with these fairly small velocities.
 
     if keys_pressed[pygame.K_LEFT]:
         add_velocity_direction += np.array([-1, 0])
@@ -206,7 +210,7 @@ while running:
         add_velocity = None
     else:
         norm = np.linalg.norm(add_velocity_direction)
-        add_velocity = (control_speed / norm) * add_velocity_direction 
+        add_velocity = control_speed * (add_velocity_direction / norm)
 
     # Reset observer velocity to 0 wrt rest frame
     if keys_pressed[pygame.K_r]:
@@ -217,6 +221,8 @@ while running:
     observer_clock_face_time = observer_frame_state[-1][0]
 
     if add_velocity is not None:
+
+
         # Find the new position and velocity of the observer clock in the
         # rest frame
         clock_velocity_ = add_velocity
@@ -250,7 +256,6 @@ while running:
                 proper_time_origin=clock_event[0],
                 proper_time_offset=observer_clock_face_time
             ),
-            clock_event[0],
             observer_clock_face_time)
 
         rest_frame._clocks[-1] = new_observer_clock

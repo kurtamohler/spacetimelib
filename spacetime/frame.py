@@ -82,7 +82,7 @@ class Frame2D:
         if batched:
             vertex_count = []
             vertices = []
-            clock_time0_events = []
+            proper_time_origin_events = []
 
             batched_velocities = []
 
@@ -107,9 +107,9 @@ class Frame2D:
                     future_velocity_idx_map[clock_idx] = len(batched_velocities)
                     batched_velocities.append(worldline._vel_ends[1])
 
-                clock_time0_events.append(worldline.eval(clock._time0))
+                proper_time_origin_events.append(worldline.eval(worldline.proper_time_origin))
 
-            batched_events = np.concatenate([vertices, clock_time0_events])
+            batched_events = np.concatenate([vertices, proper_time_origin_events])
 
             new_batched_events = boost(
                 batched_events - event_delta,
@@ -120,7 +120,7 @@ class Frame2D:
                 velocity_delta)
 
             new_vertices = new_batched_events[:len(vertices)]
-            new_clock_time0_events = new_batched_events[len(vertices):]
+            new_proper_time_origin_events = new_batched_events[len(vertices):]
 
             cur_vertices_idx = 0
 
@@ -136,34 +136,42 @@ class Frame2D:
                     future_velocity = None
 
                 num_vertices = vertex_count[clock_idx]
-                
+
+                # TODO: Make Worldline accept 1-element ndarray to avoid this cast
+                new_proper_time_origin = float(new_proper_time_origin_events[clock_idx][0])
+                new_proper_time_offset = float(clock._clock_time0)
+
+                # TODO: Why does this fail?
+                #if clock._clock_time0 != worldline.proper_time_offset:
+                #    print(f'{clock_idx}: {clock._clock_time0}, {worldline.proper_time_offset}')
+
                 new_worldline = Worldline(
                         new_vertices[cur_vertices_idx : cur_vertices_idx + num_vertices],
                         vel_past=past_velocity,
-                        vel_future=future_velocity)
+                        vel_future=future_velocity,
+                        proper_time_origin=new_proper_time_origin,
+                        proper_time_offset=new_proper_time_offset)
+                        #proper_time_offset=worldline.proper_time_offset)
 
                 cur_vertices_idx += num_vertices
 
                 new_clocks.append(Clock(
                     new_worldline,
-                    new_clock_time0_events[clock_idx][0],
-                    clock._clock_time0))
+                    new_proper_time_offset))
 
         else:
-            for clock in self._clocks:
+            for clock_idx, clock in enumerate(self._clocks):
                 worldline = clock._worldline
                 new_worldline = (worldline - event_delta).boost(velocity_delta)
-                #new_time0 = (worldline.eval(clock._time0) - event_delta).boost(velocity_delta)[0]
 
-                new_time0 = boost(
-                    worldline.eval(clock._time0) - event_delta,
-                    velocity_delta)[0]
+                # TODO: Why does this fail?
+                #if clock._clock_time0 != new_worldline.proper_time_offset:
+                #    print(f'{clock_idx}: {clock._clock_time0}, {new_worldline.proper_time_offset}')
 
-                clock_time0 = clock._clock_time0
                 new_clocks.append(Clock(
                     new_worldline,
-                    new_time0,
-                    clock_time0))
+                    clock._clock_time0))
+                    #new_worldline.proper_time_offset))
 
         return Frame2D(new_clocks)
 
@@ -174,16 +182,10 @@ class Clock:
     time axis of a reference frame.
     '''
 
-    def __init__(self, worldline, time0, clock_time0):
+    def __init__(self, worldline, clock_time0):
         check(isinstance(worldline, Worldline), TypeError,
             "expected `worldline` to be a `Worldline` type, but got ",
             f"{type(worldline)} instead")
-
-        # Check `time0` arg
-        time0 = np.array(time0)
-        check(time0.ndim == 0, ValueError,
-            "expected `_time0` to be a scalar, but got array of size ",
-            f"{time0.shape}")
 
         # Check `clock_time0` arg
         clock_time0 = np.array(clock_time0)
@@ -192,7 +194,6 @@ class Clock:
             f"{clock_time0.shape}")
 
         self._worldline = worldline
-        self._time0 = time0
         self._clock_time0 = clock_time0
 
     def get_state_at_time(self, time):
@@ -201,40 +202,11 @@ class Clock:
         '''
         event = self._worldline.eval(time)
 
-        tau = self._worldline.proper_time_diff(
-            self._time0,
-            time)
+        tau = self._worldline.proper_time(time)
 
         clock_time = self._clock_time0 + tau
 
+        #if self._clock_time0 != self._worldline.proper_time_offset:
+        #    print(f'{self._clock_time0}, {self._worldline.proper_time_offset}')
+
         return clock_time, event
-
-if __name__ == '__main__':
-    frame = Frame2D()
-    frame.append(Clock(
-        0,
-        (0, -10, 0),
-        (0, 0)))
-    frame.append(Clock(
-        0,
-        (0, -5, 0),
-        (0, 0)))
-    frame.append(Clock(
-        0,
-        (0, 0, 0),
-        (0, 0)))
-    frame.append(Clock(
-        0,
-        (0, 5, 0),
-        (0, 0)))
-    frame.append(Clock(
-        0,
-        (0, 10, 0),
-        (0, 0)))
-
-    print(frame.get_state_at_time(0))
-
-    frame_ = frame.boost(
-        (0, 0, 0),
-        (0, 0))
-    print(frame_.get_state_at_time(0))
