@@ -34,8 +34,9 @@ class Frame2D:
         # different numbers of vertices. Still, there could be something that
         # would give better performance here.
         for clock in self._clocks:
-            face_time, event = clock.get_state_at_time(time)
-            state.append((face_time, event))
+            proper_time = clock._worldline.proper_time(time)
+            event = clock._worldline.eval(time)
+            state.append((proper_time, event))
 
         return state
 
@@ -167,12 +168,3 @@ class Clock:
             f"{type(worldline)} instead")
 
         self._worldline = worldline
-
-    def get_state_at_time(self, time):
-        '''
-        Gives the event and face time of the clock at a particular time.
-        '''
-        proper_time = self._worldline.proper_time(time)
-        event = self._worldline.eval(time)
-
-        return proper_time, event
