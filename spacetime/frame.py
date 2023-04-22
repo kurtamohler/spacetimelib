@@ -102,13 +102,13 @@ class Frame:
                 vertex_count.append(len(w._vertices))
                 vertices += [vertex for vertex in w._vertices]
 
-                if w._vel_ends[0] is not None:
+                if w.vel_past is not None:
                     past_velocity_idx_map[w_idx] = len(batched_velocities)
-                    batched_velocities.append(w._vel_ends[0])
+                    batched_velocities.append(w.vel_past)
 
-                if w._vel_ends[1] is not None:
+                if w.vel_future is not None:
                     future_velocity_idx_map[w_idx] = len(batched_velocities)
-                    batched_velocities.append(w._vel_ends[1])
+                    batched_velocities.append(w.vel_future)
 
                 proper_time_origin_events.append(w.eval(w.proper_time_origin))
 

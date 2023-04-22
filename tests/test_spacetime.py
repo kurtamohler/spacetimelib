@@ -434,6 +434,52 @@ class SpacetimeTestSuite(unittest.TestCase):
                 self.assertTrue(np.isclose(v0, v0_check).all())
                 self.assertTrue(np.isclose(v1, v1_check).all())
 
+    def test_Worldline_vel_ends(self):
+        w0 = st.Worldline([[0, 0]], vel_ends=[0.1])
+        self.assertTrue((w0.vel_past == 0.1).all())
+        self.assertTrue((w0.vel_future == 0.1).all())
+
+        w1 = st.Worldline([[0, 0]], vel_past=[0.1], vel_future=[0.1])
+        self.assertTrue((w1.vel_past == 0.1).all())
+        self.assertTrue((w1.vel_future == 0.1).all())
+
+        w2 = st.Worldline([[0, 0]], vel_past=[-0.2], vel_future=None)
+        self.assertTrue((w2.vel_past == -0.2).all())
+        self.assertTrue(w2.vel_future is None)
+
+        w3 = st.Worldline([[0, 0]], vel_past=None, vel_future=[0.3])
+        self.assertTrue(w3.vel_past is None)
+        self.assertTrue((w3.vel_future == 0.3).all())
+
+        v4 = [-0.13, 0.1, 0, -0.14]
+        w4 = st.Worldline([[0, 0, 0, 0, 0]], vel_ends=v4)
+        self.assertTrue((w4.vel_past == v4).all())
+        self.assertTrue((w4.vel_future == v4).all())
+
+        v5_past = [-0.13, 0.1, 0, -0.14]
+        v5_future = [0.16, -0.14, 0.01, -0.046]
+        w5 = st.Worldline([[0, 0, 0, 0, 0]], vel_past=v5_past, vel_future=v5_future)
+        self.assertTrue((w5.vel_past == v5_past).all())
+        self.assertTrue((w5.vel_future == v5_future).all())
+
+        v6_past = [-0.13, 0.1, 0, -0.14]
+        w6 = st.Worldline([[0, 0, 0, 0, 0]], vel_past=v6_past, vel_future=None)
+        self.assertTrue((w6.vel_past == v6_past).all())
+        self.assertTrue(w6.vel_future is None)
+
+        v7_past = [-0.13, 0.1, 0, -0.14]
+        v7_future = [0.16, -0.14, 0.01, -0.046]
+        w7 = st.Worldline([[0, 0, 0, 0, 0]], vel_past=None, vel_future=v7_future)
+        self.assertTrue(w7.vel_past is None)
+        self.assertTrue((w7.vel_future == v7_future).all())
+
+        w8 = st.Worldline([[0, 0, 0, 0, 0]], vel_past=None, vel_future=None)
+        self.assertTrue(w8.vel_past is None)
+        self.assertTrue(w8.vel_future is None)
+
+        w9 = st.Worldline([[0, 0, 0, 0, 0]], vel_ends=None)
+        self.assertTrue(w9.vel_past is None)
+        self.assertTrue(w9.vel_future is None)
 
 if __name__ == '__main__':
     unittest.main()

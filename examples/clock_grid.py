@@ -133,7 +133,7 @@ while running:
 
             if new_worldline_velocity_ is not None:
                 # TODO: Fix this hack
-                velocity = rest_frame._worldlines[-1]._vel_ends[0]
+                velocity = rest_frame._worldlines[-1].vel_past
                 event0_ = observer_frame_state[-1][1]
 
                 new_worldline_event0 = boost(
@@ -196,7 +196,7 @@ while running:
 
     # Reset observer velocity to 0 wrt rest frame
     if keys_pressed[pygame.K_r]:
-        velocity = observer_worldline._vel_ends[0]
+        velocity = observer_worldline.vel_past
         add_velocity = -velocity
 
     observer_frame_state = observer_frame.get_state_at_time(observer_frame_time)
@@ -212,7 +212,7 @@ while running:
 
         # TODO: This is a bit of a hack. Should probably add a method to
         # `Worldline` that gives the velocity at a particular time
-        observer_velocity = observer_worldline._vel_ends[0]
+        observer_velocity = observer_worldline.vel_past
 
         worldline_event = boost(
             worldline_event_,
@@ -264,7 +264,7 @@ while running:
 
             # TODO: This is a bit of a hack. Should probably add a method to
             # `Worldline` that gives the velocity at a particular time
-            velocity = observer_worldline._vel_ends[0]
+            velocity = observer_worldline.vel_past
             rest_pos = boost(
                 event,
                 -velocity

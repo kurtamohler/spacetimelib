@@ -255,13 +255,13 @@ class Worldline:
             internal_assert(idx_before != idx_after)
 
             if idx_before is None:
-                vel_ends = self._vel_ends[0]
+                vel_ends = self.vel_past
                 check(vel_ends is not None, ValueError,
                     f"time '{time}' is before the first event on the worldline at ",
                     f"time '{self._vertices[0][0]}'")
                 vert = self._vertices[0]
             else:
-                vel_ends = self._vel_ends[1]
+                vel_ends = self.vel_future
                 check(vel_ends is not None, ValueError,
                     f"time '{time}' is after the last event on the worldline at ",
                     f"time '{self._vertices[-1][0]}'")
@@ -370,19 +370,20 @@ class Worldline:
           :class:`spacetime.Worldline`:
         '''
         vertices = boost(self._vertices, boost_vel_s)
-        vel_ends = [None, None]
+        vel_past = None
+        vel_future = None
 
-        for idx in [0, 1]:
-            if self._vel_ends[idx] is not None:
-                vel_ends[idx] = boost_velocity_s(
-                    self._vel_ends[idx],
-                    boost_vel_s)
+        if self.vel_past is not None:
+            vel_past = boost_velocity_s(self.vel_past, boost_vel_s)
+
+        if self.vel_future is not None:
+            vel_future = boost_velocity_s(self.vel_future, boost_vel_s)
 
 
         return Worldline(
             vertices,
-            vel_past=vel_ends[0],
-            vel_future=vel_ends[1],
+            vel_past=vel_past,
+            vel_future=vel_future,
             # TODO: I guess only evaluating this once would be better
             proper_time_origin=boost(self.eval(self._proper_time_origin), boost_vel_s)[0].item(),
             proper_time_offset=self.proper_time_offset)
@@ -406,8 +407,8 @@ class Worldline:
 
         return Worldline(
             self._vertices + event_delta,
-            vel_past=self._vel_ends[0],
-            vel_future=self._vel_ends[1],
+            vel_past=self.vel_past,
+            vel_future=self.vel_future,
             proper_time_origin=self._proper_time_origin + event_delta[0].item(),
             proper_time_offset=self._proper_time_offset)
 
@@ -528,3 +529,23 @@ class Worldline:
             int: N+1
         '''
         return self._vertices.shape[-1]
+
+    @property
+    def vel_past(self):
+        '''
+        Space-velocity of the worldline before the first vertex.
+
+        Returns:
+            None or array_like: Size: (N+1)
+        '''
+        return self._vel_ends[0]
+
+    @property
+    def vel_future(self):
+        '''
+        Space-velocity of the worldline after the last vertex.
+
+        Returns:
+            None or array_like: Size: (N+1)
+        '''
+        return self._vel_ends[1]
