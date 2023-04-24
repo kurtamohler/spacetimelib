@@ -13,7 +13,7 @@ demo_number = 0
 if demo_number == 0:
     # Create a grid of stationary worldlines around the origin
     for i, j in itertools.product(range(11), range(11)):
-        rest_frame.append( Worldline(
+        rest_frame.append(Worldline(
             [20 * np.array([0, i-5, j-5])],
             [0, 0],
             proper_time_origin=0))
@@ -83,10 +83,12 @@ observer_frame_time = 0
 # Add a worldline for the observer
 # TODO: I should improve the interface for this kind of thing. Maybe allow
 # worldlines to be named, and they can be accessed from the frame by name
-rest_frame.append(Worldline(
-    [observer_frame_disp],
-    observer_frame_velocity,
-    proper_time_origin=observer_frame_disp[0]))
+rest_frame.append(
+    Worldline(
+        [observer_frame_disp],
+        observer_frame_velocity,
+        proper_time_origin=observer_frame_disp[0]),
+    'observer')
 
 observer_frame = rest_frame.boost(
     observer_frame_disp,
@@ -133,8 +135,8 @@ while running:
 
             if new_worldline_velocity_ is not None:
                 # TODO: Fix this hack
-                velocity = rest_frame._worldlines[-1].vel_past
-                event0_ = observer_frame_state[-1][1]
+                velocity = rest_frame['observer'].vel_past
+                event0_ = observer_frame_state[rest_frame.index('observer')][1]
 
                 new_worldline_event0 = boost(
                     event0_,
@@ -146,12 +148,10 @@ while running:
 
                 event0 = new_worldline_event0 + observer_frame_disp
 
-                rest_frame._worldlines.insert(
-                    -1,
-                    Worldline(
-                        [event0],
-                        new_worldline_velocity,
-                        proper_time_origin=event0[0]))
+                rest_frame.append(Worldline(
+                    [event0],
+                    new_worldline_velocity,
+                    proper_time_origin=event0[0]))
 
                 observer_frame = rest_frame.boost(
                     observer_frame_disp,
@@ -200,7 +200,7 @@ while running:
         add_velocity = -velocity
 
     observer_frame_state = observer_frame.get_state_at_time(observer_frame_time)
-    observer_worldline_face_time = observer_frame_state[-1][0]
+    observer_worldline_face_time = observer_frame_state[rest_frame.index('observer')][0]
 
     if add_velocity is not None:
 
@@ -208,7 +208,7 @@ while running:
         # Find the new position and velocity of the observer worldline in the
         # rest frame
         worldline_velocity_ = add_velocity
-        worldline_event_ = observer_frame_state[-1][1]
+        worldline_event_ = observer_frame_state[rest_frame.index('observer')][1]
 
         # TODO: This is a bit of a hack. Should probably add a method to
         # `Worldline` that gives the velocity at a particular time
@@ -233,7 +233,7 @@ while running:
             proper_time_offset=observer_worldline_face_time)
 
 
-        rest_frame._worldlines[-1] = new_observer_worldline
+        rest_frame['observer'] = new_observer_worldline
 
         observer_frame = rest_frame.boost(
             worldline_event,
@@ -245,13 +245,14 @@ while running:
 
     # Display everything
     screen.fill((0, 0, 0))
+    observer_idx = observer_frame.index('observer')
     for idx, (face_time, event) in enumerate(observer_frame_state):
 
         draw_position = (
             display_scale * event[1] + 400,
             -display_scale * event[2] + 400)
 
-        if idx == len(observer_frame_state) - 1:
+        if idx == observer_idx:
             dot_color = (255, 255, 255)
             text_color = (255, 255, 255)
             text_position = (
@@ -260,7 +261,7 @@ while running:
 
             # Find the observer worldline's position and velocity in the rest frame
             # to be displayed
-            observer_worldline = rest_frame._worldlines[-1]
+            observer_worldline = rest_frame['observer']
 
             # TODO: This is a bit of a hack. Should probably add a method to
             # `Worldline` that gives the velocity at a particular time

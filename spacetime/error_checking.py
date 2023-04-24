@@ -26,3 +26,16 @@ def internal_assert(condition, *message):
             "Please report an issue with the error message and traceback here: "
             "https://github.com/kurtamohler/spacetimelib/issues")
 
+def maybe_wrap_index(idx, length):
+    internal_assert(isinstance(idx, int))
+    internal_assert(isinstance(length, int))
+
+    if idx < 0:
+        idx_wrapped = idx + length
+    else:
+        idx_wrapped = idx
+
+    check(idx_wrapped >= 0 and idx_wrapped < length, ValueError,
+        f"index '{idx}' is out of range for container of length '{length}'")
+
+    return idx_wrapped

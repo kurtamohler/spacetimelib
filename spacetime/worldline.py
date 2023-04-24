@@ -435,6 +435,16 @@ class Worldline:
         '''
         return len(self._vertices)
 
+    def __str__(self):
+        # TODO: Should fill this with something more useful
+        if len(self) > 1:
+            return f'Worldline(vertices=[{self._vertices[0]}, ...])'
+        else:
+            return f'Worldline(vertices=[{self._vertices[0]}])'
+
+    def __repr__(self):
+        return str(self)
+
     def vertex(self, idx):
         '''
         Get the vertex at the specified index.

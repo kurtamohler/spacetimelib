@@ -1,29 +1,74 @@
 import numpy as np
 from copy import copy
+from collections import OrderedDict
+from itertools import islice
+import re
 
 from .basic_ops import boost, boost_velocity_s
 from .worldline import Worldline
-from .error_checking import check
-
+from .error_checking import check, internal_assert, maybe_wrap_index
 
 class Frame:
     '''
-    An inertial reference frame in Minkowski spacetime.
-    Only supports 2+1 spacetime at the moment.
+    An inertial reference frame is represented as a set of :class:`Worldline`s.
+
+    Each :class:`Worldline` can be given a name. Otherwise a default name of the
+    format "wl<number>" with be automatically assigned to it.
+
+    :class:`Worldline`s can be accessed either by name
     '''
 
-    def __init__(self, worldlines=None):
-        if worldlines is None:
-            self._worldlines = []
-        else:
-            assert isinstance(worldlines, (list, tuple))
-            for w in worldlines:
-                assert isinstance(w, Worldline)
-            self._worldlines = copy(worldlines)
+    def __init__(self, worldlines=None, names=None):
+        self._worldlines = OrderedDict()
+        self._next_default_name_id = 0
 
-    def append(self, worldline):
+        # TODO: Separate this into an `_append_multiple` function, and move the
+        # current `append` impl  to `_append_single`. Then make `append`
+        # conditionally call either the single or multiple append func
+        if worldlines is not None:
+            check(isinstance(worldlines, (list, tuple)), TypeError,
+                "Expected 'worldlines' to be a list or tuple, but got ",
+                f"{type(worldlines)}")
+
+            if names is not None:
+                check(isinstance(names, (list, tuple)), TypeError,
+                    "Expected 'names' to be a list or tuple, but got ",
+                    f"{type(names)}")
+                check(len(names) == len(worldlines), ValueError,
+                    "Expected 'len(names) == len(worldlines)', but got '",
+                    f"{len(names)} != {len(worldlines)}'")
+
+            for idx, worldline in enumerate(worldlines):
+                name = names[idx] if names is not None else None
+                self.append(worldline, name)
+
+        else:
+            check(names is None, ValueError, "'names' cannot be given without 'worldlines'")
+
+    def _gen_default_name(self):
+        cur_id = self._next_default_name_id
+        name = f'wl{cur_id}'
+        internal_assert(name not in self._worldlines.keys())
+        self._next_default_name_id += 1
+        return name
+
+    def append(self, worldline, name=None):
         assert isinstance(worldline, Worldline)
-        self._worldlines.append(worldline)
+
+        if name is not None:
+            assert isinstance(name, str)
+            check(name not in self._worldlines.keys(), ValueError,
+                f"The name '{name}' is already used by a different worldline")
+
+            # If the user-defined name matches the default name format, maybe
+            # reset the next default ID to avoid generating a duplicate later
+            if re.match(r'^wl[0-9]*$', name):
+                name_id = int(name[2:])
+                self._next_default_name_id = max(name_id + 1, self._next_default_name_id)
+        else:
+            name = self._gen_default_name()
+
+        self._worldlines.update({name: worldline})
 
     def get_state_at_time(self, time):
         '''
@@ -31,17 +76,65 @@ class Frame:
         '''
         state = []
 
-        # TODO: I'd like to parallelize this into one batched operation, but
-        # I don't think that's very possible since worldlines can have all
-        # different numbers of vertices. Still, there could be something that
-        # would give better performance here.
-        for w in self._worldlines:
+        # TODO: Look into parallelizing this into one batched operation, as
+        # in `Frame.boost`.
+        for _, w in self._worldlines.items():
             proper_time = w.proper_time(time)
             event = w.eval(time)
             state.append((proper_time, event))
 
         return state
 
+    def __getitem__(self, key):
+        check(isinstance(key, (int, str)), TypeError,
+            f"key must be either int or str, but got {type(key)}")
+
+        if isinstance(key, int):
+            idx = maybe_wrap_index(key, len(self))
+            return next(islice(self._worldlines.values(), idx, None))
+
+        else:
+            return self._worldlines[key]
+
+    def __setitem__(self, key, value):
+        check(isinstance(key, (int, str)), TypeError,
+            f"key must be either int or str, but got {type(key)}")
+        check(isinstance(value, Worldline), TypeError,
+            f"value must be a Worldline, but got {type(value)}")
+
+        if isinstance(key, int):
+            idx = maybe_wrap_index(key, len(self))
+            #return next(islice(self._worldlines.values(), idx, None))
+            check(False, NotImplementedError, "")
+
+        else:
+            self._worldlines[key] = value
+
+    def name(self, idx):
+        check(isinstance(idx, int), TypeError,
+            f"idx must be an int, but got {type(idx)}")
+        idx_wrapped = maybe_wrap_index(idx, len(self))
+        return next(islice(self._worldlines.keys(), idx, None))
+
+    # TODO: The complexity of this operation is O(N), so I should either figure
+    # out a way to decrease the complexity or remove the need for this function
+    # in `examples/clock_grid.py`. I should probably do the latter regardless,
+    # and make the return of `get_state_at_time` include the worldline names
+    def index(self, name):
+        check(isinstance(name, str), TypeError,
+            f"name must be a str, but got {type(name)}")
+        check(name in self._worldlines, ValueError,
+            f"no worldline named '{name}' was found")
+        return list(self._worldlines.keys()).index(name)
+
+    def __len__(self):
+        return len(self._worldlines)
+
+    def __str__(self):
+        return f'Frame(worldlines={self._worldlines})'
+
+    def __repr__(self):
+        return str(self)
 
     # TODO: `event_delta` should be None by default. Actually, probably shouldn't
     # even be here--instead, add an addition function and use that? But that would
@@ -98,7 +191,7 @@ class Frame:
             # worldlines and combine them into two batched event and velocity
             # arrays that can be boosted. Need to keep track of which vertices
             # and velocities belong to which worldlines.
-            for w_idx, w in enumerate(self._worldlines):
+            for w_idx, w in enumerate(self._worldlines.values()):
                 vertex_count.append(len(w._vertices))
                 vertices += [vertex for vertex in w._vertices]
 
@@ -127,7 +220,7 @@ class Frame:
 
             cur_vertices_idx = 0
 
-            for w_idx, w in enumerate(self._worldlines):
+            for w_idx, w in enumerate(self._worldlines.values()):
                 if w_idx in past_velocity_idx_map:
                     past_velocity = new_batched_velocities[past_velocity_idx_map[w_idx]]
                 else:
@@ -154,9 +247,9 @@ class Frame:
                 new_worldlines.append(new_w)
 
         else:
-            for w_idx, w in enumerate(self._worldlines):
+            for w_idx, w in enumerate(self._worldlines.values()):
                 new_w = (w - event_delta).boost(velocity_delta)
 
                 new_worldlines.append(new_w)
 
-        return Frame(new_worldlines)
+        return Frame(new_worldlines, list(self._worldlines.keys()))
