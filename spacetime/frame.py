@@ -22,28 +22,13 @@ class Frame:
         self._worldlines = OrderedDict()
         self._next_default_name_id = 0
 
-        # TODO: Separate this into an `_append_multiple` function, and move the
-        # current `append` impl  to `_append_single`. Then make `append`
-        # conditionally call either the single or multiple append func
-        if worldlines is not None:
-            check(isinstance(worldlines, (list, tuple)), TypeError,
-                "Expected 'worldlines' to be a list or tuple, but got ",
-                f"{type(worldlines)}")
-
-            if names is not None:
-                check(isinstance(names, (list, tuple)), TypeError,
-                    "Expected 'names' to be a list or tuple, but got ",
-                    f"{type(names)}")
-                check(len(names) == len(worldlines), ValueError,
-                    "Expected 'len(names) == len(worldlines)', but got '",
-                    f"{len(names)} != {len(worldlines)}'")
-
-            for idx, worldline in enumerate(worldlines):
-                name = names[idx] if names is not None else None
-                self.append(worldline, name)
+        if worldlines is None:
+            check(names is None, ValueError,
+                "'names' cannot be given without 'worldlines'")
 
         else:
-            check(names is None, ValueError, "'names' cannot be given without 'worldlines'")
+            self.append(worldlines, names)
+
 
     def _gen_default_name(self):
         cur_id = self._next_default_name_id
@@ -52,8 +37,53 @@ class Frame:
         self._next_default_name_id += 1
         return name
 
-    def append(self, worldline, name=None):
-        assert isinstance(worldline, Worldline)
+    @property
+    def ndim(self):
+        if len(self) == 0:
+            return None
+        else:
+            return self[0].ndim
+
+    def _append_multiple(self, worldlines, names=None):
+        # TODO: Separate this into an `_append_multiple` function, and move the
+        # current `append` impl  to `_append_single`. Then make `append`
+        # conditionally call either the single or multiple append func
+        check(isinstance(worldlines, (list, tuple)), TypeError,
+            "Expected 'worldlines' to be a list or tuple, but got ",
+            f"{type(worldlines)}")
+
+        if names is not None:
+            check(isinstance(names, (list, tuple)), TypeError,
+                "Expected 'names' to be a list or tuple, but got ",
+                f"{type(names)}")
+            check(len(names) == len(worldlines), ValueError,
+                "Expected 'len(names) == len(worldlines)', but got '",
+                f"{len(names)} != {len(worldlines)}'")
+
+        # TODO: Add ndim checks here
+        for idx, worldline in enumerate(worldlines):
+            if idx == 0:
+                if self.ndim is not None:
+                    check(worldline.ndim == self.ndim, ValueError,
+                        f"expected worldlines[{idx}] to have {self.ndim} dims, ",
+                        f"but got {worldline.ndim}")
+            else:
+                check(worldline.ndim == worldlines[0].ndim, ValueError,
+                    f"expected worldlines[{idx}] to have {worldlines[0].ndim} dims, ",
+                    f"but got {worldline.ndim}")
+
+
+        for idx, worldline in enumerate(worldlines):
+            name = names[idx] if names is not None else None
+            self._append_single(worldline, name)
+
+    def _append_single(self, worldline, name=None):
+        check(isinstance(worldline, Worldline), TypeError,
+            f"expected an object of type Worldline, but got '{type(worldline)}'")
+
+        if self.ndim is not None:
+            check(worldline.ndim == self.ndim, ValueError,
+                f"expected worldline to have {self.ndim} dims, but got {worldline.ndim}")
 
         if name is not None:
             assert isinstance(name, str)
@@ -69,6 +99,12 @@ class Frame:
             name = self._gen_default_name()
 
         self._worldlines.update({name: worldline})
+
+    def append(self, worldline, name=None):
+        if isinstance(worldline, (list, tuple)):
+            self._append_multiple(worldline, name)
+        else:
+            self._append_single(worldline, name)
 
     def get_state_at_time(self, time):
         '''
@@ -131,7 +167,7 @@ class Frame:
         return len(self._worldlines)
 
     def __str__(self):
-        return f'Frame(worldlines={self._worldlines})'
+        return f'Frame(worldlines={list(self._worldlines.items())})'
 
     def __repr__(self):
         return str(self)
@@ -146,6 +182,8 @@ class Frame:
         '''
         # Check `event_delta` arg
         event_delta = np.array(event_delta)
+
+        # TODO: Remove the 2+1 requirement
         assert event_delta.shape == (3,)
 
         # Check `velocity_delta` arg
