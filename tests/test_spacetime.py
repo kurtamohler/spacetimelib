@@ -481,5 +481,37 @@ class SpacetimeTestSuite(unittest.TestCase):
         self.assertTrue(w9.vel_past is None)
         self.assertTrue(w9.vel_future is None)
 
+    def test_Worldline___eq__(self):
+        # These worldlines all differ from each other in different ways
+        worldlines = [
+            lambda: st.Worldline([[0, 1, 2], [10, 4, 5]]),
+            lambda: st.Worldline([[0, 1, 2], [10, 4, 5], [20, 7, 8]]),
+            lambda: st.Worldline([[0, 1], [2, 1], [4, 2]]),
+            lambda: st.Worldline([[0, 1], [2, 1]]),
+            lambda: st.Worldline([[0.1, 1, 2], [10, 4, 5]]),
+            lambda: st.Worldline([[0, 1, 2], [10, 3.9, 5]]),
+            lambda: st.Worldline([[0, 1, 2], [10, 4, 5]], vel_past=[0.1, -0.1]),
+            lambda: st.Worldline([[0, 1, 2], [10, 4, 5]], vel_past=[0.2, -0.1]),
+            lambda: st.Worldline([[0, 1, 2], [10, 4, 5]], vel_future=[0.2, 0.3]),
+            lambda: st.Worldline([[0, 1, 2], [10, 4, 5]], vel_future=[0.2, -0.3]),
+            lambda: st.Worldline([[0, 1, 2], [10, 4, 5]], vel_past=[0.1, -0.1], vel_future=[0.2, 0.3]),
+            lambda: st.Worldline([[0, 1, 2], [10, 4, 5]], vel_past=[0.1, -0.1], vel_future=[0.2, -0.3]),
+            lambda: st.Worldline([[0, 1, 2], [10, 4, 5]], proper_time_origin=5),
+            lambda: st.Worldline([[0, 1, 2], [10, 4, 5]], proper_time_origin=6),
+            lambda: st.Worldline([[0, 1, 2], [10, 4, 5]], proper_time_offset=-1),
+            lambda: st.Worldline([[0, 1, 2], [10, 4, 5]], proper_time_offset=1),
+        ]
+
+        for idx, gen in enumerate(worldlines):
+            worldline = gen()
+
+            for other_idx, other_gen in enumerate(worldlines):
+                other = other_gen()
+
+                if idx == other_idx:
+                    self.assertEqual(worldline, other)
+                else:
+                    self.assertNotEqual(worldline, other)
+
 if __name__ == '__main__':
     unittest.main()

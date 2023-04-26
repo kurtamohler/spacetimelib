@@ -19,3 +19,5 @@ API Reference
    .. automethod:: __add__
 
    .. automethod:: __sub__
+
+   .. automethod:: __eq__

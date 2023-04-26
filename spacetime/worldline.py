@@ -426,6 +426,52 @@ class Worldline:
         '''
         return self + (-event_delta)
 
+    def __eq__(self, other):
+        '''
+        Check if two worldlines are equal. This checks every property of the
+        two worldlines. If any one of them differs, they are not equal.
+
+        Args:
+
+          other (:class:`spacetime.Worldline`):
+            Other worldline
+
+        Returns:
+          bool:
+        '''
+        check(isinstance(other, Worldline), TypeError,
+            "expected 'other' to be of type Worldline, but got {type(other)}")
+
+        if len(self) != len(other):
+            return False
+
+        if self.ndim != other.ndim:
+            return False
+
+        for idx in range(len(self)):
+            if (self.vertex(idx) != other.vertex(idx)).any():
+                return False
+
+        def vel_ends_match(self_vel, other_vel):
+            if self_vel is None:
+                return other_vel is None
+            else:
+                return (self_vel == other_vel).all()
+
+        if not vel_ends_match(self.vel_past, other.vel_past):
+            return False
+
+        if not vel_ends_match(self.vel_future, other.vel_future):
+            return False
+
+        if self.proper_time_origin != other.proper_time_origin:
+            return False
+
+        if self.proper_time_offset != other.proper_time_offset:
+            return False
+
+        return True
+
     def __len__(self):
         '''
         Get the number of vertices in the worldline.
