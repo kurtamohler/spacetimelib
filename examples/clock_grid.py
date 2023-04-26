@@ -107,7 +107,7 @@ my_font = pygame.font.SysFont('ubuntumono', 16)
 
 is_clock_ticking = True
 
-observer_frame_state = observer_frame.get_state_at_time(observer_frame_time)
+observer_frame_state = observer_frame.eval(observer_frame_time)
 
 while running:
     # Detect quit
@@ -199,7 +199,7 @@ while running:
         velocity = observer_worldline.vel_past
         add_velocity = -velocity
 
-    observer_frame_state = observer_frame.get_state_at_time(observer_frame_time)
+    observer_frame_state = observer_frame.eval(observer_frame_time)
     observer_worldline_face_time = observer_frame_state[rest_frame.index('observer')][0]
 
     if add_velocity is not None:

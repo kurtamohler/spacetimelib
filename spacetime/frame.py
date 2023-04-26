@@ -106,7 +106,7 @@ class Frame:
         else:
             self._append_single(worldline, name)
 
-    def get_state_at_time(self, time):
+    def eval(self, time):
         '''
         Returns the proper times and events for all worldlines at the specified time.
         '''
@@ -155,7 +155,7 @@ class Frame:
     # TODO: The complexity of this operation is O(N), so I should either figure
     # out a way to decrease the complexity or remove the need for this function
     # in `examples/clock_grid.py`. I should probably do the latter regardless,
-    # and make the return of `get_state_at_time` include the worldline names
+    # and make the return of `Frame.eval` include the worldline names
     def index(self, name):
         check(isinstance(name, str), TypeError,
             f"name must be a str, but got {type(name)}")
