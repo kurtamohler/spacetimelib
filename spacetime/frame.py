@@ -172,26 +172,33 @@ class Frame:
     def __repr__(self):
         return str(self)
 
-    # TODO: `event_delta` should be None by default. Actually, probably shouldn't
-    # even be here--instead, add an addition function and use that? But that would
-    # give worse performance though...
+    # TODO: This interface needs to be consistent with `st.boost` and `Worldline.boost`.
+    # I suppose an event delta maybe should be added to those interfaces as well, because
+    # here, we get a significant performance improvement by including the boost and
+    # the offset in the same batch
     def boost(self, event_delta, velocity_delta):
         '''
         Transform the frame, applying a time and position translations first,
         then applying a velocity transformation.
         '''
+        if len(self) == 0:
+            return Frame()
+
         # Check `event_delta` arg
         event_delta = np.array(event_delta)
 
-        # TODO: Remove the 2+1 requirement
-        assert event_delta.shape == (3,)
+        check(event_delta.shape == (self.ndim,), ValueError,
+            f"'event_delta' must have shape {(self.ndim,)}, "
+            f"but got {event_delta.shape}")
 
         # Check `velocity_delta` arg
         if velocity_delta is None:
-            velocity_delta = np.array([0, 0])
+            velocity_delta = np.zeros(self.ndim - 1)
         else:
             velocity_delta = np.array(velocity_delta)
-            assert velocity_delta.shape == (2,)
+            check(velocity_delta.shape == (self.ndim - 1,), ValueError,
+                f"'velocity_delta' must have shape {(self.ndim - 1,)}, "
+                f"but got {velocity_delta.shape}")
 
         speed = np.linalg.norm(velocity_delta)
         # Don't allow faster than light transformations
