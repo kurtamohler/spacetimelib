@@ -21,3 +21,14 @@ API Reference
    .. automethod:: __sub__
 
    .. automethod:: __eq__
+
+   .. automethod:: __len__
+
+.. autoclass:: spacetime.Frame
+   :members:
+
+   .. automethod:: __getitem__
+
+   .. automethod:: __setitem__
+
+   .. automethod:: __len__

@@ -10,12 +10,17 @@ from .error_checking import check, internal_assert, maybe_wrap_index
 
 class Frame:
     '''
-    An inertial reference frame is represented as a set of :class:`Worldline`s.
+    An inertial reference frame is represented as a set of :class:`Worldline`
+    s, all in the same coordinate system. All worldlines in the same frame must
+    have the same number of N+1 dimensions.
 
-    Each :class:`Worldline` can be given a name. Otherwise a default name of the
-    format "wl<number>" with be automatically assigned to it.
+    :class:`Worldline` s can be accessed either by name or by index. Index
+    values correspond with the order in which worldlines were added to the
+    frame.
 
-    :class:`Worldline`s can be accessed either by name
+    When a :class:`Worldline` is appended to the frame, it can be given a name.
+    If no name is given, a default name of the format "wl<number>" is
+    automatically assigned to it.
     '''
 
     def __init__(self, worldlines=None, names=None):
@@ -130,6 +135,8 @@ class Frame:
             return next(islice(self._worldlines.values(), idx, None))
 
         else:
+            check(key in self._worldlines, KeyError,
+                f"worldline of name '{key}' not found")
             return self._worldlines[key]
 
     def __setitem__(self, key, value):
@@ -140,11 +147,16 @@ class Frame:
 
         if isinstance(key, int):
             idx = maybe_wrap_index(key, len(self))
-            #return next(islice(self._worldlines.values(), idx, None))
-            check(False, NotImplementedError, "")
+            name = next(islice(self._worldlines.keys(), idx, None))
 
         else:
-            self._worldlines[key] = value
+            check(key in self._worldlines, KeyError,
+                f"worldline of name '{key}' not found")
+            name = key
+
+        check(value.ndim == self.ndim, ValueError,
+            f"expected 'value.ndim' to be {self.ndim}, but got {value.ndim}")
+        self._worldlines[name] = value
 
     def name(self, idx):
         check(isinstance(idx, int), TypeError,
