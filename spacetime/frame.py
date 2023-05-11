@@ -188,7 +188,7 @@ class Frame:
     # I suppose an event delta maybe should be added to those interfaces as well, because
     # here, we get a significant performance improvement by including the boost and
     # the offset in the same batch
-    def boost(self, event_delta, velocity_delta):
+    def boost(self, event_delta_pre, velocity_delta, event_delta_post=None):
         '''
         Transform the frame, applying a time and position translations first,
         then applying a velocity transformation.
@@ -196,12 +196,20 @@ class Frame:
         if len(self) == 0:
             return Frame()
 
-        # Check `event_delta` arg
-        event_delta = np.array(event_delta)
+        # Check `event_delta_*` args
+        event_delta_pre = np.array(event_delta_pre)
 
-        check(event_delta.shape == (self.ndim,), ValueError,
-            f"'event_delta' must have shape {(self.ndim,)}, "
-            f"but got {event_delta.shape}")
+        check(event_delta_pre.shape == (self.ndim,), ValueError,
+            f"'event_delta_pre' must have shape {(self.ndim,)}, "
+            f"but got {event_delta_pre.shape}")
+
+        if event_delta_post is not None:
+            event_delta_post = np.array(event_delta_post)
+            check(event_delta_post.shape == (self.ndim,), ValueError,
+                f"'event_delta_post' must have shape {(self.ndim,)}, "
+                f"but got {event_delta_post.shape}")
+        else:
+            event_delta_post = np.zeros(self.ndim)
 
         # Check `velocity_delta` arg
         if velocity_delta is None:
@@ -265,8 +273,8 @@ class Frame:
             batched_events = np.concatenate([vertices, proper_time_origin_events])
 
             new_batched_events = boost(
-                batched_events - event_delta,
-                velocity_delta)
+                batched_events - event_delta_pre,
+                velocity_delta) - event_delta_post
 
             new_batched_velocities = boost_velocity_s(
                 batched_velocities,
@@ -305,7 +313,7 @@ class Frame:
 
         else:
             for w_idx, w in enumerate(self._worldlines.values()):
-                new_w = (w - event_delta).boost(velocity_delta)
+                new_w = (w - event_delta_pre).boost(velocity_delta) - event_delta_post
 
                 new_worldlines.append(new_w)
 

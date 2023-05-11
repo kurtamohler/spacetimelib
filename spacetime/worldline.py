@@ -484,9 +484,20 @@ class Worldline:
     def __str__(self):
         # TODO: Should fill this with something more useful
         if len(self) > 1:
-            return f'Worldline(vertices=[{self._vertices[0]}, ...])'
+            res = f'Worldline(vertices=[{self._vertices[0]}, ...]'
         else:
-            return f'Worldline(vertices=[{self._vertices[0]}])'
+            res = f'Worldline(vertices=[{self._vertices[0]}]'
+
+        res += f', vel_past={self.vel_past}'
+
+        res += f', vel_future={self.vel_future}'
+
+        res += f', proper_time_origin={self.proper_time_origin}'
+        res += f', proper_time_offset={self.proper_time_offset}'
+
+        res += ')'
+
+        return res
 
     def __repr__(self):
         return str(self)
