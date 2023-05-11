@@ -303,6 +303,17 @@ two worldlines. If any one of them differs, they are not equal.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="spacetime.Worldline.__len__">
+<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline.__len__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of vertices in the worldline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="spacetime.Worldline.boost">
 <span class="sig-name descname"><span class="pre">boost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boost_vel_s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline.boost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Boost the worldline to a different inertial reference frame. The vertices,
@@ -497,6 +508,48 @@ negative.</p>
 
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="spacetime.Frame">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">spacetime.</span></span><span class="sig-name descname"><span class="pre">Frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">worldlines</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Frame" title="Permalink to this definition">¶</a></dt>
+<dd><p>An inertial reference frame is represented as a set of <a class="reference internal" href="#spacetime.Worldline" title="spacetime.Worldline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Worldline</span></code></a>
+s, all in the same coordinate system. All worldlines in the same frame must
+have the same number of N+1 dimensions.</p>
+<p><a class="reference internal" href="#spacetime.Worldline" title="spacetime.Worldline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Worldline</span></code></a> s can be accessed either by name or by index. Index
+values correspond with the order in which worldlines were added to the
+frame.</p>
+<p>When a <a class="reference internal" href="#spacetime.Worldline" title="spacetime.Worldline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Worldline</span></code></a> is appended to the frame, it can be given a name.
+If no name is given, a default name of the format “wl&lt;number&gt;” is
+automatically assigned to it.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="spacetime.Frame.__getitem__">
+<span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Frame.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spacetime.Frame.__setitem__">
+<span class="sig-name descname"><span class="pre">__setitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Frame.__setitem__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spacetime.Frame.__len__">
+<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Frame.__len__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spacetime.Frame.boost">
+<span class="sig-name descname"><span class="pre">boost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_delta_pre</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocity_delta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_delta_post</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Frame.boost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform the frame, applying a time and position translations first,
+then applying a velocity transformation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spacetime.Frame.eval">
+<span class="sig-name descname"><span class="pre">eval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Frame.eval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the proper times and events for all worldlines at the specified time.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
@@ -534,6 +587,7 @@ negative.</p>
 <li class="toctree-l2"><a class="reference internal" href="#spacetime.boost"><code class="docutils literal notranslate"><span class="pre">boost()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#spacetime.boost_velocity_s"><code class="docutils literal notranslate"><span class="pre">boost_velocity_s()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#spacetime.Worldline"><code class="docutils literal notranslate"><span class="pre">Worldline</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#spacetime.Frame"><code class="docutils literal notranslate"><span class="pre">Frame</span></code></a></li>
 </ul>
 </li>
 </ul>
