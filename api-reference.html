@@ -572,7 +572,23 @@ then applying a velocity transformation.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetime.Frame.eval">
 <span class="sig-name descname"><span class="pre">eval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Frame.eval" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the proper times and events for all worldlines at the specified time.</p>
+<dd><p>Calculates the event coordinates and proper times for all worldlines at
+a specified time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>time</strong> (<em>number</em>) – Time at which to evaluate the frame.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list containing an entry corresponding to each worldline in the
+frame, in the same order that worldlines are stored in the
+<a class="reference internal" href="#spacetime.Frame" title="spacetime.Frame"><code class="xref py py-class docutils literal notranslate"><span class="pre">Frame</span></code></a>. Each entry contains the name, event, and proper
+time, in that order, for one of the worldlines at the specified
+time.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">list[3-tuple(str,</span> <span class="pre">ndarray,</span> <span class="pre">float)]</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
