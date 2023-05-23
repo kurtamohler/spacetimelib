@@ -241,27 +241,17 @@ while running:
             rest_frame['observer'].vertex(0),
             rest_frame['observer'].vel_future)
 
-        #print()
-        #print('======================')
-        #print(tmp_observer_frame)
-        #print()
-        #print(observer_frame)
-
-        
-
     observer_frame_state = observer_frame.eval(observer_frame_time)
     observer_worldline_face_time = observer_frame['observer'].eval(observer_frame_time)[0]
 
     # Display everything
     screen.fill((0, 0, 0))
-    observer_idx = observer_frame.index('observer')
-    for idx, (face_time, event) in enumerate(observer_frame_state):
-
+    for name, event, face_time in observer_frame_state:
         draw_position = (
             display_scale * event[1] + 400,
             -display_scale * event[2] + 400)
 
-        if idx == observer_idx:
+        if name == 'observer':
             dot_color = (255, 255, 255)
             text_color = (255, 255, 255)
             text_position = (

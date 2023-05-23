@@ -113,16 +113,31 @@ class Frame:
 
     def eval(self, time):
         '''
-        Returns the proper times and events for all worldlines at the specified time.
+        Calculates the event coordinates and proper times for all worldlines at
+        a specified time.
+
+        Args:
+
+          time (number):
+            Time at which to evaluate the frame.
+
+        Returns:
+          ``list[3-tuple(str, ndarray, float)]``:
+            A list containing an entry corresponding to each worldline in the
+            frame, in the same order that worldlines are stored in the
+            :class:`Frame`. Each entry contains the name, event, and proper
+            time, in that order, for one of the worldlines at the specified
+            time.
         '''
+
         state = []
 
         # TODO: Look into parallelizing this into one batched operation, as
         # in `Frame.boost`.
-        for _, w in self._worldlines.items():
-            proper_time = w.proper_time(time)
-            event = w.eval(time)
-            state.append((proper_time, event))
+        for name, worldline in self._worldlines.items():
+            proper_time = worldline.proper_time(time)
+            event = worldline.eval(time)
+            state.append((name, event, proper_time))
 
         return state
 

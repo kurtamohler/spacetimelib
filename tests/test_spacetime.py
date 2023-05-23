@@ -604,5 +604,49 @@ class SpacetimeTestSuite(unittest.TestCase):
                         w0.vertex(vert_idx) + offset,
                         w1.vertex(vert_idx)).all())
 
+    def test_Frame_eval(self):
+        worldlines = [
+            st.Worldline([[0, 0, 0]], vel_ends=[0, 0]),
+            st.Worldline([[0, 0, 0]], vel_past=[-0.123, 0.01], vel_future=[0, 0.999]),
+            st.Worldline([[1, 3, -4]], vel_ends=[0.9, 0]),
+            st.Worldline([
+                    [-100, 38, -29],
+                    [-20, 15, 15],
+                    [0, 9.123, 2.6]
+                ],
+                vel_past=[-0.7, 0.69],
+                vel_future=[-0.4, -0.5],
+                proper_time_origin=-900,
+                proper_time_offset=123),
+            st.Worldline([
+                    [-34.23, 60, 70],
+                    [-15.234, 59.342, 71.324],
+                    [0.1, 61.2309, 69.34902],
+                    [10, 58.24, 70.1],
+                    [1000, 56.3094, 80.234],
+                ],
+                vel_ends=[0, 0]),
+        ]
+
+        eval_times = [
+            -1000, -100, -50, -30, -20, -15.23, -10, -10.123, -1, 0, 0.1, 1, 2, 12,
+            50, 100, 999, 1000, 10000,
+        ]
+
+        frame = st.Frame(worldlines)
+
+        for eval_time in eval_times:
+            state = frame.eval(eval_time)
+
+            for idx, (name, event, proper_time) in enumerate(state):
+                self.assertEqual(frame.name(idx), name)
+
+                event_expected = worldlines[idx].eval(eval_time)
+                self.assertTrue((event == event_expected).all())
+
+                proper_time_expected = worldlines[idx].proper_time(eval_time)
+                self.assertEqual(proper_time, proper_time_expected)
+
+
 if __name__ == '__main__':
     unittest.main()
