@@ -318,3 +318,25 @@ class Frame:
                 new_worldlines.append(new_w)
 
         return Frame(new_worldlines, list(self._worldlines.keys()))
+
+    def __add__(self, event_delta):
+        '''
+        Add a displacement to all worldlines in the frame.
+
+        Args:
+
+          event_delta (array_like):
+            Displacements to add to each dimension.
+
+        Returns:
+          :class:`Frame`:
+        '''
+        event_delta = np.array(event_delta)
+        result = Frame()
+
+        for idx in range(len(self)):
+            name = self.name(idx)
+            worldline = self[idx]
+            result.append(worldline + event_delta, name)
+
+        return result

@@ -3,6 +3,18 @@ import numpy as np
 import unittest
 from itertools import product
 
+def maybe_arraylike_equal(a, b):
+    if a is None or b is None:
+        return a is None and b is None
+    else:
+        return (np.asarray(a) == np.asarray(b)).all()
+
+def maybe_arraylike_close(a, b):
+    if a is None or b is None:
+        return a is None and b is None
+    else:
+        return np.isclose(np.asarray(a), np.asarray(b)).all()
+
 def check_boost_event_1D(v, event):
     t = event[0]
     x = event[1]
@@ -548,6 +560,49 @@ class SpacetimeTestSuite(unittest.TestCase):
         for time, expected_vel in test_times:
             vel = w.eval_vel_s(time)
             self.assertTrue(np.isclose(vel, expected_vel).all())
+
+    def test_Frame_add(self):
+        worldlines = [
+            st.Worldline([[0, 0, 0]]),
+            st.Worldline([[1, 3, -4]], vel_ends=[0.9, 0]),
+            st.Worldline([
+                    [-100, 38, -29],
+                    [-20, 15, 15],
+                    [0, 9.123, 2.6]
+                ],
+                vel_past=[-.7, 0.69],
+                proper_time_origin=-900,
+                proper_time_offset=123),
+        ]
+
+        frame0 = st.Frame(worldlines)
+
+        offsets = [
+            np.array([0, 0, 0]),
+            np.array([-10, 0, 0]),
+            np.array([100, -30, 802]),
+        ]
+
+        for offset in offsets:
+            frame1 = frame0 + offset
+
+            for idx in range(len(frame0)):
+                self.assertEqual(frame0.name(idx), frame1.name(idx))
+
+                w0 = frame0[idx]
+                w1 = frame1[idx]
+
+                self.assertTrue(maybe_arraylike_equal(w0.vel_past, w1.vel_past))
+                self.assertTrue(maybe_arraylike_equal(w0.vel_future, w1.vel_future))
+                self.assertTrue(np.isclose(
+                    w0.proper_time_origin + offset[0],
+                    w1.proper_time_origin))
+                self.assertTrue(w0.proper_time_offset == w1.proper_time_offset)
+
+                for vert_idx in range(len(w0)):
+                    self.assertTrue(np.isclose(
+                        w0.vertex(vert_idx) + offset,
+                        w1.vertex(vert_idx)).all())
 
 if __name__ == '__main__':
     unittest.main()

@@ -16,19 +16,21 @@ API Reference
 .. autoclass:: spacetime.Worldline
    :members:
 
+   .. automethod:: __len__
+
    .. automethod:: __add__
 
    .. automethod:: __sub__
 
    .. automethod:: __eq__
 
-   .. automethod:: __len__
-
 .. autoclass:: spacetime.Frame
    :members:
+
+   .. automethod:: __len__
 
    .. automethod:: __getitem__
 
    .. automethod:: __setitem__
 
-   .. automethod:: __len__
+   .. automethod:: __add__
