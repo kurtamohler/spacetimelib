@@ -513,5 +513,41 @@ class SpacetimeTestSuite(unittest.TestCase):
                 else:
                     self.assertNotEqual(worldline, other)
 
+    def test_Worldline_eval_vel_s(self):
+        w = st.Worldline([
+            [-20, 0, 0],
+            [-18, 0.8, -0.1],
+            [-16, 0.8 + 1.2, -0.1 + 0.2],
+            [0, 2 - 10, 0.1],
+            [2, -8, 0.1 - 1.9],
+            [4, -8 - 1, -1.8 - 0.1]],
+            vel_past=[-0.9, 0],
+            vel_future=[0.7, -0.7])
+
+        test_times = [
+            # time, expected_vel
+            (-float('inf'), np.array([-0.9, 0])),
+            (-100, np.array([-0.9, 0])),
+            (-20.0001, np.array([-0.9, 0])),
+            (-20, np.array([0.8, -0.1]) / 2),
+            (-19, np.array([0.8, -0.1]) / 2),
+            (-18.0001, np.array([0.8, -0.1]) / 2),
+            (-18, np.array([1.2, 0.2]) / 2),
+            (-16.0001, np.array([1.2, 0.2]) / 2),
+            (-16, np.array([-10, 0]) / 16),
+            (-0.0001, np.array([-10, 0]) / 16),
+            (0, np.array([0, -1.9]) / 2),
+            (1.9999, np.array([0, -1.9]) / 2),
+            (2, np.array([-1, -0.1]) / 2),
+            (3.9999, np.array([-1, -0.1]) / 2),
+            (4, np.array([0.7, -0.7])),
+            (40, np.array([0.7, -0.7])),
+            (float('inf'), np.array([0.7, -0.7])),
+        ]
+
+        for time, expected_vel in test_times:
+            vel = w.eval_vel_s(time)
+            self.assertTrue(np.isclose(vel, expected_vel).all())
+
 if __name__ == '__main__':
     unittest.main()

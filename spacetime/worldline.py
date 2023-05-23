@@ -286,6 +286,38 @@ class Worldline:
         else:
             return event
 
+    def eval_vel_s(self, time):
+        '''
+        Calculates the space-velocity at a specified time on the worldline. If
+        the time coincides with a vertex, the future velocity after the vertex
+        is returned.
+
+        Args:
+
+          time (number):
+            Time at which to evaluate the worldline.
+        '''
+        idx_before, idx_after = self._find_surrounding_vertices(time)
+
+        if idx_before is None or idx_after is None:
+            internal_assert(idx_before != idx_after)
+            if idx_before is None:
+                return self.vel_past
+            else:
+                return self.vel_future
+
+        elif idx_before == idx_after:
+            if idx_after == len(self) - 1:
+                return self.vel_future
+            idx_after += 1
+
+        vert0 = self.vertex(int(idx_before))
+        vert1 = self.vertex(int(idx_after))
+
+        diff = vert1 - vert0
+
+        return diff[1:] / diff[0]
+
     def proper_time(self, time):
         '''
 
