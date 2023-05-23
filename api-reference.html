@@ -260,6 +260,17 @@ the coordinate time <code class="docutils literal notranslate"><span class="pre"
 </dd>
 </dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="spacetime.Worldline.__len__">
+<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline.__len__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of vertices in the worldline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="spacetime.Worldline.__add__">
 <span class="sig-name descname"><span class="pre">__add__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_delta</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline.__add__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a displacement to all events in the worldline.</p>
@@ -298,17 +309,6 @@ two worldlines. If any one of them differs, they are not equal.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="spacetime.Worldline.__len__">
-<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline.__len__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the number of vertices in the worldline.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
 </dd>
 </dl>
 </dd></dl>
@@ -534,6 +534,11 @@ frame.</p>
 If no name is given, a default name of the format “wl&lt;number&gt;” is
 automatically assigned to it.</p>
 <dl class="py method">
+<dt class="sig sig-object py" id="spacetime.Frame.__len__">
+<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Frame.__len__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="spacetime.Frame.__getitem__">
 <span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Frame.__getitem__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -544,9 +549,18 @@ automatically assigned to it.</p>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="spacetime.Frame.__len__">
-<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Frame.__len__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="spacetime.Frame.__add__">
+<span class="sig-name descname"><span class="pre">__add__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_delta</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Frame.__add__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a displacement to all worldlines in the frame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event_delta</strong> (<em>array_like</em>) – Displacements to add to each dimension.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#spacetime.Frame" title="spacetime.Frame"><code class="xref py py-class docutils literal notranslate"><span class="pre">Frame</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetime.Frame.boost">
