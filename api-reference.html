@@ -564,9 +564,29 @@ automatically assigned to it.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetime.Frame.boost">
-<span class="sig-name descname"><span class="pre">boost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_delta_pre</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocity_delta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_delta_post</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Frame.boost" title="Permalink to this definition">¶</a></dt>
-<dd><p>Transform the frame, applying a time and position translations first,
-then applying a velocity transformation.</p>
+<span class="sig-name descname"><span class="pre">boost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boost_vel_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_delta_pre</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_delta_post</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_batched</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Frame.boost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Boost each worldline in the frame by the specified velocity.</p>
+<p>The <code class="xref py py-attr docutils literal notranslate"><span class="pre">event_delta_pre</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">event_delta_post</span></code> arguments
+can be used to add optional spacetime-vector offsets to the frame
+before and after boosting. This performs the same calculation as
+calling <a class="reference internal" href="#spacetime.Frame.__add__" title="spacetime.Frame.__add__"><code class="xref py py-func docutils literal notranslate"><span class="pre">Frame.__add__()</span></code></a> before and after boosting, but it is
+usually significantly faster to use this combined operation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>boost_vel_s</strong> (<em>array_like</em>) – Space-velocity to boost the frame by.</p></li>
+<li><p><strong>event_delta_pre</strong> (<em>optional</em><em>, </em><em>array_like</em>) – <p>Displacement to add to each worldline before boosting.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</p></li>
+<li><p><strong>event_delta_post</strong> (<em>optional</em><em>, </em><em>array_like</em>) – <p>Displacement to add to each worldline after boosting.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#spacetime.Frame" title="spacetime.Frame"><code class="xref py py-class docutils literal notranslate"><span class="pre">Frame</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
