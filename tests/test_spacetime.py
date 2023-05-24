@@ -647,6 +647,75 @@ class SpacetimeTestSuite(unittest.TestCase):
                 proper_time_expected = worldlines[idx].proper_time(eval_time)
                 self.assertEqual(proper_time, proper_time_expected)
 
+    def test_Frame_boost(self):
+        worldlines = [
+            st.Worldline([[0, 0, 0]]),
+            st.Worldline([[0, 0, 0]], vel_ends=[0, 0]),
+            st.Worldline([[0, 0, 0]], vel_past=[-0.123, 0.01], vel_future=[0, 0.999]),
+            st.Worldline([[1, 3, -4]], vel_ends=[0.9, 0]),
+            st.Worldline([
+                    [-100, 38, -29],
+                    [-20, 15, 15],
+                    [0, 9.123, 2.6]
+                ],
+                vel_past=[-.7, 0.69],
+                proper_time_origin=-900,
+                proper_time_offset=123),
+            st.Worldline([
+                    [-34.23, 60, 70],
+                    [-15.234, 59.342, 71.324],
+                    [0.1, 61.2309, 69.34902],
+                    [10, 58.24, 70.1],
+                    [1000, 56.3094, 80.234],
+                ],
+                vel_ends=[0, 0]),
+        ]
+
+        frame0 = st.Frame(worldlines)
+
+        boost_vels = [
+            [0, 0],
+            [0.9, 0],
+            [0, -0.99],
+            [0.734, -0.6342],
+        ]
+
+        event_deltas = [
+            # event_delta_pre, event_delta_post
+            (None, None),
+            ([0, 0, 0], [0, 0, 0]),
+            ([1, 2, 3], None),
+            (None, [1, 2, 3]),
+            ([-123, 39, -23], [53.1, 89.2, -23.55]),
+        ]
+
+        for boost_vel_s, (event_delta_pre, event_delta_post), batched in product(boost_vels, event_deltas, [True, False]):
+            frame1 = frame0.boost(
+                boost_vel_s,
+                event_delta_pre,
+                event_delta_post,
+                _batched=batched)
+
+            self.assertEqual(len(frame0), len(frame1))
+
+            for idx in range(len(frame1)):
+                self.assertEqual(frame0.name(idx), frame1.name(idx))
+                w0 = frame0[idx]
+                w1 = frame1[idx]
+
+                if event_delta_pre is not None:
+                    w0_ = w0 + event_delta_pre
+                else:
+                    w0_ = w0
+
+                w1_check_ = w0_.boost(boost_vel_s)
+
+                if event_delta_post is not None:
+                    w1_check = w1_check_ + event_delta_post
+                else:
+                    w1_check = w1_check_
+
+                self.assertEqual(w1, w1_check)
 
 if __name__ == '__main__':
     unittest.main()

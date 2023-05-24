@@ -89,8 +89,8 @@ rest_frame.append(
     'observer')
 
 observer_frame = rest_frame.boost(
-    rest_frame['observer'].vertex(0),
-    rest_frame['observer'].vel_future)
+    rest_frame['observer'].vel_future,
+    event_delta_pre=-rest_frame['observer'].vertex(0))
 
 
 pygame.init()
@@ -152,8 +152,8 @@ while running:
                     proper_time_origin=event0[0]))
 
                 observer_frame = rest_frame.boost(
-                    rest_frame['observer'].vertex(0),
-                    velocity)
+                    velocity,
+                    event_delta_pre=-rest_frame['observer'].vertex(0))
 
 
 
@@ -238,8 +238,8 @@ while running:
         observer_frame_time = 0
         
         observer_frame = rest_frame.boost(
-            rest_frame['observer'].vertex(0),
-            rest_frame['observer'].vel_future)
+            rest_frame['observer'].vel_future,
+            event_delta_pre=-rest_frame['observer'].vertex(0))
 
     observer_frame_state = observer_frame.eval(observer_frame_time)
     observer_worldline_face_time = observer_frame['observer'].eval(observer_frame_time)[0]

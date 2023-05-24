@@ -203,45 +203,60 @@ class Frame:
     # I suppose an event delta maybe should be added to those interfaces as well, because
     # here, we get a significant performance improvement by including the boost and
     # the offset in the same batch
-    def boost(self, event_delta_pre, velocity_delta, event_delta_post=None):
+    def boost(self, boost_vel_s, event_delta_pre=None, event_delta_post=None, _batched=True):
         '''
-        Transform the frame, applying a time and position translations first,
-        then applying a velocity transformation.
+        Boost each worldline in the frame by the specified velocity.
+
+        The :attr:`event_delta_pre` and :attr:`event_delta_post` arguments
+        can be used to add optional spacetime-vector offsets to the frame
+        before and after boosting. This performs the same calculation as
+        calling :func:`Frame.__add__` before and after boosting, but it is
+        usually significantly faster to use this combined operation.
+
+        Args:
+
+          boost_vel_s (array_like):
+            Space-velocity to boost the frame by.
+
+          event_delta_pre (optional, array_like):
+            Displacement to add to each worldline before boosting.
+
+            Default: ``None``
+
+          event_delta_post (optional, array_like):
+            Displacement to add to each worldline after boosting.
+
+            Default: ``None``
+
+        Returns:
+          :class:`Frame`:
         '''
         if len(self) == 0:
             return Frame()
 
         # Check `event_delta_*` args
-        event_delta_pre = np.array(event_delta_pre)
-
-        check(event_delta_pre.shape == (self.ndim,), ValueError,
-            f"'event_delta_pre' must have shape {(self.ndim,)}, "
-            f"but got {event_delta_pre.shape}")
+        if event_delta_pre is not None:
+            event_delta_pre = np.array(event_delta_pre)
+            check(event_delta_pre.shape == (self.ndim,), ValueError,
+                f"'event_delta_pre' must have shape {(self.ndim,)}, "
+                f"but got {event_delta_pre.shape}")
 
         if event_delta_post is not None:
             event_delta_post = np.array(event_delta_post)
             check(event_delta_post.shape == (self.ndim,), ValueError,
                 f"'event_delta_post' must have shape {(self.ndim,)}, "
                 f"but got {event_delta_post.shape}")
-        else:
-            event_delta_post = np.zeros(self.ndim)
 
-        # Check `velocity_delta` arg
-        if velocity_delta is None:
-            velocity_delta = np.zeros(self.ndim - 1)
-        else:
-            velocity_delta = np.array(velocity_delta)
-            check(velocity_delta.shape == (self.ndim - 1,), ValueError,
-                f"'velocity_delta' must have shape {(self.ndim - 1,)}, "
-                f"but got {velocity_delta.shape}")
+        boost_vel_s = np.array(boost_vel_s)
+        check(boost_vel_s.shape == (self.ndim - 1,), ValueError,
+            f"'boost_vel_s' must have shape {(self.ndim - 1,)}, "
+            f"but got {boost_vel_s.shape}")
 
-        speed = np.linalg.norm(velocity_delta)
+        speed = np.linalg.norm(boost_vel_s)
         # Don't allow faster than light transformations
         assert speed <= 1
 
         new_worldlines = []
-
-        batched = False
 
         # TODO: While this impl of batching is roughly 3x faster on my machine
         # than the non-batched path while uniformly accelerating in
@@ -255,7 +270,7 @@ class Frame:
         # events and velocities of the individual worldlines could potentially
         # be views into the batched representation, but that seems harder to
         # implement while preventing broken views.
-        if batched:
+        if _batched:
             vertex_count = []
             vertices = []
             proper_time_origin_events = []
@@ -287,13 +302,19 @@ class Frame:
 
             batched_events = np.concatenate([vertices, proper_time_origin_events])
 
+            if event_delta_pre is not None:
+                batched_events = batched_events + event_delta_pre
+
             new_batched_events = boost(
-                batched_events - event_delta_pre,
-                velocity_delta) - event_delta_post
+                batched_events,
+                boost_vel_s)
+
+            if event_delta_post is not None:
+                new_batched_events = new_batched_events + event_delta_post
 
             new_batched_velocities = boost_velocity_s(
                 batched_velocities,
-                velocity_delta)
+                boost_vel_s)
 
             new_vertices = new_batched_events[:len(vertices)]
             new_proper_time_origin_events = new_batched_events[len(vertices):]
@@ -328,7 +349,13 @@ class Frame:
 
         else:
             for w_idx, w in enumerate(self._worldlines.values()):
-                new_w = (w - event_delta_pre).boost(velocity_delta) - event_delta_post
+                if event_delta_pre is not None:
+                    w = w + event_delta_pre
+
+                new_w = w.boost(boost_vel_s)
+
+                if event_delta_post is not None:
+                    new_w = new_w + event_delta_post
 
                 new_worldlines.append(new_w)
 
