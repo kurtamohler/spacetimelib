@@ -296,6 +296,9 @@ class Worldline:
 
           time (number):
             Time at which to evaluate the worldline.
+
+        Returns:
+          ``ndarray``:
         '''
         idx_before, idx_after = self._find_surrounding_vertices(time)
 
