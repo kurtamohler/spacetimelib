@@ -15,6 +15,10 @@ def check(condition, error_type, *message):
         message_joined = ''.join([str(m) for m in message])
         raise error_type(message_joined)
 
+def check_type(obj, expected_type, obj_name):
+    check(isinstance(obj, expected_type), TypeError,
+        f"expected '{obj_name}' to be type {expected_type}, but got {type(obj)}")
+
 def internal_assert(condition, *message):
     if not condition:
         message_final = 'Internal assert failed'
