@@ -561,6 +561,55 @@ class SpacetimeTestSuite(unittest.TestCase):
             vel = w.eval_vel_s(time)
             self.assertTrue(np.isclose(vel, expected_vel).all())
 
+    def test_Worldline_eval_proper_time_delta(self):
+        w0 = st.Worldline([[0, 0, 0]], vel_ends=[0, 0])
+        w1 = st.Worldline([[-1.12, 1.234, 8.01]], vel_ends=[-0.124, 0.234])
+
+        w2 = st.Worldline([
+            [-20, 0, 0],
+            [-18, 0.8, -0.1],
+            [-16, 0.8 + 1.2, -0.1 + 0.2],
+            [0, 2 - 10, 0.1],
+            [2, -8, 0.1 - 1.9],
+            [4, -8 - 1, -1.8 - 0.1]],
+            vel_past=[-0.9, 0],
+            vel_future=[0.7, -0.7])
+
+        test_cases = [
+            # worldline, time, proper_time_delta
+            (w0, -10, 1),
+            (w0, 0, 0),
+            (w0, 0, 10),
+            (w0, 1, 10),
+
+            (w1, -10, 0),
+            (w1, -12, 1),
+            (w1, -10, 9),
+            (w1, -9, 9),
+            (w1, -2, 7),
+            (w1, 0, 0),
+            (w1, 0, 10),
+            (w1, 1, 10),
+            # Test a case where the result lands on a vertex
+            (w1, -9, w1.proper_time(w1.vertex(0)[0]) - w1.proper_time(-9)),
+
+            (w2, -40, 1000),
+            (w2, 0, 0.01),
+            (w2, -0.01, 2),
+            (w2, -0.01, 0.0001),
+            (w2, 3.8, 10),
+            (w2, 3.8, 0.0001),
+            (w2, 4, 10),
+            (w2, 5, 1.123),
+        ]
+
+        for w, time, proper_time_delta in test_cases:
+            event = w.eval_proper_time_delta(time, proper_time_delta)
+            proper_time_delta_check = w.proper_time(event[0]) - w.proper_time(time)
+            self.assertTrue(np.isclose(proper_time_delta, proper_time_delta_check))
+            event_check = w.eval(event[0])
+            self.assertTrue(np.isclose(event, event_check).all())
+
     def test_Frame_add(self):
         worldlines = [
             st.Worldline([[0, 0, 0]]),

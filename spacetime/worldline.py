@@ -1,4 +1,4 @@
-from .basic_ops import boost, _proper_time, boost_velocity_s
+from .basic_ops import boost, _proper_time, boost_velocity_s, velocity_st
 from .error_checking import check, internal_assert
 
 import numpy as np
@@ -206,7 +206,7 @@ class Worldline:
 
             If there is no vertex after ``time``, then ``idx_after = None``.
         '''
-        idx_after = np.searchsorted(self._vertices[..., 0], time)
+        idx_after = int(np.searchsorted(self._vertices[..., 0], time))
 
         if idx_after >= len(self._vertices):
             return idx_after - 1, None
@@ -285,6 +285,84 @@ class Worldline:
             return event, (idx_before, idx_after)
         else:
             return event
+
+    def eval_proper_time_delta(self, time, proper_time_delta):
+        '''
+        Calculates the coordinates of the event located at the specified proper
+        time displacement away from a specified time coordinate along the
+        worldline.
+
+        Args:
+
+          time (number):
+            Time coordinate
+
+          proper_time_delta (number):
+            Proper time displacement away from the time coordinate
+
+        Returns:
+          ``ndarray`` or ``tuple(ndarray, tuple(int, int))``:
+        '''
+        cur_event, (idx_before, idx_after) = self.eval(time, return_indices=True)
+        cur_proper_time = 0
+
+        if proper_time_delta == 0:
+            return cur_event
+
+        elif proper_time_delta > 0:
+            # If the start event is a vertex, increment idx_after
+            if idx_after == idx_before:
+                if idx_after + 1 < len(self):
+                    idx_after += 1
+                else:
+                    idx_after = None
+
+            # Loop through each of the segments between the current event and the
+            # vertices after it, adding up the proper times of each segment until we
+            # reach the proper time delta.
+            while idx_after is not None:
+                next_event = self.vertex(idx_after)
+
+                segment_proper_time = _proper_time(next_event, cur_event)
+                next_proper_time = cur_proper_time + segment_proper_time
+
+                if next_proper_time == proper_time_delta:
+                    # The proper time delta is at the end vertex of this segment.
+                    return next_event
+
+                elif next_proper_time > proper_time_delta:
+                    # The proper time delta is within the current segment. We can
+                    # do linear interpolation between cur_event and next_event.
+                    proper_time_remaining = proper_time_delta - cur_proper_time
+                    linear_interp_factor = proper_time_remaining / segment_proper_time
+                    return cur_event + (next_event - cur_event) * linear_interp_factor
+
+                elif next_proper_time < proper_time_delta:
+                    cur_proper_time = next_proper_time
+                    cur_event = next_event
+
+                    if idx_after + 1 < len(self):
+                        idx_after += 1
+                    else:
+                        idx_after = None
+
+            # The resulting event is after all of the vertices, and we have to
+            # find the result using `vel_future`, so it must be defined.
+            check(self.vel_future is not None, ValueError, (
+                f"Coordinate time '{time}' plus proper time '{proper_time_delta}' "
+                "along this worldline is after the final vertex, but this "
+                "worldline does not have a 'vel_future'"))
+
+            # We can multipy the spacetime-velocity of `vel_future` by the
+            # remaining amount of proper time to get an offset spacetime-vector
+            # from the `cur_event`
+            proper_time_remaining = proper_time_delta - cur_proper_time
+            return cur_event + velocity_st(self.vel_future) * proper_time_remaining
+
+        else:
+            check(False, NotImplementedError, (
+                "'proper_time_delta < 0' is not yet supported, but got "
+                f"{proper_time_delta}"))
 
     def eval_vel_s(self, time):
         '''
