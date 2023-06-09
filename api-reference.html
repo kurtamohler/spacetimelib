@@ -360,6 +360,25 @@ indices of vertices surrounding the specified <code class="docutils literal notr
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="spacetime.Worldline.eval_proper_time_delta">
+<span class="sig-name descname"><span class="pre">eval_proper_time_delta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proper_time_delta</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline.eval_proper_time_delta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the coordinates of the event located at the specified proper
+time displacement away from a specified time coordinate along the
+worldline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> (<em>number</em>) – Time coordinate</p></li>
+<li><p><strong>proper_time_delta</strong> (<em>number</em>) – Proper time displacement away from the time coordinate</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">ndarray</span></code> or <code class="docutils literal notranslate"><span class="pre">tuple(ndarray,</span> <span class="pre">tuple(int,</span> <span class="pre">int))</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="spacetime.Worldline.eval_vel_s">
 <span class="sig-name descname"><span class="pre">eval_vel_s</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline.eval_vel_s" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the space-velocity at a specified time on the worldline. If
