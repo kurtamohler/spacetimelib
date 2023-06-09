@@ -716,9 +716,19 @@ class Worldline:
         Space-velocity of the worldline before the first vertex.
 
         Returns:
-            None or array_like: Size: (N+1)
+            None or array_like: Size: (N)
         '''
         return self._ends_vel_s[0]
+
+    @property
+    def past_vel_st(self):
+        '''
+        Spacetime-velocity of the worldline before the first vertex.
+
+        Returns:
+            None or array_like: Size: (N+1)
+        '''
+        return None if self.past_vel_s is None else velocity_st(self.past_vel_s)
 
     @property
     def future_vel_s(self):
@@ -726,6 +736,16 @@ class Worldline:
         Space-velocity of the worldline after the last vertex.
 
         Returns:
-            None or array_like: Size: (N+1)
+            None or array_like: Size: (N)
         '''
         return self._ends_vel_s[1]
+
+    @property
+    def future_vel_st(self):
+        '''
+        Spacetime-velocity of the worldline after the last vertex.
+
+        Returns:
+            None or array_like: Size: (N+1)
+        '''
+        return None if self.future_vel_s is None else velocity_st(self.future_vel_s)
