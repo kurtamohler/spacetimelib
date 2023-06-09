@@ -338,15 +338,15 @@ class SpacetimeTestSuite(unittest.TestCase):
             [0.9])
         w1 = st.Worldline(
             [[0, 0]],
-            vel_past=[0.7],
-            vel_future=[-0.1])
+            past_vel_s=[0.7],
+            future_vel_s=[-0.1])
         w2 = st.Worldline(
             [[-100, 1], [10, -50]],
             [-0.4])
         w3 = st.Worldline(
             [[-100, 1], [10, -50]],
-            vel_past=[0.4],
-            vel_future=[-0.1])
+            past_vel_s=[0.4],
+            future_vel_s=[-0.1])
         test_cases = [
             # worldline, time, event_check
             (w0, 0, [0, 0]),
@@ -400,7 +400,7 @@ class SpacetimeTestSuite(unittest.TestCase):
             self.assertAlmostEqual(w.proper_time_diff(time1, time0), -tau_check)
 
     def test_Worldline_boost(self):
-        # TODO: Should test `vel_ends` too
+        # TODO: Should test `ends_vel_s` too
         test_worldlines = [
             st.Worldline([
                 [0, 0],
@@ -446,52 +446,52 @@ class SpacetimeTestSuite(unittest.TestCase):
                 self.assertTrue(np.isclose(v0, v0_check).all())
                 self.assertTrue(np.isclose(v1, v1_check).all())
 
-    def test_Worldline_vel_ends(self):
-        w0 = st.Worldline([[0, 0]], vel_ends=[0.1])
-        self.assertTrue((w0.vel_past == 0.1).all())
-        self.assertTrue((w0.vel_future == 0.1).all())
+    def test_Worldline_ends_vel_s(self):
+        w0 = st.Worldline([[0, 0]], ends_vel_s=[0.1])
+        self.assertTrue((w0.past_vel_s == 0.1).all())
+        self.assertTrue((w0.future_vel_s == 0.1).all())
 
-        w1 = st.Worldline([[0, 0]], vel_past=[0.1], vel_future=[0.1])
-        self.assertTrue((w1.vel_past == 0.1).all())
-        self.assertTrue((w1.vel_future == 0.1).all())
+        w1 = st.Worldline([[0, 0]], past_vel_s=[0.1], future_vel_s=[0.1])
+        self.assertTrue((w1.past_vel_s == 0.1).all())
+        self.assertTrue((w1.future_vel_s == 0.1).all())
 
-        w2 = st.Worldline([[0, 0]], vel_past=[-0.2], vel_future=None)
-        self.assertTrue((w2.vel_past == -0.2).all())
-        self.assertTrue(w2.vel_future is None)
+        w2 = st.Worldline([[0, 0]], past_vel_s=[-0.2], future_vel_s=None)
+        self.assertTrue((w2.past_vel_s == -0.2).all())
+        self.assertTrue(w2.future_vel_s is None)
 
-        w3 = st.Worldline([[0, 0]], vel_past=None, vel_future=[0.3])
-        self.assertTrue(w3.vel_past is None)
-        self.assertTrue((w3.vel_future == 0.3).all())
+        w3 = st.Worldline([[0, 0]], past_vel_s=None, future_vel_s=[0.3])
+        self.assertTrue(w3.past_vel_s is None)
+        self.assertTrue((w3.future_vel_s == 0.3).all())
 
         v4 = [-0.13, 0.1, 0, -0.14]
-        w4 = st.Worldline([[0, 0, 0, 0, 0]], vel_ends=v4)
-        self.assertTrue((w4.vel_past == v4).all())
-        self.assertTrue((w4.vel_future == v4).all())
+        w4 = st.Worldline([[0, 0, 0, 0, 0]], ends_vel_s=v4)
+        self.assertTrue((w4.past_vel_s == v4).all())
+        self.assertTrue((w4.future_vel_s == v4).all())
 
         v5_past = [-0.13, 0.1, 0, -0.14]
         v5_future = [0.16, -0.14, 0.01, -0.046]
-        w5 = st.Worldline([[0, 0, 0, 0, 0]], vel_past=v5_past, vel_future=v5_future)
-        self.assertTrue((w5.vel_past == v5_past).all())
-        self.assertTrue((w5.vel_future == v5_future).all())
+        w5 = st.Worldline([[0, 0, 0, 0, 0]], past_vel_s=v5_past, future_vel_s=v5_future)
+        self.assertTrue((w5.past_vel_s == v5_past).all())
+        self.assertTrue((w5.future_vel_s == v5_future).all())
 
         v6_past = [-0.13, 0.1, 0, -0.14]
-        w6 = st.Worldline([[0, 0, 0, 0, 0]], vel_past=v6_past, vel_future=None)
-        self.assertTrue((w6.vel_past == v6_past).all())
-        self.assertTrue(w6.vel_future is None)
+        w6 = st.Worldline([[0, 0, 0, 0, 0]], past_vel_s=v6_past, future_vel_s=None)
+        self.assertTrue((w6.past_vel_s == v6_past).all())
+        self.assertTrue(w6.future_vel_s is None)
 
         v7_past = [-0.13, 0.1, 0, -0.14]
         v7_future = [0.16, -0.14, 0.01, -0.046]
-        w7 = st.Worldline([[0, 0, 0, 0, 0]], vel_past=None, vel_future=v7_future)
-        self.assertTrue(w7.vel_past is None)
-        self.assertTrue((w7.vel_future == v7_future).all())
+        w7 = st.Worldline([[0, 0, 0, 0, 0]], past_vel_s=None, future_vel_s=v7_future)
+        self.assertTrue(w7.past_vel_s is None)
+        self.assertTrue((w7.future_vel_s == v7_future).all())
 
-        w8 = st.Worldline([[0, 0, 0, 0, 0]], vel_past=None, vel_future=None)
-        self.assertTrue(w8.vel_past is None)
-        self.assertTrue(w8.vel_future is None)
+        w8 = st.Worldline([[0, 0, 0, 0, 0]], past_vel_s=None, future_vel_s=None)
+        self.assertTrue(w8.past_vel_s is None)
+        self.assertTrue(w8.future_vel_s is None)
 
-        w9 = st.Worldline([[0, 0, 0, 0, 0]], vel_ends=None)
-        self.assertTrue(w9.vel_past is None)
-        self.assertTrue(w9.vel_future is None)
+        w9 = st.Worldline([[0, 0, 0, 0, 0]], ends_vel_s=None)
+        self.assertTrue(w9.past_vel_s is None)
+        self.assertTrue(w9.future_vel_s is None)
 
     def test_Worldline___eq__(self):
         # These worldlines all differ from each other in different ways
@@ -502,12 +502,12 @@ class SpacetimeTestSuite(unittest.TestCase):
             lambda: st.Worldline([[0, 1], [2, 1]]),
             lambda: st.Worldline([[0.1, 1, 2], [10, 4, 5]]),
             lambda: st.Worldline([[0, 1, 2], [10, 3.9, 5]]),
-            lambda: st.Worldline([[0, 1, 2], [10, 4, 5]], vel_past=[0.1, -0.1]),
-            lambda: st.Worldline([[0, 1, 2], [10, 4, 5]], vel_past=[0.2, -0.1]),
-            lambda: st.Worldline([[0, 1, 2], [10, 4, 5]], vel_future=[0.2, 0.3]),
-            lambda: st.Worldline([[0, 1, 2], [10, 4, 5]], vel_future=[0.2, -0.3]),
-            lambda: st.Worldline([[0, 1, 2], [10, 4, 5]], vel_past=[0.1, -0.1], vel_future=[0.2, 0.3]),
-            lambda: st.Worldline([[0, 1, 2], [10, 4, 5]], vel_past=[0.1, -0.1], vel_future=[0.2, -0.3]),
+            lambda: st.Worldline([[0, 1, 2], [10, 4, 5]], past_vel_s=[0.1, -0.1]),
+            lambda: st.Worldline([[0, 1, 2], [10, 4, 5]], past_vel_s=[0.2, -0.1]),
+            lambda: st.Worldline([[0, 1, 2], [10, 4, 5]], future_vel_s=[0.2, 0.3]),
+            lambda: st.Worldline([[0, 1, 2], [10, 4, 5]], future_vel_s=[0.2, -0.3]),
+            lambda: st.Worldline([[0, 1, 2], [10, 4, 5]], past_vel_s=[0.1, -0.1], future_vel_s=[0.2, 0.3]),
+            lambda: st.Worldline([[0, 1, 2], [10, 4, 5]], past_vel_s=[0.1, -0.1], future_vel_s=[0.2, -0.3]),
             lambda: st.Worldline([[0, 1, 2], [10, 4, 5]], proper_time_origin=5),
             lambda: st.Worldline([[0, 1, 2], [10, 4, 5]], proper_time_origin=6),
             lambda: st.Worldline([[0, 1, 2], [10, 4, 5]], proper_time_offset=-1),
@@ -533,8 +533,8 @@ class SpacetimeTestSuite(unittest.TestCase):
             [0, 2 - 10, 0.1],
             [2, -8, 0.1 - 1.9],
             [4, -8 - 1, -1.8 - 0.1]],
-            vel_past=[-0.9, 0],
-            vel_future=[0.7, -0.7])
+            past_vel_s=[-0.9, 0],
+            future_vel_s=[0.7, -0.7])
 
         test_times = [
             # time, expected_vel
@@ -562,8 +562,8 @@ class SpacetimeTestSuite(unittest.TestCase):
             self.assertTrue(np.isclose(vel, expected_vel).all())
 
     def test_Worldline_eval_proper_time_delta(self):
-        w0 = st.Worldline([[0, 0, 0]], vel_ends=[0, 0])
-        w1 = st.Worldline([[-1.12, 1.234, 8.01]], vel_ends=[-0.124, 0.234])
+        w0 = st.Worldline([[0, 0, 0]], ends_vel_s=[0, 0])
+        w1 = st.Worldline([[-1.12, 1.234, 8.01]], ends_vel_s=[-0.124, 0.234])
 
         w2 = st.Worldline([
             [-20, 0, 0],
@@ -572,8 +572,8 @@ class SpacetimeTestSuite(unittest.TestCase):
             [0, 2 - 10, 0.1],
             [2, -8, 0.1 - 1.9],
             [4, -8 - 1, -1.8 - 0.1]],
-            vel_past=[-0.9, 0],
-            vel_future=[0.7, -0.7])
+            past_vel_s=[-0.9, 0],
+            future_vel_s=[0.7, -0.7])
 
         test_cases = [
             # worldline, time, proper_time_delta
@@ -613,13 +613,13 @@ class SpacetimeTestSuite(unittest.TestCase):
     def test_Frame_add(self):
         worldlines = [
             st.Worldline([[0, 0, 0]]),
-            st.Worldline([[1, 3, -4]], vel_ends=[0.9, 0]),
+            st.Worldline([[1, 3, -4]], ends_vel_s=[0.9, 0]),
             st.Worldline([
                     [-100, 38, -29],
                     [-20, 15, 15],
                     [0, 9.123, 2.6]
                 ],
-                vel_past=[-.7, 0.69],
+                past_vel_s=[-.7, 0.69],
                 proper_time_origin=-900,
                 proper_time_offset=123),
         ]
@@ -641,8 +641,8 @@ class SpacetimeTestSuite(unittest.TestCase):
                 w0 = frame0[idx]
                 w1 = frame1[idx]
 
-                self.assertTrue(maybe_arraylike_equal(w0.vel_past, w1.vel_past))
-                self.assertTrue(maybe_arraylike_equal(w0.vel_future, w1.vel_future))
+                self.assertTrue(maybe_arraylike_equal(w0.past_vel_s, w1.past_vel_s))
+                self.assertTrue(maybe_arraylike_equal(w0.future_vel_s, w1.future_vel_s))
                 self.assertTrue(np.isclose(
                     w0.proper_time_origin + offset[0],
                     w1.proper_time_origin))
@@ -655,16 +655,16 @@ class SpacetimeTestSuite(unittest.TestCase):
 
     def test_Frame_eval(self):
         worldlines = [
-            st.Worldline([[0, 0, 0]], vel_ends=[0, 0]),
-            st.Worldline([[0, 0, 0]], vel_past=[-0.123, 0.01], vel_future=[0, 0.999]),
-            st.Worldline([[1, 3, -4]], vel_ends=[0.9, 0]),
+            st.Worldline([[0, 0, 0]], ends_vel_s=[0, 0]),
+            st.Worldline([[0, 0, 0]], past_vel_s=[-0.123, 0.01], future_vel_s=[0, 0.999]),
+            st.Worldline([[1, 3, -4]], ends_vel_s=[0.9, 0]),
             st.Worldline([
                     [-100, 38, -29],
                     [-20, 15, 15],
                     [0, 9.123, 2.6]
                 ],
-                vel_past=[-0.7, 0.69],
-                vel_future=[-0.4, -0.5],
+                past_vel_s=[-0.7, 0.69],
+                future_vel_s=[-0.4, -0.5],
                 proper_time_origin=-900,
                 proper_time_offset=123),
             st.Worldline([
@@ -674,7 +674,7 @@ class SpacetimeTestSuite(unittest.TestCase):
                     [10, 58.24, 70.1],
                     [1000, 56.3094, 80.234],
                 ],
-                vel_ends=[0, 0]),
+                ends_vel_s=[0, 0]),
         ]
 
         eval_times = [
@@ -699,15 +699,15 @@ class SpacetimeTestSuite(unittest.TestCase):
     def test_Frame_boost(self):
         worldlines = [
             st.Worldline([[0, 0, 0]]),
-            st.Worldline([[0, 0, 0]], vel_ends=[0, 0]),
-            st.Worldline([[0, 0, 0]], vel_past=[-0.123, 0.01], vel_future=[0, 0.999]),
-            st.Worldline([[1, 3, -4]], vel_ends=[0.9, 0]),
+            st.Worldline([[0, 0, 0]], ends_vel_s=[0, 0]),
+            st.Worldline([[0, 0, 0]], past_vel_s=[-0.123, 0.01], future_vel_s=[0, 0.999]),
+            st.Worldline([[1, 3, -4]], ends_vel_s=[0.9, 0]),
             st.Worldline([
                     [-100, 38, -29],
                     [-20, 15, 15],
                     [0, 9.123, 2.6]
                 ],
-                vel_past=[-.7, 0.69],
+                past_vel_s=[-.7, 0.69],
                 proper_time_origin=-900,
                 proper_time_offset=123),
             st.Worldline([
@@ -717,7 +717,7 @@ class SpacetimeTestSuite(unittest.TestCase):
                     [10, 58.24, 70.1],
                     [1000, 56.3094, 80.234],
                 ],
-                vel_ends=[0, 0]),
+                ends_vel_s=[0, 0]),
         ]
 
         frame0 = st.Frame(worldlines)

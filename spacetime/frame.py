@@ -290,13 +290,13 @@ class Frame:
                 vertex_count.append(len(w._vertices))
                 vertices += [vertex for vertex in w._vertices]
 
-                if w.vel_past is not None:
+                if w.past_vel_s is not None:
                     past_velocity_idx_map[w_idx] = len(batched_velocities)
-                    batched_velocities.append(w.vel_past)
+                    batched_velocities.append(w.past_vel_s)
 
-                if w.vel_future is not None:
+                if w.future_vel_s is not None:
                     future_velocity_idx_map[w_idx] = len(batched_velocities)
-                    batched_velocities.append(w.vel_future)
+                    batched_velocities.append(w.future_vel_s)
 
                 proper_time_origin_events.append(w.eval(w.proper_time_origin))
 
@@ -338,8 +338,8 @@ class Frame:
                 new_proper_time_origin = float(new_proper_time_origin_events[w_idx][0])
                 new_w = Worldline(
                         new_vertices[cur_vertices_idx : cur_vertices_idx + num_vertices],
-                        vel_past=past_velocity,
-                        vel_future=future_velocity,
+                        past_vel_s=past_velocity,
+                        future_vel_s=future_velocity,
                         proper_time_origin=new_proper_time_origin,
                         proper_time_offset=w.proper_time_offset)
 

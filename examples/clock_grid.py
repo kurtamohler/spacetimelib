@@ -69,7 +69,7 @@ elif demo_number == 4:
             np.array([
                 [0, 0, 0]
             ]),
-            vel_ends=[0, 0],
+            ends_vel_s=[0, 0],
             proper_time_origin=0,
             proper_time_offset=123))
 
@@ -89,7 +89,7 @@ rest_frame.append(
     'observer')
 
 observer_frame = rest_frame.boost(
-    rest_frame['observer'].vel_future,
+    rest_frame['observer'].future_vel_s,
     event_delta_pre=-rest_frame['observer'].vertex(0))
 
 
@@ -133,7 +133,7 @@ while running:
 
             if new_worldline_velocity_ is not None:
                 # TODO: Fix this hack
-                velocity = rest_frame['observer'].vel_past
+                velocity = rest_frame['observer'].past_vel_s
                 event0_ = observer_frame['observer'].eval(observer_frame_time)
 
                 new_worldline_event0 = boost(
@@ -215,7 +215,7 @@ while running:
 
     # Reset observer velocity to 0 wrt rest frame
     if keys_pressed[pygame.K_r]:
-        add_velocity = -rest_frame['observer'].vel_future
+        add_velocity = -rest_frame['observer'].future_vel_s
 
     if add_velocity is not None:
         # Create a new worldline for the observer, boost it back to the rest
@@ -227,18 +227,18 @@ while running:
 
         new_observer_worldline_ = Worldline(
             [event],
-            vel_ends=add_velocity,
+            ends_vel_s=add_velocity,
             proper_time_origin=float(event[0]),
             proper_time_offset=proper_time)
 
         new_observer_worldline = new_observer_worldline_.boost(
-            -rest_frame['observer'].vel_future) + rest_frame['observer'].vertex(0)
+            -rest_frame['observer'].future_vel_s) + rest_frame['observer'].vertex(0)
 
         rest_frame['observer'] = new_observer_worldline
         observer_frame_time = 0
         
         observer_frame = rest_frame.boost(
-            rest_frame['observer'].vel_future,
+            rest_frame['observer'].future_vel_s,
             event_delta_pre=-rest_frame['observer'].vertex(0))
 
     observer_frame_state = observer_frame.eval(observer_frame_time)
@@ -262,7 +262,7 @@ while running:
             # to be displayed
             # TODO: This is a bit of a hack. Should probably add a method to
             # `Worldline` that gives the velocity at a particular time
-            velocity = rest_frame['observer'].vel_future
+            velocity = rest_frame['observer'].future_vel_s
             rest_pos = boost(
                 event,
                 -velocity

@@ -30,10 +30,10 @@ class Worldline:
 
     def __init__(self,
             vertices,
-            vel_ends=None,
+            ends_vel_s=None,
             *,
-            vel_past=None,
-            vel_future=None,
+            past_vel_s=None,
+            future_vel_s=None,
             proper_time_origin=None,
             proper_time_offset=0):
         '''
@@ -51,18 +51,18 @@ class Worldline:
 
             By default, the first and last vertices are treated as end point
             boundaries, past which events simply cannot be evaluated. The
-            ``vel_ends``, ``vel_past``, or ``vel_future`` arguments can be
+            ``ends_vel_s``, ``past_vel_s``, or ``future_vel_s`` arguments can be
             specified to enable linear extrapolation of events that fall
             outside of these boundaries.
 
             Size: (M, N+1) for M vertices that each have N+1 dimensions
 
-          vel_ends (array_like, optional):
+          ends_vel_s (array_like, optional):
             Space-velocity of the worldline before and after the first and last
             vertices. This enables the extrapolation of events that occur
             before and after the first and last ``vertices``.
 
-            If specified, ``vel_past`` and ``vel_future`` must be ``None``.
+            If specified, ``past_vel_s`` and ``future_vel_s`` must be ``None``.
 
             Size: (N+1)
 
@@ -70,17 +70,17 @@ class Worldline:
 
         Keyword args:
 
-          vel_past (array_like, optional):
+          past_vel_s (array_like, optional):
             Space-velocity of the worldline before the first vertex. If
-            specified, ``vel_ends`` must be ``None``.
+            specified, ``ends_vel_s`` must be ``None``.
 
             Size: (N+1)
 
             Default: ``None``
 
-          vel_future (array_like, optional):
+          future_vel_s (array_like, optional):
             Space-velocity of the worldline after the last vertex. If
-            specified, ``vel_ends`` must be ``None``.
+            specified, ``ends_vel_s`` must be ``None``.
 
             Size: (N+1)
 
@@ -139,28 +139,28 @@ class Worldline:
                 f"expected `{arg_name}` to have speed less than or equal ",
                 f"to the speed of light, 1, but got {speed} instead")
 
-        if vel_ends is not None:
-            check(vel_past is None and vel_future is None, ValueError,
-                "expected `vel_past` and `vel_future` to be None, since `vel_ends` was given")
-            vel_ends = np.array(vel_ends)
-            check_vel_end('vel_ends', vel_ends)
+        if ends_vel_s is not None:
+            check(past_vel_s is None and future_vel_s is None, ValueError,
+                "expected `past_vel_s` and `future_vel_s` to be None, since `ends_vel_s` was given")
+            ends_vel_s = np.array(ends_vel_s)
+            check_vel_end('ends_vel_s', ends_vel_s)
 
-            # TODO: I may want to rename `_vel_ends` since its meaning is actually
-            # not the same as `vel_ends`. `vel_ends` is one velocity, and `_vel_ends`
+            # TODO: I may want to rename `_ends_vel_s` since its meaning is actually
+            # not the same as `ends_vel_s`. `ends_vel_s` is one velocity, and `_ends_vel_s`
             # is two velocities
-            self._vel_ends = [vel_ends, vel_ends]
+            self._ends_vel_s = [ends_vel_s, ends_vel_s]
         else:
-            self._vel_ends = [None, None]
+            self._ends_vel_s = [None, None]
 
-            if vel_past is not None:
-                vel_past = np.array(vel_past)
-                check_vel_end('vel_past', vel_past)
-                self._vel_ends[0] = vel_past
+            if past_vel_s is not None:
+                past_vel_s = np.array(past_vel_s)
+                check_vel_end('past_vel_s', past_vel_s)
+                self._ends_vel_s[0] = past_vel_s
 
-            if vel_future is not None:
-                vel_future = np.array(vel_future)
-                check_vel_end('vel_future', vel_future)
-                self._vel_ends[1] = vel_future
+            if future_vel_s is not None:
+                future_vel_s = np.array(future_vel_s)
+                check_vel_end('future_vel_s', future_vel_s)
+                self._ends_vel_s[1] = future_vel_s
 
         if proper_time_origin is None:
             proper_time_origin = self._vertices[0][0].item()
@@ -171,8 +171,8 @@ class Worldline:
 
         # Need to check that the proper time origin is actually within the bounds of
         # worldline
-        first_time = -float('inf') if self._vel_ends[0] is not None else self._vertices[0][0].item()
-        last_time = float('inf') if self._vel_ends[1] is not None else self._vertices[-1][0].item()
+        first_time = -float('inf') if self._ends_vel_s[0] is not None else self._vertices[0][0].item()
+        last_time = float('inf') if self._ends_vel_s[1] is not None else self._vertices[-1][0].item()
 
         check(proper_time_origin >= first_time and proper_time_origin <= last_time,
             ValueError,
@@ -228,7 +228,7 @@ class Worldline:
         interpolation for this.
 
         To evaluate times that are before or after all of the vertices,
-        ``vel_ends``, ``vel_past``, or ``vel_future`` must have been
+        ``ends_vel_s``, ``past_vel_s``, or ``future_vel_s`` must have been
         specified in :func:`Worldline`.
 
         Args:
@@ -255,20 +255,20 @@ class Worldline:
             internal_assert(idx_before != idx_after)
 
             if idx_before is None:
-                vel_ends = self.vel_past
-                check(vel_ends is not None, ValueError,
+                ends_vel_s = self.past_vel_s
+                check(ends_vel_s is not None, ValueError,
                     f"time '{time}' is before the first event on the worldline at ",
                     f"time '{self._vertices[0][0]}'")
                 vert = self._vertices[0]
             else:
-                vel_ends = self.vel_future
-                check(vel_ends is not None, ValueError,
+                ends_vel_s = self.future_vel_s
+                check(ends_vel_s is not None, ValueError,
                     f"time '{time}' is after the last event on the worldline at ",
                     f"time '{self._vertices[-1][0]}'")
                 vert = self._vertices[-1]
 
             event = np.concatenate([[time],
-                vert[1:] + vel_ends * (time - vert[0])])
+                vert[1:] + ends_vel_s * (time - vert[0])])
 
         elif idx_before == idx_after:
             event = self._vertices[idx_before]
@@ -347,17 +347,17 @@ class Worldline:
                         idx_after = None
 
             # The resulting event is after all of the vertices, and we have to
-            # find the result using `vel_future`, so it must be defined.
-            check(self.vel_future is not None, ValueError, (
+            # find the result using `future_vel_s`, so it must be defined.
+            check(self.future_vel_s is not None, ValueError, (
                 f"Coordinate time '{time}' plus proper time '{proper_time_delta}' "
                 "along this worldline is after the final vertex, but this "
-                "worldline does not have a 'vel_future'"))
+                "worldline does not have a 'future_vel_s'"))
 
-            # We can multipy the spacetime-velocity of `vel_future` by the
+            # We can multipy the spacetime-velocity of `future_vel_s` by the
             # remaining amount of proper time to get an offset spacetime-vector
             # from the `cur_event`
             proper_time_remaining = proper_time_delta - cur_proper_time
-            return cur_event + velocity_st(self.vel_future) * proper_time_remaining
+            return cur_event + velocity_st(self.future_vel_s) * proper_time_remaining
 
         else:
             check(False, NotImplementedError, (
@@ -383,13 +383,13 @@ class Worldline:
         if idx_before is None or idx_after is None:
             internal_assert(idx_before != idx_after)
             if idx_before is None:
-                return self.vel_past
+                return self.past_vel_s
             else:
-                return self.vel_future
+                return self.future_vel_s
 
         elif idx_before == idx_after:
             if idx_after == len(self) - 1:
-                return self.vel_future
+                return self.future_vel_s
             idx_after += 1
 
         vert0 = self.vertex(int(idx_before))
@@ -483,20 +483,20 @@ class Worldline:
           :class:`spacetime.Worldline`:
         '''
         vertices = boost(self._vertices, boost_vel_s)
-        vel_past = None
-        vel_future = None
+        past_vel_s = None
+        future_vel_s = None
 
-        if self.vel_past is not None:
-            vel_past = boost_velocity_s(self.vel_past, boost_vel_s)
+        if self.past_vel_s is not None:
+            past_vel_s = boost_velocity_s(self.past_vel_s, boost_vel_s)
 
-        if self.vel_future is not None:
-            vel_future = boost_velocity_s(self.vel_future, boost_vel_s)
+        if self.future_vel_s is not None:
+            future_vel_s = boost_velocity_s(self.future_vel_s, boost_vel_s)
 
 
         return Worldline(
             vertices,
-            vel_past=vel_past,
-            vel_future=vel_future,
+            past_vel_s=past_vel_s,
+            future_vel_s=future_vel_s,
             # TODO: I guess only evaluating this once would be better
             proper_time_origin=boost(self.eval(self._proper_time_origin), boost_vel_s)[0].item(),
             proper_time_offset=self.proper_time_offset)
@@ -520,8 +520,8 @@ class Worldline:
 
         return Worldline(
             self._vertices + event_delta,
-            vel_past=self.vel_past,
-            vel_future=self.vel_future,
+            past_vel_s=self.past_vel_s,
+            future_vel_s=self.future_vel_s,
             proper_time_origin=self._proper_time_origin + event_delta[0].item(),
             proper_time_offset=self._proper_time_offset)
 
@@ -565,16 +565,16 @@ class Worldline:
             if (self.vertex(idx) != other.vertex(idx)).any():
                 return False
 
-        def vel_ends_match(self_vel, other_vel):
+        def ends_vel_s_match(self_vel, other_vel):
             if self_vel is None:
                 return other_vel is None
             else:
                 return (self_vel == other_vel).all()
 
-        if not vel_ends_match(self.vel_past, other.vel_past):
+        if not ends_vel_s_match(self.past_vel_s, other.past_vel_s):
             return False
 
-        if not vel_ends_match(self.vel_future, other.vel_future):
+        if not ends_vel_s_match(self.future_vel_s, other.future_vel_s):
             return False
 
         if self.proper_time_origin != other.proper_time_origin:
@@ -601,9 +601,9 @@ class Worldline:
         else:
             res = f'Worldline(vertices=[{self._vertices[0]}]'
 
-        res += f', vel_past={self.vel_past}'
+        res += f', past_vel_s={self.past_vel_s}'
 
-        res += f', vel_future={self.vel_future}'
+        res += f', future_vel_s={self.future_vel_s}'
 
         res += f', proper_time_origin={self.proper_time_origin}'
         res += f', proper_time_offset={self.proper_time_offset}'
@@ -711,21 +711,21 @@ class Worldline:
         return self._vertices.shape[-1]
 
     @property
-    def vel_past(self):
+    def past_vel_s(self):
         '''
         Space-velocity of the worldline before the first vertex.
 
         Returns:
             None or array_like: Size: (N+1)
         '''
-        return self._vel_ends[0]
+        return self._ends_vel_s[0]
 
     @property
-    def vel_future(self):
+    def future_vel_s(self):
         '''
         Space-velocity of the worldline after the last vertex.
 
         Returns:
             None or array_like: Size: (N+1)
         '''
-        return self._vel_ends[1]
+        return self._ends_vel_s[1]
