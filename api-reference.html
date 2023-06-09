@@ -199,7 +199,7 @@ transformation.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="spacetime.Worldline">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">spacetime.</span></span><span class="sig-name descname"><span class="pre">Worldline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vel_ends</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vel_past</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vel_future</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proper_time_origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proper_time_offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">spacetime.</span></span><span class="sig-name descname"><span class="pre">Worldline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ends_vel_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">past_vel_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">future_vel_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proper_time_origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proper_time_offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline" title="Permalink to this definition">¶</a></dt>
 <dd><p>The worldline of a particle is represented as a finite list of events,
 called “vertices”, through which the particle passes in an inertial
 reference frame. The particle moves in straight lines between the vertices.</p>
@@ -220,15 +220,15 @@ other words, <code class="docutils literal notranslate"><span class="pre">st.nor
 all <code class="docutils literal notranslate"><span class="pre">i</span></code>.</p>
 <p>By default, the first and last vertices are treated as end point
 boundaries, past which events simply cannot be evaluated. The
-<code class="docutils literal notranslate"><span class="pre">vel_ends</span></code>, <code class="docutils literal notranslate"><span class="pre">vel_past</span></code>, or <code class="docutils literal notranslate"><span class="pre">vel_future</span></code> arguments can be
+<code class="docutils literal notranslate"><span class="pre">ends_vel_s</span></code>, <code class="docutils literal notranslate"><span class="pre">past_vel_s</span></code>, or <code class="docutils literal notranslate"><span class="pre">future_vel_s</span></code> arguments can be
 specified to enable linear extrapolation of events that fall
 outside of these boundaries.</p>
 <p>Size: (M, N+1) for M vertices that each have N+1 dimensions</p>
 </p></li>
-<li><p><strong>vel_ends</strong> (<em>array_like</em><em>, </em><em>optional</em>) – <p>Space-velocity of the worldline before and after the first and last
+<li><p><strong>ends_vel_s</strong> (<em>array_like</em><em>, </em><em>optional</em>) – <p>Space-velocity of the worldline before and after the first and last
 vertices. This enables the extrapolation of events that occur
 before and after the first and last <code class="docutils literal notranslate"><span class="pre">vertices</span></code>.</p>
-<p>If specified, <code class="docutils literal notranslate"><span class="pre">vel_past</span></code> and <code class="docutils literal notranslate"><span class="pre">vel_future</span></code> must be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<p>If specified, <code class="docutils literal notranslate"><span class="pre">past_vel_s</span></code> and <code class="docutils literal notranslate"><span class="pre">future_vel_s</span></code> must be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 <p>Size: (N+1)</p>
 <p>Default: <code class="docutils literal notranslate"><span class="pre">None</span></code></p>
 </p></li>
@@ -236,13 +236,13 @@ before and after the first and last <code class="docutils literal notranslate"><
 </dd>
 <dt class="field-even">Keyword Arguments<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>vel_past</strong> (<em>array_like</em><em>, </em><em>optional</em>) – <p>Space-velocity of the worldline before the first vertex. If
-specified, <code class="docutils literal notranslate"><span class="pre">vel_ends</span></code> must be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<li><p><strong>past_vel_s</strong> (<em>array_like</em><em>, </em><em>optional</em>) – <p>Space-velocity of the worldline before the first vertex. If
+specified, <code class="docutils literal notranslate"><span class="pre">ends_vel_s</span></code> must be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 <p>Size: (N+1)</p>
 <p>Default: <code class="docutils literal notranslate"><span class="pre">None</span></code></p>
 </p></li>
-<li><p><strong>vel_future</strong> (<em>array_like</em><em>, </em><em>optional</em>) – <p>Space-velocity of the worldline after the last vertex. If
-specified, <code class="docutils literal notranslate"><span class="pre">vel_ends</span></code> must be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<li><p><strong>future_vel_s</strong> (<em>array_like</em><em>, </em><em>optional</em>) – <p>Space-velocity of the worldline after the last vertex. If
+specified, <code class="docutils literal notranslate"><span class="pre">ends_vel_s</span></code> must be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 <p>Size: (N+1)</p>
 <p>Default: <code class="docutils literal notranslate"><span class="pre">None</span></code></p>
 </p></li>
@@ -336,7 +336,7 @@ all boosted.</p>
 travels in straight lines between vertices, so we use simple linear
 interpolation for this.</p>
 <p>To evaluate times that are before or after all of the vertices,
-<code class="docutils literal notranslate"><span class="pre">vel_ends</span></code>, <code class="docutils literal notranslate"><span class="pre">vel_past</span></code>, or <code class="docutils literal notranslate"><span class="pre">vel_future</span></code> must have been
+<code class="docutils literal notranslate"><span class="pre">ends_vel_s</span></code>, <code class="docutils literal notranslate"><span class="pre">past_vel_s</span></code>, or <code class="docutils literal notranslate"><span class="pre">future_vel_s</span></code> must have been
 specified in <a class="reference internal" href="#spacetime.Worldline" title="spacetime.Worldline"><code class="xref py py-func docutils literal notranslate"><span class="pre">Worldline()</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -395,6 +395,20 @@ is returned.</p>
 </dd></dl>
 
 <dl class="py property">
+<dt class="sig sig-object py" id="spacetime.Worldline.future_vel_s">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">future_vel_s</span></span><a class="headerlink" href="#spacetime.Worldline.future_vel_s" title="Permalink to this definition">¶</a></dt>
+<dd><p>Space-velocity of the worldline after the last vertex.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Size: (N+1)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None or array_like</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
 <dt class="sig sig-object py" id="spacetime.Worldline.ndim">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ndim</span></span><a class="headerlink" href="#spacetime.Worldline.ndim" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the number of spatial plus time dimensions, N+1, for this worldline.</p>
@@ -404,6 +418,20 @@ is returned.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="spacetime.Worldline.past_vel_s">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">past_vel_s</span></span><a class="headerlink" href="#spacetime.Worldline.past_vel_s" title="Permalink to this definition">¶</a></dt>
+<dd><p>Space-velocity of the worldline before the first vertex.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Size: (N+1)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None or array_like</p>
 </dd>
 </dl>
 </dd></dl>
@@ -492,34 +520,6 @@ negative.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>int or float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="spacetime.Worldline.vel_future">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vel_future</span></span><a class="headerlink" href="#spacetime.Worldline.vel_future" title="Permalink to this definition">¶</a></dt>
-<dd><p>Space-velocity of the worldline after the last vertex.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Size: (N+1)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None or array_like</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="spacetime.Worldline.vel_past">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vel_past</span></span><a class="headerlink" href="#spacetime.Worldline.vel_past" title="Permalink to this definition">¶</a></dt>
-<dd><p>Space-velocity of the worldline before the first vertex.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Size: (N+1)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None or array_like</p>
 </dd>
 </dl>
 </dd></dl>
