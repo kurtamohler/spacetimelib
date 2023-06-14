@@ -245,30 +245,48 @@ def boost_velocity_s(vel_s, boost_vel_s, light_speed=1):
     else:
         return vel_s_
 
-
-# TODO: Probably get rid of this, in favor of just taking the difference between the
-# two events and calling `norm2_st` on the difference.
 def proper_time_delta(event0, event1):
     '''
     Calculate the proper time between two events.
+
+    The result preserves the sign of the difference between the time
+    coordinates of the two events. So if ``event1`` is in the future with
+    respect to ``event0``, the result is positive; otherwise, the result is
+    negative.
 
     Args:
 
       event0 (array_like):
         First event
+        Shape: (..., N+1)
 
       event1 (array_like):
         Second event
+        Shape: (..., N+1)
+
+    Returns:
+      ndarray:
+        The proper time between the two events.
+        Shape: (...)
     '''
     event0 = np.array(event0)
     event1 = np.array(event1)
 
-    check(event0.shape == event1.shape, ValueError,
-        "expected both events to have same shape")
-    check(event0.ndim == 1, ValueError, "expected exactly two dimensions")
-    check(event0.shape[0] >= 2, ValueError, "expected at least 2 dims")
+    check(event0.shape[-1] >= 2 and event0.shape[-1] == event1.shape[-1], ValueError,
+        "expected events to have same number of spacetime dims, and to be at "
+        f"least 2, but got event0: {event0.shape[0]}, event1: {event1.shape[0]}")
 
-    return np.sqrt(-norm2_st(event1 - event0))
+    diff = event1 - event0
+    norm2 = -norm2_st(diff)
+
+    check((norm2 >= 0).all(), ValueError,
+        "expected events to have time-like interval, but got space-like")
+    norm = np.sqrt(norm2)
+
+    # Preserve the sign from time coordinate difference
+    sign = np.where(np.signbit(diff[..., 0]), -1, 1)
+
+    return sign * norm
 
 def norm_s(vec_s):
     '''

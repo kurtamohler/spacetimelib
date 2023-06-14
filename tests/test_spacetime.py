@@ -90,6 +90,40 @@ class SpacetimeTestSuite(unittest.TestCase):
 
             self.assertTrue(np.isclose(res, res_check).all())
 
+    def test_proper_time_delta(self):
+        with self.assertRaisesRegex(ValueError, r"expected events to have time-like interval"):
+            st.proper_time_delta([0, 0], [0, 1])
+
+        with self.assertRaisesRegex(ValueError, r"expected events to have same number"):
+            st.proper_time_delta([0, 0], [0, 1, 2])
+
+        with self.assertRaisesRegex(ValueError, r"expected events to have same number"):
+            st.proper_time_delta([0], [0])
+
+        res = st.proper_time_delta(np.zeros([1, 10, 3]), np.zeros([1, 20, 1, 3]))
+        self.assertEqual(res.shape, (1, 20, 10))
+
+        with self.assertRaisesRegex(ValueError, r"operands could not be broadcast"):
+            res = st.proper_time_delta(np.zeros([2, 10, 3]), np.zeros([20, 1, 3]))
+
+
+        test_cases = [
+            # event0, event1, res_expected
+            ([0, 0], [0, 0], 0),
+            ([-1.2, 4.5], [-1.2, 4.5], 0),
+            ([0, 0], [1, 0], 1),
+            ([0, 0], [-1, 0], -1),
+            ([3.4, -6.7], [-10.2, -4.5], -((-10.2 - 3.4)**2 - (-4.5 + 6.7)**2)**0.5),
+            ([1, -2], [4, -3], (3**2 - 1**2)**0.5),
+            ([-10, 5], [21, -13], (31**2 - 18**2)**0.5),
+            ([999, 21], [777, 12], -(222**2 - 9**2)**0.5),
+        ]
+
+        for event0, event1, res_expected in test_cases:
+            res = st.proper_time_delta(event0, event1)
+            self.assertTrue((res == res_expected).all())
+
+
     # Test `velocity_st` and `velocity_s`
     def test_velocity(self):
         def velocity_st_check(vel_s):
@@ -383,10 +417,12 @@ class SpacetimeTestSuite(unittest.TestCase):
             # worldline, time0, time1, tau_check
             (w0, 0, 2, tau0),
             (w0, 0, 1, tau0 / 2),
+            (w0, 1, 0, -tau0 / 2),
             (w0, 1, 2, tau0 / 2),
+            (w0, 2, 1, -tau0 / 2),
             (w0, 0.5, 1.5, tau0 / 2),
             (w0, 0.25, 0.75, tau0 / 4),
-            (w0, 1.25, 1.75, tau0 / 4),
+            (w0, 1.75, 1.25, -tau0 / 4),
             (w0, 0, 0, 0),
             (w0, 0, 0.123, 0.123 * tau0 / 2),
             (w0, 0.123, 0.123, 0),

@@ -13,6 +13,8 @@ API Reference
 
 .. autofunction:: spacetime.boost_velocity_s
 
+.. autofunction:: spacetime.proper_time_delta
+
 .. autoclass:: spacetime.Worldline
    :members:
 

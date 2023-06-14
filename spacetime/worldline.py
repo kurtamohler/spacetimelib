@@ -323,7 +323,7 @@ class Worldline:
             while idx_after is not None:
                 next_event = self.vertex(idx_after)
 
-                segment_proper_time = st.proper_time_delta(next_event, cur_event)
+                segment_proper_time = st.proper_time_delta(cur_event, next_event)
                 next_proper_time = cur_proper_time + segment_proper_time
 
                 if next_proper_time == proper_time_delta:
