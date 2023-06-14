@@ -1,6 +1,6 @@
-from .error_checking import check
-
 import numpy as np
+
+from .error_checking import check
 
 def boost(vec_st, boost_vel_s, light_speed=1):
     '''
@@ -248,7 +248,7 @@ def boost_velocity_s(vel_s, boost_vel_s, light_speed=1):
 
 # TODO: Probably get rid of this, in favor of just taking the difference between the
 # two events and calling `norm2_st` on the difference.
-def _proper_time(event0, event1):
+def proper_time_delta(event0, event1):
     '''
     Calculate the proper time between two events.
 

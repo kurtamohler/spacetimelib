@@ -375,7 +375,7 @@ class SpacetimeTestSuite(unittest.TestCase):
             event = w.eval(t)
             self.assertTrue(np.isclose(event, event_check).all())
 
-    def test_Worldline_proper_time_diff(self):
+    def test_Worldline_proper_time_delta(self):
         w0 = st.Worldline([[0, 0], [1, 0.9], [2, 0]])
         tau0 = (2 ** 2 - 1.8 ** 2) ** 0.5
 
@@ -396,8 +396,8 @@ class SpacetimeTestSuite(unittest.TestCase):
         ]
 
         for w, time0, time1, tau_check in test_cases:
-            self.assertAlmostEqual(w.proper_time_diff(time0, time1), tau_check)
-            self.assertAlmostEqual(w.proper_time_diff(time1, time0), -tau_check)
+            self.assertAlmostEqual(w.proper_time_delta(time0, time1), tau_check)
+            self.assertAlmostEqual(w.proper_time_delta(time1, time0), -tau_check)
 
     def test_Worldline_boost(self):
         # TODO: Should test `ends_vel_s` too
@@ -581,7 +581,7 @@ class SpacetimeTestSuite(unittest.TestCase):
             vel = w.eval_vel_s(time)
             self.assertTrue(np.isclose(vel, expected_vel).all())
 
-    def test_Worldline_eval_proper_time_delta(self):
+    def test_Worldline_eval_proper_time(self):
         w0 = st.Worldline([[0, 0, 0]], ends_vel_s=[0, 0])
         w1 = st.Worldline([[-1.12, 1.234, 8.01]], ends_vel_s=[-0.124, 0.234])
 
@@ -624,7 +624,7 @@ class SpacetimeTestSuite(unittest.TestCase):
         ]
 
         for w, time, proper_time_delta in test_cases:
-            event = w.eval_proper_time_delta(time, proper_time_delta)
+            event = w.eval_proper_time(time, proper_time_delta)
             proper_time_delta_check = w.proper_time(event[0]) - w.proper_time(time)
             self.assertTrue(np.isclose(proper_time_delta, proper_time_delta_check))
             event_check = w.eval(event[0])

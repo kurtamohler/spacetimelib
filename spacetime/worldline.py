@@ -1,8 +1,8 @@
-from .basic_ops import boost, _proper_time, boost_velocity_s, velocity_st
-from .error_checking import check, internal_assert
-
 import numpy as np
 import numbers
+
+import spacetime as st
+from .error_checking import check, internal_assert
 
 class Worldline:
     '''
@@ -118,7 +118,7 @@ class Worldline:
             check(cur_event[0] > prev_event[0], ValueError,
                 "expected 'vertices' to be ordered by increasing time coordinate")
 
-            tau = _proper_time(prev_event, cur_event)
+            tau = st.proper_time_delta(prev_event, cur_event)
 
             check(tau >= 0, ValueError,
                 "expected 'vertices' to all have time-like separation")
@@ -286,7 +286,7 @@ class Worldline:
         else:
             return event
 
-    def eval_proper_time_delta(self, time, proper_time_delta):
+    def eval_proper_time(self, time, proper_time_delta):
         '''
         Calculates the coordinates of the event located at the specified proper
         time displacement away from a specified time coordinate along the
@@ -323,7 +323,7 @@ class Worldline:
             while idx_after is not None:
                 next_event = self.vertex(idx_after)
 
-                segment_proper_time = _proper_time(next_event, cur_event)
+                segment_proper_time = st.proper_time_delta(next_event, cur_event)
                 next_proper_time = cur_proper_time + segment_proper_time
 
                 if next_proper_time == proper_time_delta:
@@ -357,7 +357,7 @@ class Worldline:
             # remaining amount of proper time to get an offset spacetime-vector
             # from the `cur_event`
             proper_time_remaining = proper_time_delta - cur_proper_time
-            return cur_event + velocity_st(self.future_vel_s) * proper_time_remaining
+            return cur_event + st.velocity_st(self.future_vel_s) * proper_time_remaining
 
         else:
             check(False, NotImplementedError, (
@@ -418,9 +418,9 @@ class Worldline:
         Returns:
           number:
         '''
-        return self.proper_time_diff(self.proper_time_origin, time) + self.proper_time_offset
+        return self.proper_time_delta(self.proper_time_origin, time) + self.proper_time_offset
 
-    def proper_time_diff(self, time0, time1):
+    def proper_time_delta(self, time0, time1):
         '''
         Measure the proper time along a section of the worldline between two
         specified time coordinates. Note that if ``time1 < time0``, result is
@@ -450,21 +450,21 @@ class Worldline:
         last_event, last_indices = self.eval(time1, return_indices=True)
 
         if first_indices == last_indices:
-            return sign * _proper_time(first_event, last_event)
+            return sign * st.proper_time_delta(first_event, last_event)
 
         else:
             res = 0
             if first_indices[0] != first_indices[1]:
-                res += _proper_time(first_event, self._vertices[first_indices[1]])
+                res += st.proper_time_delta(first_event, self._vertices[first_indices[1]])
 
             for idx0 in range(first_indices[1], last_indices[0]):
                 idx1 = idx0 + 1
                 v0 = self._vertices[idx0]
                 v1 = self._vertices[idx1]
-                res += _proper_time(v0, v1)
+                res += st.proper_time_delta(v0, v1)
 
             if last_indices[0] != last_indices[1]:
-                res += _proper_time(self._vertices[last_indices[0]], last_event)
+                res += st.proper_time_delta(self._vertices[last_indices[0]], last_event)
 
             return sign * res
 
@@ -482,15 +482,15 @@ class Worldline:
         Returns:
           :class:`spacetime.Worldline`:
         '''
-        vertices = boost(self._vertices, boost_vel_s)
+        vertices = st.boost(self._vertices, boost_vel_s)
         past_vel_s = None
         future_vel_s = None
 
         if self.past_vel_s is not None:
-            past_vel_s = boost_velocity_s(self.past_vel_s, boost_vel_s)
+            past_vel_s = st.boost_velocity_s(self.past_vel_s, boost_vel_s)
 
         if self.future_vel_s is not None:
-            future_vel_s = boost_velocity_s(self.future_vel_s, boost_vel_s)
+            future_vel_s = st.boost_velocity_s(self.future_vel_s, boost_vel_s)
 
 
         return Worldline(
@@ -498,7 +498,7 @@ class Worldline:
             past_vel_s=past_vel_s,
             future_vel_s=future_vel_s,
             # TODO: I guess only evaluating this once would be better
-            proper_time_origin=boost(self.eval(self._proper_time_origin), boost_vel_s)[0].item(),
+            proper_time_origin=st.boost(self.eval(self._proper_time_origin), boost_vel_s)[0].item(),
             proper_time_offset=self.proper_time_offset)
 
     def __add__(self, event_delta):
@@ -728,7 +728,7 @@ class Worldline:
         Returns:
             None or array_like: Size: (N+1)
         '''
-        return None if self.past_vel_s is None else velocity_st(self.past_vel_s)
+        return None if self.past_vel_s is None else st.velocity_st(self.past_vel_s)
 
     @property
     def future_vel_s(self):
@@ -748,4 +748,4 @@ class Worldline:
         Returns:
             None or array_like: Size: (N+1)
         '''
-        return None if self.future_vel_s is None else velocity_st(self.future_vel_s)
+        return None if self.future_vel_s is None else st.velocity_st(self.future_vel_s)

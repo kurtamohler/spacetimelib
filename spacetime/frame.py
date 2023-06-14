@@ -1,11 +1,9 @@
 import numpy as np
-from copy import copy
 from collections import OrderedDict
 from itertools import islice
 import re
 
-from .basic_ops import boost, boost_velocity_s
-from .worldline import Worldline
+import spacetime as st
 from .error_checking import check, internal_assert, maybe_wrap_index
 
 class Frame:
@@ -83,7 +81,7 @@ class Frame:
             self._append_single(worldline, name)
 
     def _append_single(self, worldline, name=None):
-        check(isinstance(worldline, Worldline), TypeError,
+        check(isinstance(worldline, st.Worldline), TypeError,
             f"expected an object of type Worldline, but got '{type(worldline)}'")
 
         if self.ndim is not None:
@@ -157,7 +155,7 @@ class Frame:
     def __setitem__(self, key, value):
         check(isinstance(key, (int, str)), TypeError,
             f"key must be either int or str, but got {type(key)}")
-        check(isinstance(value, Worldline), TypeError,
+        check(isinstance(value, st.Worldline), TypeError,
             f"value must be a Worldline, but got {type(value)}")
 
         if isinstance(key, int):
@@ -305,14 +303,14 @@ class Frame:
             if event_delta_pre is not None:
                 batched_events = batched_events + event_delta_pre
 
-            new_batched_events = boost(
+            new_batched_events = st.boost(
                 batched_events,
                 boost_vel_s)
 
             if event_delta_post is not None:
                 new_batched_events = new_batched_events + event_delta_post
 
-            new_batched_velocities = boost_velocity_s(
+            new_batched_velocities = st.boost_velocity_s(
                 batched_velocities,
                 boost_vel_s)
 
@@ -336,7 +334,7 @@ class Frame:
 
                 # TODO: Make Worldline accept 1-element ndarray to avoid this cast
                 new_proper_time_origin = float(new_proper_time_origin_events[w_idx][0])
-                new_w = Worldline(
+                new_w = st.Worldline(
                         new_vertices[cur_vertices_idx : cur_vertices_idx + num_vertices],
                         past_vel_s=past_velocity,
                         future_vel_s=future_velocity,

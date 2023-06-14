@@ -1,7 +1,7 @@
 from .basic_ops import (
     boost,
     boost_velocity_s,
-    _proper_time,
+    proper_time_delta,
     norm_s,
     norm2_st,
     velocity_s,
