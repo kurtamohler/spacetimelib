@@ -380,3 +380,17 @@ class Frame:
             result.append(worldline + event_delta, name)
 
         return result
+
+    def __sub__(self, event_delta):
+        '''
+        Subtract a displacement from all worldlines in the frame.
+
+        Args:
+
+          event_delta (array_like):
+            Displacements to subtract from each dimension.
+
+        Returns:
+          :class:`Frame`:
+        '''
+        return self + (-event_delta)
