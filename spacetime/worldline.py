@@ -28,6 +28,8 @@ class Worldline:
     # TODO: Try to think of shorter names than `proper_time_origin` and
     # `proper_time_offset`. Maybe `tau_origin` and `tau_offset`?
 
+    # TODO: Probably `proper_time_origin` should just default to 0
+
     def __init__(self,
             vertices,
             ends_vel_s=None,

@@ -15,6 +15,22 @@ def maybe_arraylike_close(a, b):
     else:
         return np.isclose(np.asarray(a), np.asarray(b)).all()
 
+def are_frame_states_close(a_state, b_state):
+    if len(a_state) != len(b_state):
+        return False
+
+    for (a_name, a_coords, a_tau), (b_name, b_coords, b_tau) in zip(a_state, b_state):
+        if a_name != b_name:
+            return False
+
+        if not np.isclose(a_coords, b_coords).all():
+            return False
+
+        if not np.isclose(a_tau, b_tau):
+            return False
+
+    return True
+
 def check_boost_event_1D(v, event):
     t = event[0]
     x = event[1]
@@ -936,6 +952,104 @@ class SpacetimeTestSuite(unittest.TestCase):
                     w1_check = w1_check_
 
                 self.assertEqual(w1, w1_check)
+
+    def test_ObserverSim(self):
+        f = st.Frame()
+
+        f.append(st.Worldline([[0, 1, 0]], ends_vel_s=[0, 0]), 'observer')
+        f.append(st.Worldline([
+            [0, 0, 0],
+            [2, 1, 0],
+            [4, 0, 1],
+            [6, -1, 0],
+            [8, 0, -1],
+            ], ends_vel_s=[0, 0]))
+
+        sequence = [
+            # proper_time, event_check
+            (0, [0, -1, 0]),
+            (1, [1, -0.5, 0]),
+            (2, [2, 0, 0]),
+            (3, [3, -0.5, 0.5]),
+            (4, [4, -1, 1]),
+            (5, [5, -1.5, 0.5]),
+        ]
+
+        sim_generators = [
+            lambda: st.ObserverSim(f),
+            lambda: st.ObserverSim((f + [0, -1, 0]).boost([.1, -.2]) + [0, -10, 10]),
+            lambda: st.ObserverSim((f + [0, -1, 0]).boost([-.99, 0]) + [0, -1123.4, 590.234]),
+            lambda: st.ObserverSim((f + [0, -1, 0]).boost([.99, 0]) + [0, 484.234, -324.2]),
+            lambda: st.ObserverSim((f + [0, -1, 0]).boost([0, .99]) + [0, -484.234, 324.2]),
+            lambda: st.ObserverSim((f + [0, -1, 0]).boost([0, -.99]) + [0, -1000093.24, -34.234]),
+        ]
+
+        for sim_gen in sim_generators:
+            sim = sim_gen()
+            for proper_time, event_check in sequence:
+                sim_state = sim.eval()
+                self.assertTrue(np.isclose(sim_state[1][1], event_check).all())
+                self.assertTrue(np.isclose(sim_state[0][2], proper_time))
+                sim.step(1)
+
+        # Test a frame where the observer accelerates
+        f = st.Frame()
+
+        dist = 4.367
+        speed = 0.7
+        total_time = 2 * dist / speed
+
+        alice = st.Worldline([
+            (total_time / 2, dist),
+        ], past_vel_s=[0.7], future_vel_s=[-0.7], proper_time_origin=0)
+
+        bob = st.Worldline([
+            (0, 0),
+            (total_time, 0)
+        ], [0])
+
+        carol = st.Worldline([
+            (0, -1),
+            (1, -.1),
+            (1.9, 0.5),
+            (3, 1.5),
+            (3.5, 1.1),
+            (4, 1.5),
+            (5, 2.45),
+        ], past_vel_s=[-0.1], future_vel_s=[-.9])
+
+        alpha_centauri = st.Worldline([
+            (0, dist),
+        ], [0])
+
+        f.append(alice, 'Alice')
+        f.append(bob, 'Bob')
+        f.append(carol, 'Carol')
+        f.append(alpha_centauri, 'Alpha Centauri')
+
+        sim = st.ObserverSim(f, 'Alice')
+
+        alice_total_proper_time = alice.proper_time_delta(0, total_time)
+
+        f_alice_first_leg = f.boost([speed])
+
+        tmp = alice.eval(total_time / 2)
+        f_alice_second_leg = (f - tmp).boost([-speed]) + [alice_total_proper_time/2, 0]
+
+        # An odd number of steps is best, to avoid hitting the middle vertex,
+        # where we may get one or the other reference frame.
+        num_steps = 9
+        for i in range(num_steps):
+            if i < (num_steps + 1) // 2:
+                state_check = f_alice_first_leg.eval(
+                    i * alice_total_proper_time / num_steps)
+            else:
+                state_check = f_alice_second_leg.eval(
+                    i * alice_total_proper_time / num_steps)
+            state = sim.eval()
+            self.assertTrue(are_frame_states_close(state, state_check))
+
+            sim.step(alice_total_proper_time / num_steps)
 
 if __name__ == '__main__':
     unittest.main()
