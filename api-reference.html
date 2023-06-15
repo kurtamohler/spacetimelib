@@ -197,6 +197,33 @@ transformation.</p>
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="spacetime.proper_time_delta">
+<span class="sig-prename descclassname"><span class="pre">spacetime.</span></span><span class="sig-name descname"><span class="pre">proper_time_delta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.proper_time_delta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the proper time between two events.</p>
+<p>The result preserves the sign of the difference between the time
+coordinates of the two events. So if <code class="docutils literal notranslate"><span class="pre">event1</span></code> is in the future with
+respect to <code class="docutils literal notranslate"><span class="pre">event0</span></code>, the result is positive; otherwise, the result is
+negative.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>event0</strong> (<em>array_like</em>) – First event
+Shape: (…, N+1)</p></li>
+<li><p><strong>event1</strong> (<em>array_like</em>) – Second event
+Shape: (…, N+1)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The proper time between the two events.
+Shape: (…)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="spacetime.Worldline">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">spacetime.</span></span><span class="sig-name descname"><span class="pre">Worldline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ends_vel_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">past_vel_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">future_vel_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proper_time_origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proper_time_offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline" title="Permalink to this definition">¶</a></dt>
@@ -360,8 +387,8 @@ indices of vertices surrounding the specified <code class="docutils literal notr
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="spacetime.Worldline.eval_proper_time_delta">
-<span class="sig-name descname"><span class="pre">eval_proper_time_delta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proper_time_delta</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline.eval_proper_time_delta" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spacetime.Worldline.eval_proper_time">
+<span class="sig-name descname"><span class="pre">eval_proper_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proper_time_delta</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline.eval_proper_time" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the coordinates of the event located at the specified proper
 time displacement away from a specified time coordinate along the
 worldline.</p>
@@ -512,8 +539,8 @@ set to :attr:<code class="docutils literal notranslate"><span class="pre">Worldl
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="spacetime.Worldline.proper_time_diff">
-<span class="sig-name descname"><span class="pre">proper_time_diff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline.proper_time_diff" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spacetime.Worldline.proper_time_delta">
+<span class="sig-name descname"><span class="pre">proper_time_delta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline.proper_time_delta" title="Permalink to this definition">¶</a></dt>
 <dd><p>Measure the proper time along a section of the worldline between two
 specified time coordinates. Note that if <code class="docutils literal notranslate"><span class="pre">time1</span> <span class="pre">&lt;</span> <span class="pre">time0</span></code>, result is
 negative.</p>
@@ -699,6 +726,7 @@ time.</p>
 <li class="toctree-l2"><a class="reference internal" href="#spacetime.velocity_s"><code class="docutils literal notranslate"><span class="pre">velocity_s()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#spacetime.boost"><code class="docutils literal notranslate"><span class="pre">boost()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#spacetime.boost_velocity_s"><code class="docutils literal notranslate"><span class="pre">boost_velocity_s()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#spacetime.proper_time_delta"><code class="docutils literal notranslate"><span class="pre">proper_time_delta()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#spacetime.Worldline"><code class="docutils literal notranslate"><span class="pre">Worldline</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#spacetime.Frame"><code class="docutils literal notranslate"><span class="pre">Frame</span></code></a></li>
 </ul>
