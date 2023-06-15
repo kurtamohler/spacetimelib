@@ -31,7 +31,7 @@ conda env create -f environment.yaml -n spacetime && conda activate spacetime
 Then install SpacetimeLib.
 
 ```bash
-python setup.py install
+pip install -e .
 ```
 
 ## Interactive demo
