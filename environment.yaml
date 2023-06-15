@@ -13,3 +13,4 @@ dependencies:
     - setuptools
     - jupyter
     - matplotlib
+    - perfplot
