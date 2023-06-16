@@ -53,33 +53,33 @@ def boost(vec_st, boost_vel_s, light_speed=1, _old=False):
         boost_vel_s = np.asarray([boost_vel_s])
 
     vec_st = np.asarray(vec_st)
-    check(vec_st.ndim > 0, ValueError,
-        "expected 'vec_st' to have one or more dimensions, ",
-        f"but got {vec_st.ndim}")
+    check(vec_st.ndim > 0, ValueError, lambda: (
+        "expected 'vec_st' to have one or more dimensions, "
+        f"but got {vec_st.ndim}"))
 
     # TODO: Need to think more about the logic here. It might be a bit wrong
     if vec_st.shape[-1] == 2 and boost_vel_s.shape[-1] > 1:
         boost_vel_s = np.expand_dims(boost_vel_s, -1)
     else:
-        check(vec_st.shape[-1] - 1 == boost_vel_s.shape[-1], ValueError,
-            "expected 'vec_st.shape[-1] - 1 == boost_vel_s.shape[-1]', but ",
-            f"got '{vec_st.shape[-1]} - 1 != {boost_vel_s.shape[-1]}'")
+        check(vec_st.shape[-1] - 1 == boost_vel_s.shape[-1], ValueError, lambda: (
+            "expected 'vec_st.shape[-1] - 1 == boost_vel_s.shape[-1]', but "
+            f"got '{vec_st.shape[-1]} - 1 != {boost_vel_s.shape[-1]}'"))
 
     frame_speed = np.linalg.norm(boost_vel_s, axis=-1)
 
     # TODO: If boost_vel_s is batched, we should only print out the
     # first speed in frame_speed that is greater than light_speed
-    check((frame_speed < light_speed).all(), ValueError,
-        "the norm of 'boost_vel_s' must be less than ",
-        f"'light_speed' ({light_speed}), but got {frame_speed}")
+    check((frame_speed < light_speed).all(), ValueError, lambda: (
+        "the norm of 'boost_vel_s' must be less than "
+        f"'light_speed' ({light_speed}), but got {frame_speed}"))
 
     # TODO: Would batching the speed of light be useful at all? Probably best to
     # wait and see before adding batching.
-    check(light_speed.ndim == 0, ValueError,
-        "expected 'light_speed' to have 0 dimensions, ",
-        f"but got {light_speed.ndim}")
-    check(light_speed > 0, ValueError,
-        f"expected 'light_speed' to be positive, but got {light_speed}")
+    check(light_speed.ndim == 0, ValueError, lambda: (
+        "expected 'light_speed' to have 0 dimensions, "
+        f"but got {light_speed.ndim}"))
+    check(light_speed > 0, ValueError, lambda: (
+        f"expected 'light_speed' to be positive, but got {light_speed}"))
 
     dtype = np.find_common_type([boost_vel_s.dtype, light_speed.dtype], [])
 
@@ -129,8 +129,8 @@ def boost(vec_st, boost_vel_s, light_speed=1, _old=False):
             if frame_speed == 0:
                 return vec_st
         else:
-            check((frame_speed > 0).all(), ValueError,
-                f"'boost_vel_s' must be nonzero, but got {boost_vel_s}")
+            check((frame_speed > 0).all(), ValueError, lambda: (
+                f"'boost_vel_s' must be nonzero, but got {boost_vel_s}"))
 
         # γ = 1 / √(1 - v ⋅ v / c²)
         lorentz_factor = 1 / np.sqrt(1 - np.square(frame_speed / light_speed))
@@ -213,17 +213,17 @@ def boost_velocity_s(vel_s, boost_vel_s, light_speed=1):
 
     # TODO: If boost_vel_s is batched, we should only print out the
     # first speed in frame_speed that is greater than light_speed
-    check((frame_speed < light_speed).all(), ValueError,
+    check((frame_speed < light_speed).all(), ValueError, lambda: (
         "the norm of 'boost_vel_s' must be less than ",
-        f"'light_speed' ({light_speed}), but got {frame_speed}")
+        f"'light_speed' ({light_speed}), but got {frame_speed}"))
 
     # TODO: Would batching the speed of light be useful at all? Probably best to
     # wait and see before adding batching.
-    check(light_speed.ndim == 0, ValueError,
-        "expected 'light_speed' to have 0 dimensions, ",
-        f"but got {light_speed.ndim}")
-    check(light_speed > 0, ValueError,
-        f"expected 'light_speed' to be positive, but got {light_speed}")
+    check(light_speed.ndim == 0, ValueError, lambda: (
+        "expected 'light_speed' to have 0 dimensions, "
+        f"but got {light_speed.ndim}"))
+    check(light_speed > 0, ValueError, lambda: (
+        f"expected 'light_speed' to be positive, but got {light_speed}"))
 
     dtype = np.find_common_type([
         boost_vel_s.dtype,
@@ -232,9 +232,9 @@ def boost_velocity_s(vel_s, boost_vel_s, light_speed=1):
     ], [])
 
     speed = np.linalg.norm(vel_s, axis=-1)
-    check((speed <= light_speed).all(), ValueError,
-        "the norm of 'vel_s' must be less than or equal to ",
-        f"'light_speed' ({light_speed}), but got {speed}")
+    check((speed <= light_speed).all(), ValueError, lambda: (
+        "the norm of 'vel_s' must be less than or equal to "
+        f"'light_speed' ({light_speed}), but got {speed}"))
 
     # Change dtypes to match each other
     boost_vel_s = boost_vel_s.astype(dtype)
@@ -249,8 +249,8 @@ def boost_velocity_s(vel_s, boost_vel_s, light_speed=1):
     else:
         # TODO: This case should be supported, but will require a condition
         # below to prevent the division by zero
-        check((frame_speed > 0).all(), ValueError,
-            f"'boost_vel_s' must be nonzero, but got {boost_vel_s}")
+        check((frame_speed > 0).all(), ValueError, lambda: (
+            f"'boost_vel_s' must be nonzero, but got {boost_vel_s}"))
 
     # γ = 1 / √(1 - v ⋅ v / c²)
     lorentz_factor = 1 / np.sqrt(1 - np.square(frame_speed / light_speed))
@@ -304,14 +304,15 @@ def proper_time_delta(event0, event1):
     event1 = np.array(event1)
 
     check(event0.shape[-1] >= 2 and event0.shape[-1] == event1.shape[-1], ValueError,
-        "expected events to have same number of spacetime dims, and to be at "
-        f"least 2, but got event0: {event0.shape[0]}, event1: {event1.shape[0]}")
+        lambda: (
+            "expected events to have same number of spacetime dims, and to be at "
+            f"least 2, but got event0: {event0.shape[0]}, event1: {event1.shape[0]}"))
 
     diff = event1 - event0
     norm2 = -norm2_st(diff)
 
-    check((norm2 >= 0).all(), ValueError,
-        "expected events to have time-like interval, but got space-like")
+    check((norm2 >= 0).all(), ValueError, lambda: (
+        "expected events to have time-like interval, but got space-like"))
     norm = np.sqrt(norm2)
 
     # Preserve the sign from time coordinate difference
@@ -401,9 +402,9 @@ def velocity_st(vel_s, light_speed=1):
         vel_s = np.array([vel_s])
 
     speed = np.linalg.norm(vel_s, axis=-1)
-    check((speed < light_speed).all(), ValueError,
-        "the norm of 'vel_s' must be less than ",
-        f"'light_speed' ({light_speed}), but got {speed}")
+    check((speed < light_speed).all(), ValueError, lambda: (
+        "the norm of 'vel_s' must be less than "
+        f"'light_speed' ({light_speed}), but got {speed}"))
 
     shape = list(vel_s.shape)
     shape[-1] += 1

@@ -102,10 +102,10 @@ class Worldline:
         '''
         vertices = np.array(vertices)
 
-        check(vertices.ndim == 2, ValueError,
-            f"expected 'vertices' to have 2 dims, but got {vertices.ndim}")
-        check(vertices.shape[-1] >= 2, ValueError,
-            f"expected 'vertices.shape[-1] >= 2', but got {vertices.shape[-1]}")
+        check(vertices.ndim == 2, ValueError, lambda: (
+            f"expected 'vertices' to have 2 dims, but got {vertices.ndim}"))
+        check(vertices.shape[-1] >= 2, ValueError, lambda: (
+            f"expected 'vertices.shape[-1] >= 2', but got {vertices.shape[-1]}"))
 
         prev_event = vertices[0]
 
@@ -115,13 +115,13 @@ class Worldline:
             cur_event = vertices[event_idx]
 
             # Time dimension must increase for each pair
-            check(cur_event[0] > prev_event[0], ValueError,
-                "expected 'vertices' to be ordered by increasing time coordinate")
+            check(cur_event[0] > prev_event[0], ValueError, lambda: (
+                "expected 'vertices' to be ordered by increasing time coordinate"))
 
             tau = st.proper_time_delta(prev_event, cur_event)
 
-            check(tau >= 0, ValueError,
-                "expected 'vertices' to all have time-like separation")
+            check(tau >= 0, ValueError, lambda: (
+                "expected 'vertices' to all have time-like separation"))
 
             prev_event = cur_event
 
@@ -130,18 +130,19 @@ class Worldline:
         num_spatial_dims = vertices.shape[-1] - 1
 
         def check_vel_end(arg_name, v):
-            check(v.shape == (num_spatial_dims,), ValueError,
-                f"expected `{arg_name}.shape == ({num_spatial_dims},)`, ",
-                f"since `events` has {num_spatial_dims} spatial dimensions, but got ",
-                f"`{v.shape}` instead")
+            check(v.shape == (num_spatial_dims,), ValueError, lambda: (
+                f"expected `{arg_name}.shape == ({num_spatial_dims},)`, "
+                f"since `events` has {num_spatial_dims} spatial dimensions, but got "
+                f"`{v.shape}` instead"))
             speed = np.linalg.norm(v)
-            check(speed <= 1, ValueError,
-                f"expected `{arg_name}` to have speed less than or equal ",
-                f"to the speed of light, 1, but got {speed} instead")
+            check(speed <= 1, ValueError, lambda: (
+                f"expected `{arg_name}` to have speed less than or equal "
+                f"to the speed of light, 1, but got {speed} instead"))
 
         if ends_vel_s is not None:
-            check(past_vel_s is None and future_vel_s is None, ValueError,
-                "expected `past_vel_s` and `future_vel_s` to be None, since `ends_vel_s` was given")
+            check(past_vel_s is None and future_vel_s is None, ValueError, lambda: (
+                "expected `past_vel_s` and `future_vel_s` to be None, since "
+                "`ends_vel_s` was given"))
             ends_vel_s = np.array(ends_vel_s)
             check_vel_end('ends_vel_s', ends_vel_s)
 
@@ -165,9 +166,9 @@ class Worldline:
         if proper_time_origin is None:
             proper_time_origin = self._vertices[0][0].item()
         else:
-            check(isinstance(proper_time_origin, numbers.Number), TypeError,
-                "expected 'proper_time_origin' to be float or int, but got ",
-                f"{type(proper_time_origin)}")
+            check(isinstance(proper_time_origin, numbers.Number), TypeError, lambda: (
+                "expected 'proper_time_origin' to be float or int, but got "
+                f"{type(proper_time_origin)}"))
 
         # Need to check that the proper time origin is actually within the bounds of
         # worldline
@@ -176,15 +177,16 @@ class Worldline:
 
         check(proper_time_origin >= first_time and proper_time_origin <= last_time,
             ValueError,
-            f"expected 'proper_time_origin' to be between {first_time} and ",
-            f"{last_time}, the first and last time coordinates in the worldline, ",
-            f"but got {proper_time_origin}")
+            lambda: (
+                f"expected 'proper_time_origin' to be between {first_time} and "
+                f"{last_time}, the first and last time coordinates in the worldline, "
+                f"but got {proper_time_origin}"))
 
         self._proper_time_origin = proper_time_origin
 
-        check(isinstance(proper_time_offset, numbers.Number), TypeError,
-            "expected 'proper_time_offset' to be float or int, but got ",
-            f"{type(proper_time_offset)}")
+        check(isinstance(proper_time_offset, numbers.Number), TypeError, lambda: (
+            "expected 'proper_time_offset' to be float or int, but got "
+            f"{type(proper_time_offset)}"))
         self._proper_time_offset = proper_time_offset
 
     def _find_surrounding_vertices(self, time):
@@ -256,15 +258,15 @@ class Worldline:
 
             if idx_before is None:
                 ends_vel_s = self.past_vel_s
-                check(ends_vel_s is not None, ValueError,
-                    f"time '{time}' is before the first event on the worldline at ",
-                    f"time '{self._vertices[0][0]}'")
+                check(ends_vel_s is not None, ValueError, lambda: (
+                    f"time '{time}' is before the first event on the worldline at "
+                    f"time '{self._vertices[0][0]}'"))
                 vert = self._vertices[0]
             else:
                 ends_vel_s = self.future_vel_s
-                check(ends_vel_s is not None, ValueError,
-                    f"time '{time}' is after the last event on the worldline at ",
-                    f"time '{self._vertices[-1][0]}'")
+                check(ends_vel_s is not None, ValueError, lambda: (
+                    f"time '{time}' is after the last event on the worldline at "
+                    f"time '{self._vertices[-1][0]}'"))
                 vert = self._vertices[-1]
 
             event = np.concatenate([[time],
@@ -348,7 +350,7 @@ class Worldline:
 
             # The resulting event is after all of the vertices, and we have to
             # find the result using `future_vel_s`, so it must be defined.
-            check(self.future_vel_s is not None, ValueError, (
+            check(self.future_vel_s is not None, ValueError, lambda: (
                 f"Coordinate time '{time}' plus proper time '{proper_time_delta}' "
                 "along this worldline is after the final vertex, but this "
                 "worldline does not have a 'future_vel_s'"))
@@ -360,7 +362,7 @@ class Worldline:
             return cur_event + st.velocity_st(self.future_vel_s) * proper_time_remaining
 
         else:
-            check(False, NotImplementedError, (
+            check(False, NotImplementedError, lambda: (
                 "'proper_time_delta < 0' is not yet supported, but got "
                 f"{proper_time_delta}"))
 
@@ -514,9 +516,9 @@ class Worldline:
           :class:`spacetime.Worldline`:
         '''
         event_delta = np.asarray(event_delta)
-        check(event_delta.shape == self._vertices[0].shape, ValueError,
-            f"'event_delta' must have shape {self._vertices[0].shape}, but got ",
-            f"{event_delta.shape}")
+        check(event_delta.shape == self._vertices[0].shape, ValueError, lambda: (
+            f"'event_delta' must have shape {self._vertices[0].shape}, but got "
+            f"{event_delta.shape}"))
 
         return Worldline(
             self._vertices + event_delta,
@@ -552,8 +554,8 @@ class Worldline:
         Returns:
           bool:
         '''
-        check(isinstance(other, Worldline), TypeError,
-            "expected 'other' to be of type Worldline, but got {type(other)}")
+        check(isinstance(other, Worldline), TypeError, lambda: (
+            "expected 'other' to be of type Worldline, but got {type(other)}"))
 
         if len(self) != len(other):
             return False
@@ -627,8 +629,8 @@ class Worldline:
         Returns:
           ndarray: Size: (N+1,)
         '''
-        check(isinstance(idx, int), TypeError,
-            f'idx must be an int, but got {type(idx)}')
+        check(isinstance(idx, int), TypeError, lambda: (
+            f'idx must be an int, but got {type(idx)}'))
         return self._vertices[idx].copy()
 
     # TODO: Should probably take a list (or array_like potentially) of dim
@@ -659,20 +661,20 @@ class Worldline:
 
           ndarray: Size: (2, M) for M vertices
         '''
-        check(isinstance(dim0, int), TypeError,
-            f'dim0 must be an int, but got {type(dim0)}')
-        check(isinstance(dim1, int), TypeError,
-            f'dim1 must be an int, but got {type(dim1)}')
+        check(isinstance(dim0, int), TypeError, lambda: (
+            f'dim0 must be an int, but got {type(dim0)}'))
+        check(isinstance(dim1, int), TypeError, lambda: (
+            f'dim1 must be an int, but got {type(dim1)}'))
 
         num_dims = self._vertices.shape[1]
         check(
             dim0 >= 0 and dim0 < num_dims,
             TypeError,
-            f'dim0 must be >=0 or <{num_dims}, but got {dim0}')
+            lambda: f'dim0 must be >=0 or <{num_dims}, but got {dim0}')
         check(
             dim1 >= 0 and dim1 < num_dims,
             TypeError,
-            f'dim1 must be >=0 or <{num_dims}, but got {dim1}')
+            lambda: f'dim1 must be >=0 or <{num_dims}, but got {dim1}')
 
         vertices_t = self._vertices.transpose()
 

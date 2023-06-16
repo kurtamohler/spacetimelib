@@ -26,8 +26,8 @@ class Frame:
         self._next_default_name_id = 0
 
         if worldlines is None:
-            check(names is None, ValueError,
-                "'names' cannot be given without 'worldlines'")
+            check(names is None, ValueError, lambda: (
+                "'names' cannot be given without 'worldlines'"))
 
         else:
             self.append(worldlines, names)
@@ -51,29 +51,29 @@ class Frame:
         # TODO: Separate this into an `_append_multiple` function, and move the
         # current `append` impl  to `_append_single`. Then make `append`
         # conditionally call either the single or multiple append func
-        check(isinstance(worldlines, (list, tuple)), TypeError,
-            "Expected 'worldlines' to be a list or tuple, but got ",
-            f"{type(worldlines)}")
+        check(isinstance(worldlines, (list, tuple)), TypeError, lambda: (
+            "Expected 'worldlines' to be a list or tuple, but got "
+            f"{type(worldlines)}"))
 
         if names is not None:
-            check(isinstance(names, (list, tuple)), TypeError,
-                "Expected 'names' to be a list or tuple, but got ",
-                f"{type(names)}")
-            check(len(names) == len(worldlines), ValueError,
-                "Expected 'len(names) == len(worldlines)', but got '",
-                f"{len(names)} != {len(worldlines)}'")
+            check(isinstance(names, (list, tuple)), TypeError, lambda: (
+                "Expected 'names' to be a list or tuple, but got "
+                f"{type(names)}"))
+            check(len(names) == len(worldlines), ValueError, lambda: (
+                "Expected 'len(names) == len(worldlines)', but got '"
+                f"{len(names)} != {len(worldlines)}'"))
 
         # TODO: Add ndim checks here
         for idx, worldline in enumerate(worldlines):
             if idx == 0:
                 if self.ndim is not None:
-                    check(worldline.ndim == self.ndim, ValueError,
-                        f"expected worldlines[{idx}] to have {self.ndim} dims, ",
-                        f"but got {worldline.ndim}")
+                    check(worldline.ndim == self.ndim, ValueError, lambda: (
+                        f"expected worldlines[{idx}] to have {self.ndim} dims, "
+                        f"but got {worldline.ndim}"))
             else:
-                check(worldline.ndim == worldlines[0].ndim, ValueError,
-                    f"expected worldlines[{idx}] to have {worldlines[0].ndim} dims, ",
-                    f"but got {worldline.ndim}")
+                check(worldline.ndim == worldlines[0].ndim, ValueError, lambda: (
+                    f"expected worldlines[{idx}] to have {worldlines[0].ndim} dims, "
+                    f"but got {worldline.ndim}"))
 
 
         for idx, worldline in enumerate(worldlines):
@@ -81,17 +81,17 @@ class Frame:
             self._append_single(worldline, name)
 
     def _append_single(self, worldline, name=None):
-        check(isinstance(worldline, st.Worldline), TypeError,
-            f"expected an object of type Worldline, but got '{type(worldline)}'")
+        check(isinstance(worldline, st.Worldline), TypeError, lambda: (
+            f"expected an object of type Worldline, but got '{type(worldline)}'"))
 
         if self.ndim is not None:
-            check(worldline.ndim == self.ndim, ValueError,
-                f"expected worldline to have {self.ndim} dims, but got {worldline.ndim}")
+            check(worldline.ndim == self.ndim, ValueError, lambda: (
+                f"expected worldline to have {self.ndim} dims, but got {worldline.ndim}"))
 
         if name is not None:
             assert isinstance(name, str)
-            check(name not in self._worldlines.keys(), ValueError,
-                f"The name '{name}' is already used by a different worldline")
+            check(name not in self._worldlines.keys(), ValueError, lambda: (
+                f"The name '{name}' is already used by a different worldline"))
 
             # If the user-defined name matches the default name format, maybe
             # reset the next default ID to avoid generating a duplicate later
@@ -140,40 +140,40 @@ class Frame:
         return state
 
     def __getitem__(self, key):
-        check(isinstance(key, (int, str)), TypeError,
-            f"key must be either int or str, but got {type(key)}")
+        check(isinstance(key, (int, str)), TypeError, lambda: (
+            f"key must be either int or str, but got {type(key)}"))
 
         if isinstance(key, int):
             idx = maybe_wrap_index(key, len(self))
             return next(islice(self._worldlines.values(), idx, None))
 
         else:
-            check(key in self._worldlines, KeyError,
-                f"worldline of name '{key}' not found")
+            check(key in self._worldlines, KeyError, lambda: (
+                f"worldline of name '{key}' not found"))
             return self._worldlines[key]
 
     def __setitem__(self, key, value):
-        check(isinstance(key, (int, str)), TypeError,
-            f"key must be either int or str, but got {type(key)}")
-        check(isinstance(value, st.Worldline), TypeError,
-            f"value must be a Worldline, but got {type(value)}")
+        check(isinstance(key, (int, str)), TypeError, lambda: (
+            f"key must be either int or str, but got {type(key)}"))
+        check(isinstance(value, st.Worldline), TypeError, lambda: (
+            f"value must be a Worldline, but got {type(value)}"))
 
         if isinstance(key, int):
             idx = maybe_wrap_index(key, len(self))
             name = next(islice(self._worldlines.keys(), idx, None))
 
         else:
-            check(key in self._worldlines, KeyError,
-                f"worldline of name '{key}' not found")
+            check(key in self._worldlines, KeyError, lambda: (
+                f"worldline of name '{key}' not found"))
             name = key
 
-        check(value.ndim == self.ndim, ValueError,
-            f"expected 'value.ndim' to be {self.ndim}, but got {value.ndim}")
+        check(value.ndim == self.ndim, ValueError, lambda: (
+            f"expected 'value.ndim' to be {self.ndim}, but got {value.ndim}"))
         self._worldlines[name] = value
 
     def name(self, idx):
-        check(isinstance(idx, int), TypeError,
-            f"idx must be an int, but got {type(idx)}")
+        check(isinstance(idx, int), TypeError, lambda: (
+            f"idx must be an int, but got {type(idx)}"))
         idx_wrapped = maybe_wrap_index(idx, len(self))
         return next(islice(self._worldlines.keys(), idx, None))
 
@@ -182,10 +182,10 @@ class Frame:
     # in `examples/clock_grid.py`. I should probably do the latter regardless,
     # and make the return of `Frame.eval` include the worldline names
     def index(self, name):
-        check(isinstance(name, str), TypeError,
-            f"name must be a str, but got {type(name)}")
-        check(name in self._worldlines, ValueError,
-            f"no worldline named '{name}' was found")
+        check(isinstance(name, str), TypeError, lambda: (
+            f"name must be a str, but got {type(name)}"))
+        check(name in self._worldlines, ValueError, lambda: (
+            f"no worldline named '{name}' was found"))
         return list(self._worldlines.keys()).index(name)
 
     def __len__(self):
@@ -235,20 +235,20 @@ class Frame:
         # Check `event_delta_*` args
         if event_delta_pre is not None:
             event_delta_pre = np.array(event_delta_pre)
-            check(event_delta_pre.shape == (self.ndim,), ValueError,
+            check(event_delta_pre.shape == (self.ndim,), ValueError, lambda: (
                 f"'event_delta_pre' must have shape {(self.ndim,)}, "
-                f"but got {event_delta_pre.shape}")
+                f"but got {event_delta_pre.shape}"))
 
         if event_delta_post is not None:
             event_delta_post = np.array(event_delta_post)
-            check(event_delta_post.shape == (self.ndim,), ValueError,
+            check(event_delta_post.shape == (self.ndim,), ValueError, lambda: (
                 f"'event_delta_post' must have shape {(self.ndim,)}, "
-                f"but got {event_delta_post.shape}")
+                f"but got {event_delta_post.shape}"))
 
         boost_vel_s = np.array(boost_vel_s)
-        check(boost_vel_s.shape == (self.ndim - 1,), ValueError,
+        check(boost_vel_s.shape == (self.ndim - 1,), ValueError, lambda: (
             f"'boost_vel_s' must have shape {(self.ndim - 1,)}, "
-            f"but got {boost_vel_s.shape}")
+            f"but got {boost_vel_s.shape}"))
 
         speed = np.linalg.norm(boost_vel_s)
         # Don't allow faster than light transformations
