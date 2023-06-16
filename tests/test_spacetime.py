@@ -239,6 +239,64 @@ class SpacetimeTestSuite(unittest.TestCase):
             res_old = st.boost(vec_st, boost_vel_s, _old=True)
             self.assertTrue(np.isclose(res, res_old).all())
 
+    # Test `st.boost_velocity_s` against
+    # `st.velocity_s(st.boost(st.velocity_st(...), ...)`
+    def test_boost_velocity_s_against_boost(self):
+        test_cases = [
+            # vel_s_size, boost_vel_s_size
+            ((1,), (1,)),
+            ((3,), (3,)),
+            ((9,), (9,)),
+
+            ((1, 1,), (1,)),
+            ((1, 3,), (3,)),
+            ((1, 9,), (9,)),
+            ((10, 1,), (1,)),
+            ((10, 3,), (3,)),
+            ((10, 9,), (9,)),
+            ((1000, 1,), (1,)),
+            ((1000, 3,), (3,)),
+            ((1000, 9,), (9,)),
+
+            ((1,), (1, 1,)),
+            ((3,), (1, 3,)),
+            ((9,), (1, 9,)),
+            ((1,), (10, 1,)),
+            ((3,), (10, 3,)),
+            ((9,), (10, 9,)),
+            ((1,), (1000, 1,)),
+            ((3,), (1000, 3,)),
+            ((9,), (1000, 9,)),
+
+            ((1, 1,), (1, 1,)),
+            ((1, 3,), (1, 3,)),
+            ((1, 9,), (1, 9,)),
+
+            ((100, 1,), (100, 1,)),
+            ((100, 3,), (100, 3,)),
+            ((100, 9,), (100, 9,)),
+
+            ((100, 1, 1,), (200, 1,)),
+            ((100, 1, 3,), (200, 3,)),
+            ((100, 1, 9,), (200, 9,)),
+
+            ((100, 1,), (200, 1, 1,)),
+            ((100, 3,), (200, 1, 3,)),
+            ((100, 9,), (200, 1, 9,)),
+
+            ((1, 7, 1, 1,), (3, 1, 10, 1,)),
+            ((1, 7, 1, 3,), (3, 1, 10, 3,)),
+            ((1, 7, 1, 9,), (3, 1, 10, 9,)),
+        ]
+
+        for vel_s_size, boost_vel_s_size in test_cases:
+            ndim = vel_s_size[-1] + 1
+            vel_s = (2 * np.random.rand(*vel_s_size) - 1) * (1 / ((ndim - 1) ** 0.5)) / 2
+            boost_vel_s = (2 * np.random.rand(*boost_vel_s_size) - 1) * (1 / ((ndim - 1) ** 0.5)) / 2
+            res = st.boost_velocity_s(vel_s, boost_vel_s)
+            res_check = st.velocity_s(st.boost(st.velocity_st(vel_s), boost_vel_s))
+            self.assertTrue(np.isclose(res, res_check).all())
+
     # Test boosting events in one spatial dimension with randomized inputs
     def test_boost_event_1D_random(self):
         v_batch = []
@@ -329,7 +387,7 @@ class SpacetimeTestSuite(unittest.TestCase):
 
             u_out = st.boost_velocity_s(u, v)
 
-            assert np.isclose(u_out, u_out_check).all()
+            self.assertTrue(np.isclose(u_out, u_out_check).all())
 
             v_batch.append([v])
             u_batch.append([u])
@@ -343,7 +401,7 @@ class SpacetimeTestSuite(unittest.TestCase):
 
         u_out = st.boost_velocity_s(u, v)
 
-        assert np.isclose(u_out, u_out_check).all()
+        self.assertTrue(np.isclose(u_out, u_out_check).all())
 
     # Test `spacetime.boost` with lots of different input shapes
     def test_boost_shapes(self):

@@ -59,7 +59,7 @@ def boost(vec_st, boost_vel_s, light_speed=1, _old=False):
 
     # TODO: Need to think more about the logic here. It might be a bit wrong
     if vec_st.shape[-1] == 2 and boost_vel_s.shape[-1] > 1:
-        boost_vel_s = np.expand_dims(boost_vel_s, -1)
+        boost_vel_s = boost_vel_s[..., np.newaxis]
     else:
         check(vec_st.shape[-1] - 1 == boost_vel_s.shape[-1], ValueError, lambda: (
             "expected 'vec_st.shape[-1] - 1 == boost_vel_s.shape[-1]', but "
@@ -139,11 +139,10 @@ def boost(vec_st, boost_vel_s, light_speed=1, _old=False):
         time = vec_st[..., 0]
 
         # r' = r + v ((r ⋅ v) (γ - 1) / v² - tγ)
-        position_ = position + boost_vel_s * np.expand_dims(
+        position_ = position + boost_vel_s * (
             np.sum(position * boost_vel_s, axis=-1) * (lorentz_factor - 1)
                 / np.square(frame_speed)    # TODO: fix division by zero case
-            - time * lorentz_factor,
-            axis=-1)
+            - time * lorentz_factor)[..., np.newaxis]
 
         # t' = γ (t - (r ⋅ v) / c²)
         time_ = lorentz_factor * (time - np.sum(position * boost_vel_s, axis=-1)
@@ -195,19 +194,20 @@ def boost_velocity_s(vel_s, boost_vel_s, light_speed=1):
     Returns:
       ndarray: The boosted space-velocity
     '''
-    boost_vel_s = np.array(boost_vel_s)
-    light_speed = np.array(light_speed)
-    vel_s = np.array(vel_s)
+    boost_vel_s = np.asarray(boost_vel_s)
+    light_speed = np.asarray(light_speed)
+    vel_s = np.asarray(vel_s)
 
-    is_scalar = (boost_vel_s.ndim == 0) and (vel_s.ndim == 0)
+    is_boost_vel_scalar = boost_vel_s.ndim == 0
+    is_vel_scalar = vel_s.ndim == 0
 
     if boost_vel_s.ndim == 0:
-        boost_vel_s = np.array([boost_vel_s])
+        boost_vel_s = np.asarray([boost_vel_s])
 
     # TODO: I don't like messing around with changing the sizes for scalar
     # inputs. Maybe I should just disallow scalar vel_s at first
     if vel_s.ndim == 0:
-        vel_s = np.array([vel_s])
+        vel_s = np.asarray([vel_s])
 
     frame_speed = np.linalg.norm(boost_vel_s, axis=-1)
 
@@ -243,35 +243,36 @@ def boost_velocity_s(vel_s, boost_vel_s, light_speed=1):
 
     # TODO: Need to check up front whether the args can broadcast with each other.
 
-    if frame_speed.ndim == 0:
-        if frame_speed == 0:
-            return vel_s
-    else:
-        # TODO: This case should be supported, but will require a condition
-        # below to prevent the division by zero
-        check((frame_speed > 0).all(), ValueError, lambda: (
-            f"'boost_vel_s' must be nonzero, but got {boost_vel_s}"))
+    # TODO: The following implementation is much simpler, so it would be nice
+    # to have. But it's also significantly slower than the current
+    # implementation. Try to make it faster, if possible.
+    #
+    #   vel_st_ = boost(velocity_st(vel_s, light_speed), boost_vel_s, light_speed)
+    #   vel_s_ = velocity_s(vel_st_)
+    #   if is_vel_scalar:
+    #       if is_boost_vel_scalar:
+    #           return vel_s_[0]
+    #       else:
+    #           return vel_s_[:, 0]
+    #   else:
+    #       return vel_s_
 
     # γ = 1 / √(1 - v ⋅ v / c²)
-    lorentz_factor = 1 / np.sqrt(1 - np.square(frame_speed / light_speed))
+    lorentz_factor = 1 / np.sqrt(1 - np.square(frame_speed / light_speed))[..., np.newaxis]
 
     # u' = (u / γ - v + (γ (u ⋅ v) v) / (c² (γ + 1)))
     #      / (1 - u ⋅ v / c²)
-    u_dot_v = np.expand_dims(
-        np.sum(vel_s * boost_vel_s, axis=-1),
-        axis=-1)
 
-    outer_factor = 1 / (1 - (u_dot_v / (light_speed**2)))
-    inner_factor = np.expand_dims(
-        (lorentz_factor / (lorentz_factor + 1)) / (light_speed**2),
-        axis=-1)
+    u_dot_v = np.einsum('...i,...i->...', vel_s, boost_vel_s)[..., np.newaxis]
 
-    # TODO: Probably should expand this above, where it's first calculated
-    L = np.expand_dims(lorentz_factor, axis=-1)
+    c_squared = light_speed ** 2
 
-    vel_s_ = outer_factor * (vel_s / L - boost_vel_s + inner_factor * u_dot_v * boost_vel_s)
+    factor = lorentz_factor / ((lorentz_factor + 1) * c_squared)
+    divisor = (1 - (u_dot_v / c_squared))
 
-    if is_scalar:
+    vel_s_ = (vel_s / lorentz_factor - boost_vel_s + factor * u_dot_v * boost_vel_s) / divisor
+
+    if is_vel_scalar and is_boost_vel_scalar:
         return vel_s_[0]
     else:
         return vel_s_
@@ -300,8 +301,8 @@ def proper_time_delta(event0, event1):
         The proper time between the two events.
         Shape: (...)
     '''
-    event0 = np.array(event0)
-    event1 = np.array(event1)
+    event0 = np.asarray(event0)
+    event1 = np.asarray(event1)
 
     check(event0.shape[-1] >= 2 and event0.shape[-1] == event1.shape[-1], ValueError,
         lambda: (
@@ -363,7 +364,7 @@ def norm2_st(vec_st):
 
         Shape: (..., N+1)
     '''
-    vec_st = np.array(vec_st)
+    vec_st = np.asarray(vec_st)
     return -vec_st[..., 0]**2 + np.linalg.norm(vec_st[..., 1:], axis=-1)**2
 
 def velocity_st(vel_s, light_speed=1):
@@ -397,22 +398,21 @@ def velocity_st(vel_s, light_speed=1):
     if light_speed != 1:
         raise NotImplementedError('light_speed must be 1')
 
-    vel_s = np.array(vel_s)
+    vel_s = np.asarray(vel_s)
     if vel_s.ndim == 0:
-        vel_s = np.array([vel_s])
+        vel_s = np.asarray([vel_s])
 
     speed = np.linalg.norm(vel_s, axis=-1)
     check((speed < light_speed).all(), ValueError, lambda: (
         "the norm of 'vel_s' must be less than "
         f"'light_speed' ({light_speed}), but got {speed}"))
 
-    shape = list(vel_s.shape)
-    shape[-1] += 1
+    shape = vel_s.shape[:-1] + (vel_s.shape[-1] + 1,)
     vel_st = np.empty(shape, dtype=vel_s.dtype)
 
     vel_st[..., 0] = 1
     vel_st[..., 1:] = vel_s
-    vel_st = vel_st / np.sqrt(1 - np.expand_dims(speed, -1)**2)
+    vel_st = vel_st / np.sqrt(1 - speed[..., np.newaxis] ** 2)
 
     # TODO: Find out if this should be light_speed**2 or light_speed**-2 or whatever.
     if not np.allclose(-norm2_st(vel_st), light_speed, atol=0.01):
@@ -438,4 +438,4 @@ def velocity_s(vel_st):
 
         Shape: (..., N+1)
     '''
-    return vel_st[..., 1:] / np.expand_dims(vel_st[..., 0], -1)
+    return vel_st[..., 1:] / vel_st[..., 0, np.newaxis]
