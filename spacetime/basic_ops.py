@@ -102,6 +102,12 @@ def boost(vec_st, boost_vel_s, light_speed=1, _old=False):
             f"'boost_vel_s' must be nonzero, but got {boost_vel_s}")
 
     if not _old:
+        # To perform the boost, we construct a boost matrix from the boost
+        # velocity. Then we can just do a matrix-vector multiplication of the
+        # boost matrix and the spacetime-vector to get the boosted
+        # spacetime-vector.  The formula is taken from here:
+        # https://en.wikipedia.org/wiki/Lorentz_transformation#Proper_transformations
+
         lorentz_factor = 1 / np.sqrt(1 - np.square(frame_speed / light_speed))
         v = boost_vel_s / light_speed
         v_gamma = v * lorentz_factor[..., np.newaxis]
