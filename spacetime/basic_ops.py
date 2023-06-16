@@ -92,15 +92,6 @@ def boost(vec_st, boost_vel_s, light_speed=1, _old=False):
 
     # TODO: Need to check up front whether the args can broadcast with each other.
 
-    if frame_speed.ndim == 0:
-        if frame_speed == 0:
-            return vec_st
-    else:
-        # TODO: This case should be supported, but will require a condition
-        # below to prevent the division by zero
-        check((frame_speed > 0).all(), ValueError,
-            f"'boost_vel_s' must be nonzero, but got {boost_vel_s}")
-
     if not _old:
         # To perform the boost, we construct a boost matrix from the boost
         # velocity. Then we can just do a matrix-vector multiplication of the
@@ -120,14 +111,27 @@ def boost(vec_st, boost_vel_s, light_speed=1, _old=False):
 
         v_outer = np.matmul(v[..., :, np.newaxis], v[..., np.newaxis, :])
         v_dot = np.einsum('...i,...i->...', v, v)
+        v_dot_expand = v_dot[..., np.newaxis, np.newaxis]
 
-        boost_matrix[..., 1:, 1:] = np.eye(ndim - 1) + (lorentz_factor[..., np.newaxis, np.newaxis] - 1) * (
-            v_outer / v_dot[..., np.newaxis, np.newaxis]
+        boost_matrix[..., 1:, 1:] = (
+            np.eye(ndim - 1)
+            + (lorentz_factor[..., np.newaxis, np.newaxis] - 1) * (
+                # Avoid dividing by zero, in which case we get an identiy
+                # matrix and the boosted vector equals the input vector
+                np.divide(v_outer, v_dot_expand, out=v_outer, where=v_dot_expand!=0)
+            )
         )
 
         return np.einsum('...jk,...j->...k', boost_matrix, vec_st)
 
     else:
+        if frame_speed.ndim == 0:
+            if frame_speed == 0:
+                return vec_st
+        else:
+            check((frame_speed > 0).all(), ValueError,
+                f"'boost_vel_s' must be nonzero, but got {boost_vel_s}")
+
         # γ = 1 / √(1 - v ⋅ v / c²)
         lorentz_factor = 1 / np.sqrt(1 - np.square(frame_speed / light_speed))
         
