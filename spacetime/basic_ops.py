@@ -2,7 +2,7 @@ import numpy as np
 
 from .error_checking import check
 
-def boost(vec_st, boost_vel_s, light_speed=1):
+def boost(vec_st, boost_vel_s, light_speed=1, _old=False):
     '''
     Boost a spacetime-vector by a specified space-velocity.
 
@@ -46,13 +46,13 @@ def boost(vec_st, boost_vel_s, light_speed=1):
     Returns:
       ndarray: The boosted spacetime-vector
     '''
-    boost_vel_s = np.array(boost_vel_s)
-    light_speed = np.array(light_speed)
+    boost_vel_s = np.asarray(boost_vel_s)
+    light_speed = np.asarray(light_speed)
 
     if boost_vel_s.ndim == 0:
-        boost_vel_s = np.array([boost_vel_s])
+        boost_vel_s = np.asarray([boost_vel_s])
 
-    vec_st = np.array(vec_st)
+    vec_st = np.asarray(vec_st)
     check(vec_st.ndim > 0, ValueError,
         "expected 'vec_st' to have one or more dimensions, ",
         f"but got {vec_st.ndim}")
@@ -101,29 +101,50 @@ def boost(vec_st, boost_vel_s, light_speed=1):
         check((frame_speed > 0).all(), ValueError,
             f"'boost_vel_s' must be nonzero, but got {boost_vel_s}")
 
-    # γ = 1 / √(1 - v ⋅ v / c²)
-    lorentz_factor = 1 / np.sqrt(1 - np.square(frame_speed / light_speed))
-    
-    position = vec_st[..., 1:]
-    time = vec_st[..., 0]
+    if not _old:
+        lorentz_factor = 1 / np.sqrt(1 - np.square(frame_speed / light_speed))
+        v = boost_vel_s / light_speed
+        v_gamma = v * lorentz_factor[..., np.newaxis]
+        ndim = vec_st.shape[-1]
+        boost_matrix = np.zeros(boost_vel_s.shape[:-1] + (ndim, ndim))
 
-    # r' = r + v ((r ⋅ v) (γ - 1) / v² - tγ)
-    position_ = position + boost_vel_s * np.expand_dims(
-        np.sum(position * boost_vel_s, axis=-1) * (lorentz_factor - 1)
-            / np.square(frame_speed)    # TODO: fix division by zero case
-        - time * lorentz_factor,
-        axis=-1)
+        boost_matrix[..., 0, 0] = lorentz_factor
+        boost_matrix[..., 0, 1:] = -v_gamma
+        boost_matrix[..., 1:, 0] = -v_gamma
 
-    # t' = γ (t - (r ⋅ v) / c²)
-    time_ = lorentz_factor * (time - np.sum(position * boost_vel_s, axis=-1)
-        / np.square(light_speed))
+        v_outer = np.matmul(v[..., :, np.newaxis], v[..., np.newaxis, :])
+        v_dot = np.einsum('...i,...i->...', v, v)
 
-    event_ = np.empty(time_.shape + (position_.shape[-1] + 1,), dtype=dtype)
+        boost_matrix[..., 1:, 1:] = np.eye(ndim - 1) + (lorentz_factor[..., np.newaxis, np.newaxis] - 1) * (
+            v_outer / v_dot[..., np.newaxis, np.newaxis]
+        )
 
-    event_[..., 0] = time_
-    event_[..., 1:] = position_
+        return np.einsum('...jk,...j->...k', boost_matrix, vec_st)
 
-    return event_
+    else:
+        # γ = 1 / √(1 - v ⋅ v / c²)
+        lorentz_factor = 1 / np.sqrt(1 - np.square(frame_speed / light_speed))
+        
+        position = vec_st[..., 1:]
+        time = vec_st[..., 0]
+
+        # r' = r + v ((r ⋅ v) (γ - 1) / v² - tγ)
+        position_ = position + boost_vel_s * np.expand_dims(
+            np.sum(position * boost_vel_s, axis=-1) * (lorentz_factor - 1)
+                / np.square(frame_speed)    # TODO: fix division by zero case
+            - time * lorentz_factor,
+            axis=-1)
+
+        # t' = γ (t - (r ⋅ v) / c²)
+        time_ = lorentz_factor * (time - np.sum(position * boost_vel_s, axis=-1)
+            / np.square(light_speed))
+
+        event_ = np.empty(time_.shape + (position_.shape[-1] + 1,), dtype=dtype)
+
+        event_[..., 0] = time_
+        event_[..., 1:] = position_
+
+        return event_
 
 def boost_velocity_s(vel_s, boost_vel_s, light_speed=1):
     '''

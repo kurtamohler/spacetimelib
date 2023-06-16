@@ -182,6 +182,63 @@ class SpacetimeTestSuite(unittest.TestCase):
                 vel_s_check = st.velocity_s(vel_st)
                 self.assertTrue(np.isclose(vel_s, vel_s_check).all())
 
+    # Test the new implementation of `st.boost` against the old one
+    def test_boost_against_old(self):
+        test_cases = [
+            # vec_st_size, boost_vel_s_size
+            ((2,), (1,)),
+            ((4,), (3,)),
+            ((10,), (9,)),
+
+            ((1, 2,), (1,)),
+            ((1, 4,), (3,)),
+            ((1, 10,), (9,)),
+            ((10, 2,), (1,)),
+            ((10, 4,), (3,)),
+            ((10, 10,), (9,)),
+            ((1000, 2,), (1,)),
+            ((1000, 4,), (3,)),
+            ((1000, 10,), (9,)),
+
+            ((2,), (1, 1,)),
+            ((4,), (1, 3,)),
+            ((10,), (1, 9,)),
+            ((2,), (10, 1,)),
+            ((4,), (10, 3,)),
+            ((10,), (10, 9,)),
+            ((2,), (1000, 1,)),
+            ((4,), (1000, 3,)),
+            ((10,), (1000, 9,)),
+
+            ((1, 2,), (1, 1,)),
+            ((1, 4,), (1, 3,)),
+            ((1, 10,), (1, 9,)),
+
+            ((100, 2,), (100, 1,)),
+            ((100, 4,), (100, 3,)),
+            ((100, 10,), (100, 9,)),
+
+            ((100, 1, 2,), (200, 1,)),
+            ((100, 1, 4,), (200, 3,)),
+            ((100, 1, 10,), (200, 9,)),
+
+            ((100, 2,), (200, 1, 1,)),
+            ((100, 4,), (200, 1, 3,)),
+            ((100, 10,), (200, 1, 9,)),
+
+            ((1, 7, 1, 2,), (3, 1, 10, 1,)),
+            ((1, 7, 1, 4,), (3, 1, 10, 3,)),
+            ((1, 7, 1, 10,), (3, 1, 10, 9,)),
+        ]
+
+        for vec_st_size, boost_vel_s_size in test_cases:
+            ndim = vec_st_size[-1]
+            vec_st = 100 * np.random.randn(*vec_st_size)
+            boost_vel_s = (2 * np.random.rand(*boost_vel_s_size) - 1) * (1 / ((ndim - 1) ** 0.5)) / 2
+            res = st.boost(vec_st, boost_vel_s)
+            res_old = st.boost(vec_st, boost_vel_s, _old=True)
+            self.assertTrue(np.isclose(res, res_old).all())
+
     # Test boosting events in one spatial dimension with randomized inputs
     def test_boost_event_1D_random(self):
         v_batch = []
