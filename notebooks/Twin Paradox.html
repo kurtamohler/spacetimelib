@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Twin Paradox &#8212; spacetime 0.0.0 documentation</title>
+    <title>Start Here - Twin Paradox tutorial &#8212; spacetime 0.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -18,8 +18,8 @@
     <script src="../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="spacetime.Worldline Tutorial" href="Worldline%20Tutorial.html" />
-    <link rel="prev" title="Start here" href="../start-here.html" />
+    <link rel="next" title="Installation" href="../installation.html" />
+    <link rel="prev" title="SpacetimeLib documentation" href="../index.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -36,65 +36,115 @@
 
           <div class="body" role="main">
             
-  <section id="twin-paradox">
-<h1>Twin Paradox<a class="headerlink" href="#twin-paradox" title="Permalink to this heading">¶</a></h1>
-<p>The <a class="reference external" href="https://en.wikipedia.org/wiki/Twin_paradox">twin paradox</a> is a classic example of the strange consequences of special relativity.</p>
-<p>Take two twins living on Earth, Alice and Bob. Alice is an astronaut and she is about to make the first ever journey to the <a class="reference external" href="https://en.wikipedia.org/wiki/Alpha_Centauri">Alpha Centauri</a> star system, the Solar system’s closest neighbor. She travels in a new kind of spacecraft that can travel at extremely high speeds. She will make the journey to Alpha Centauri, take a few scientific measurements, set up a few satellites, and then she’ll start heading right back to Earth within a few days. Bob stays on Earth during this whole time. Alice’s spacecraft has enough fuel to let her travel at a maximum speed of 0.7 light-years per year with respect to Earth on both legs of her trip.</p>
-<section id="approximations">
-<h2>Approximations<a class="headerlink" href="#approximations" title="Permalink to this heading">¶</a></h2>
-<p>Let’s make some approximations to simplify the scenario. We can ignore the few days that Alice spends at Alpha Centauri, since it’s not much time compared to the years her whole trip will take. We can also assume that the spacecraft accelerates quickly enough that we can just approximate the velocity changes to be instantaneous. Also, Alpha Centauri is currently moving away from our Solar system at about 21.4 km per second. This is only about <code class="docutils literal notranslate"><span class="pre">1.98e-8</span></code> times the speed of light, so we can ignore this and approximate that Bob, Earth, and Alpha Centauri are all at rest with respect to each other.</p>
-</section>
-<section id="quantify">
-<h2>Quantify<a class="headerlink" href="#quantify" title="Permalink to this heading">¶</a></h2>
-<p>We can find quantities to describe the whole scenario from Bob’s perspective. Alpha Centauri is about <code class="docutils literal notranslate"><span class="pre">dist</span> <span class="pre">=</span> <span class="pre">4.367</span></code> light-years away from Earth. The spacecraft travels at <code class="docutils literal notranslate"><span class="pre">speed</span> <span class="pre">=</span> <span class="pre">0.7</span></code> light-years per year. So each leg of Alice’s trip takes <code class="docutils literal notranslate"> <span class="pre">dist</span> <span class="pre">/</span> <span class="pre">speed</span>&#160; <span class="pre">=</span> <span class="pre">6.238</span></code> years of coordinate time in Bob’s frame of reference. The entire trip takes <code class="docutils literal notranslate"><span class="pre">total_time</span> <span class="pre">=</span> <span class="pre">2</span> <span class="pre">*</span> <span class="pre">dist</span> <span class="pre">/</span> <span class="pre">speed</span> <span class="pre">=</span> <span class="pre">12.477</span></code> years.</p>
-<p>Let’s find out the important points in coordinate time and space in Bob’s frame of reference–the starting points of Alice and Bob, the midpoint of Alice’s journey when she reaches Alpha Centauri, and the ending points of Alice and Bob. We’ll use <code class="docutils literal notranslate"><span class="pre">t</span></code> to represent time, in years, and <code class="docutils literal notranslate"><span class="pre">x</span></code> to represent distance, in light-years.</p>
-<p>Alice starts moving in a straight line toward Alpha Centauri at <code class="docutils literal notranslate"><span class="pre">(t</span> <span class="pre">=</span> <span class="pre">0</span> <span class="pre">,</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">0)</span></code>. She reaches Alpha Centauri at <code class="docutils literal notranslate"><span class="pre">(t</span> <span class="pre">=</span> <span class="pre">total_time</span> <span class="pre">/</span> <span class="pre">2</span> <span class="pre">,</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">dist)</span></code>. Then she turns around toward Earth again and travels in a straight line to arrive back home at <code class="docutils literal notranslate"><span class="pre">(t</span> <span class="pre">=</span> <span class="pre">total_time</span> <span class="pre">,</span>&#160; <span class="pre">x</span> <span class="pre">=</span> <span class="pre">0)</span></code>.</p>
-<p>Bob stays at <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">0</span></code> the whole time, so his path is a straight line between <code class="docutils literal notranslate"><span class="pre">(t</span> <span class="pre">=</span> <span class="pre">0,</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">0)</span></code> and <code class="docutils literal notranslate"><span class="pre">(t</span> <span class="pre">=</span> <span class="pre">total_time,</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">0)</span></code>.</p>
-<p>We’ll also throw in a line that represents the position of Alpha Centauri, which stays fixed at <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">dist</span></code>. I’m going to choose to draw this line between <code class="docutils literal notranslate"><span class="pre">(t</span> <span class="pre">=</span> <span class="pre">-10_000,</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">dist)</span></code> and <code class="docutils literal notranslate"><span class="pre">(t</span> <span class="pre">=</span> <span class="pre">10_000,</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">dist)</span></code> so that it’ll be long enough to always be displayed within the plots that we’ll draw.</p>
-</section>
-<section id="plot-it">
-<h2>Plot it<a class="headerlink" href="#plot-it" title="Permalink to this heading">¶</a></h2>
-<p>Let’s use SpacetimeLib and <a class="reference external" href="https://matplotlib.org/">Matplotlib</a> to define and draw a plot of the paths of Alice, Bob, and Alpha Centauri through spacetime.</p>
+  <section id="start-here-twin-paradox-tutorial">
+<h1>Start Here - Twin Paradox tutorial<a class="headerlink" href="#start-here-twin-paradox-tutorial" title="Permalink to this heading">¶</a></h1>
+<p>To show what SpacetimeLib can do, let’s look at a well-known thought experience called the <a class="reference external" href="https://en.wikipedia.org/wiki/Twin_paradox">twin paradox</a>.</p>
+<p>Alice and Bob are twins living on Earth. Alice gets on a spaceship, travels 10 light years away from Earth, and then comes right back. Her ship can travel extremely fast, but not as fast as light. From Bob’s perspective, each leg of Alice’s trip takes 10.1 years, and when Alice arrives back home, Bob has aged 20.2 years. How much time does the trip take from Alice’s perspective?</p>
+<p>If you haven’t learned about special relativity and <a class="reference external" href="https://en.wikipedia.org/wiki/Time_dilation">time dilation</a> before, you may be tempted to say that the trip takes 20.2 years from Alice’s perspective as well, because time passes at the same rate for everyone. However, special relativity teaches us that time actually passes at different rates for two people traveling at different velocities. Let’s get more into it.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">spacetime</span> <span class="k">as</span> <span class="nn">st</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>In special relativity, we call the path that a particle takes through spacetime a <a class="reference external" href="https://en.wikipedia.org/wiki/World_line">worldline</a>. SpacetimeLib has an object called <code class="docutils literal notranslate"><span class="pre">spacetime.Worldline</span></code> to represent the worldline of a particle. We have to give it a list of the points in spacetime that the partcle travels through, and SpacetimeLib will draw straight lines through those points.</p>
+<section id="creating-worldlines">
+<h2>Creating worldlines<a class="headerlink" href="#creating-worldlines" title="Permalink to this heading">¶</a></h2>
+<p>SpacetimeLib has an object called <code class="docutils literal notranslate"><span class="pre">spacetime.Worldline</span></code> to represent the <a class="reference external" href="https://en.wikipedia.org/wiki/World_line">worldline</a> (a trajectory through spacetime) of a particle. We give it a list of events that a particle travels through, and SpacetimeLib will draw straight lines through those points to create a trajectory.</p>
+<p>An event is just a point in spacetime, so it contains a time and a spatial position.</p>
+<p>Alice and Bob both start at the same event <code class="docutils literal notranslate"><span class="pre">(t=0,</span> <span class="pre">x=0)</span></code>. Halfway through her trip, Alice is at the event <code class="docutils literal notranslate"><span class="pre">(t=10.1,</span> <span class="pre">x=10)</span></code>. Then at the end of her trip, both Alice and Bob are at the event <code class="docutils literal notranslate"><span class="pre">(t=20.2,</span> <span class="pre">x=0)</span></code>. Let’s create the worldlines for Alice and Bob.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dist</span> <span class="o">=</span> <span class="mf">4.367</span>
-<span class="n">speed</span> <span class="o">=</span> <span class="mf">0.7</span>
-<span class="n">total_time</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">dist</span> <span class="o">/</span> <span class="n">speed</span>
-
-<span class="n">alice_0</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">Worldline</span><span class="p">([</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">alice_0</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">Worldline</span><span class="p">([</span>
     <span class="c1"># (t, x)</span>
     <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-    <span class="p">(</span><span class="n">total_time</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">dist</span><span class="p">),</span>
-    <span class="p">(</span><span class="n">total_time</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">(</span><span class="mf">10.1</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+    <span class="p">(</span><span class="mf">20.2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 <span class="p">])</span>
 
 <span class="n">bob_0</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">Worldline</span><span class="p">([</span>
     <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-    <span class="p">(</span><span class="n">total_time</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-<span class="p">])</span>
-
-<span class="n">alpha_centauri_0</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">Worldline</span><span class="p">([</span>
-    <span class="p">(</span><span class="o">-</span><span class="mi">10000</span><span class="p">,</span> <span class="n">dist</span><span class="p">),</span>
-    <span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="n">dist</span><span class="p">)</span>
+    <span class="p">(</span><span class="mf">20.2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 <span class="p">])</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>I put <code class="docutils literal notranslate"><span class="pre">_0</span></code> on these variable names. This is to keep track of which reference frame the worldline is drawn in. <code class="docutils literal notranslate"><span class="pre">_0</span></code> will refer to Bob’s frame.</p>
-<p>Let’s create a plotting function that displays each worldline in the same plot. If you’re not familiar with Matplotlib, don’t worry about understanding it right now–there are <a class="reference external" href="https://matplotlib.org/stable/tutorials/introductory/quick_start.html">great tutorials</a> for it that you can check out later.</p>
+<p>I put <code class="docutils literal notranslate"><span class="pre">_0</span></code> on these variable names to keep track of which reference frame we used for the coordinates of the worldlines. <code class="docutils literal notranslate"><span class="pre">_0</span></code> will refer to Bob’s reference frame.</p>
+</section>
+<section id="proper-time-along-worldlines">
+<h2>Proper time along worldlines<a class="headerlink" href="#proper-time-along-worldlines" title="Permalink to this heading">¶</a></h2>
+<p>Finding the answer to the question, “How much time does the trip take from Alice’s perspective?”, is easy. We can just call <code class="docutils literal notranslate"><span class="pre">Worldline.proper_time_delta()</span></code> to find the <a class="reference external" href="https://en.wikipedia.org/wiki/Proper_time">proper time</a> along a worldline between two time coordinates.</p>
+<p>Let’s first find Bob’s proper time over the course of Alice’s journey.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plotter</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bob_0</span><span class="o">.</span><span class="n">proper_time_delta</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">20.2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>20.2
+</pre></div>
+</div>
+</div>
+</div>
+<p>Exactly as we expected, the trip takes 20.2 years from Bob’s perspective. What about Alice’s proper time?</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">alice_0</span><span class="o">.</span><span class="n">proper_time_delta</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">20.2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.8354893757515587
+</pre></div>
+</div>
+</div>
+</div>
+<p>From Alice’s perspective, her trip only takes 2.84 years. This means that when Alice arrives back home, she will have aged only 2.84 years, while Bob will have aged 20.2 years. Bob will be more than 17 years older than Alice, even though they both started out at the same age before Alice went on her trip.</p>
+<p>This time dilation effect becomes even greater if Alice has a faster spaceship. For instance, what if she could complete each 10 lightyear leg in 10.00001 years from Bob’s perspective?</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">w</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">Worldline</span><span class="p">([</span>
+    <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+    <span class="p">(</span><span class="mf">10.00001</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+    <span class="p">(</span><span class="mf">20.00002</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="p">])</span>
+<span class="n">years</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">proper_time_delta</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">20.00002</span><span class="p">)</span>
+<span class="n">years</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.02828427831811963
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">days</span> <span class="o">=</span> <span class="mi">365</span> <span class="o">*</span> <span class="n">years</span>
+<span class="n">days</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10.323761586113665
+</pre></div>
+</div>
+</div>
+</div>
+<p>Traveling at this faster speed, Alice only experiences 10.32 days, while Bob experiences slightly more than 20 years.</p>
+<p>Imagine this: Right before Alice starts her journey, Alice and Bob celebrate their 18th birthday, and they also welcome Bob’s newborn daughter into the world. When Alice arrives back home after her trip, it is her niece’s 20th birthday and Bob’s 38th birthday, while Alice is only 18 years and 10 days old.</p>
+</section>
+<section id="plotting">
+<h2>Plotting<a class="headerlink" href="#plotting" title="Permalink to this heading">¶</a></h2>
+<p>We can plot worldlines with <a class="reference external" href="https://matplotlib.org/">Matplotlib</a>. Obtaining plottable data from worldlines is easy, with <code class="docutils literal notranslate"><span class="pre">Worldline.plot()</span></code>. If you’re not familiar with Matplotlib, don’t worry about understanding how it works right now. There are <a class="reference external" href="https://matplotlib.org/stable/tutorials/introductory/quick_start.html">tutorials</a> for it, which you can check out later.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="k">def</span> <span class="nf">plot_worldline</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
     <span class="n">out</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">w</span><span class="o">.</span><span class="n">plot</span><span class="p">(),</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;x-axis&#39;</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;t-axis&#39;</span><span class="p">)</span>
@@ -104,98 +154,103 @@
 </div>
 </div>
 </div>
-<p>Plot the worldlines.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 
-<span class="n">plotter</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">alice_0</span><span class="p">,</span> <span class="s2">&quot;Alice&quot;</span><span class="p">)</span>
-<span class="n">plotter</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">bob_0</span><span class="p">,</span> <span class="s2">&quot;Bob&quot;</span><span class="p">)</span>
-<span class="n">plotter</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">alpha_centauri_0</span><span class="p">,</span> <span class="s2">&quot;Alpha Centauri&quot;</span><span class="p">)</span>
+<span class="n">plot_worldline</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">alice_0</span><span class="p">,</span> <span class="s2">&quot;Alice&quot;</span><span class="p">)</span>
+<span class="n">plot_worldline</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">bob_0</span><span class="p">,</span> <span class="s2">&quot;Bob&quot;</span><span class="p">)</span>
 
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">7</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">22</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(0.0, 14.0)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(0.0, 22.0)
 </pre></div>
 </div>
-<img alt="../_images/d5e2249e730eb21af630147fa92a1174e37c2890be2ff84841c404dea45d78f3.png" src="../_images/d5e2249e730eb21af630147fa92a1174e37c2890be2ff84841c404dea45d78f3.png" />
+<img alt="../_images/e6b88c9a63839ec01865154c5273366ab1ec1ca50a8ffdccdbb15b56e4ad7fb3.png" src="../_images/e6b88c9a63839ec01865154c5273366ab1ec1ca50a8ffdccdbb15b56e4ad7fb3.png" />
 </div>
 </div>
 </section>
-<section id="how-much-time-does-the-trip-take-for-alice">
-<h2>How much time does the trip take for Alice?<a class="headerlink" href="#how-much-time-does-the-trip-take-for-alice" title="Permalink to this heading">¶</a></h2>
-<p>If you’re not familiar with special relativity, you might think that Alice experiences the same amount of time across her journey as Bob does.</p>
-<p>In <a class="reference external" href="https://en.wikipedia.org/wiki/Newton%27s_laws_of_motion">Newtonian physics</a>, <a class="reference external" href="https://en.wikipedia.org/wiki/Absolute_space_and_time">time is universal</a>, meaning that time always marches forward at the same rate in every possible reference frame. One second for you is the same as one second for me, no matter what our relative velocities are. Intuitively, we always assume this in everyday life.</p>
-<p>Well, in special relativity, that’s not true. Alice actually experiences less time passing during her trip than Bob does. When Alice and Bob meet up after her journey to celebrate her return, Bob is older than Alice. This concept is called <a class="reference external" href="https://en.wikipedia.org/wiki/Time_dilation">time dilation</a>, and the amount of time that a person or object experiences between two points along their path of motion is called <a class="reference external" href="https://en.wikipedia.org/wiki/Proper_time">proper time</a>. This is the heart of the twin paradox.</p>
-<p>I won’t explain why this is the case, but I will show you how to calculate the amount of time that passes for Alice.</p>
-<p><code class="docutils literal notranslate"><span class="pre">spacetime.Worldline</span></code> has a function <code class="docutils literal notranslate"><span class="pre">spacetime.Worldline.proper_time_delta()</span></code>, which can calculate this for us. We have to give it two time coordinates between which to calculate the proper time. Let’s see how much time Alice and Bob both experience from the beginning to the end of Alice’s journey.</p>
+<section id="velocity-along-a-worldline">
+<h2>Velocity along a worldline<a class="headerlink" href="#velocity-along-a-worldline" title="Permalink to this heading">¶</a></h2>
+<p>Another thing we can do with these worldlines is calculate the velocity of Alice and Bob at different points in time with <code class="docutils literal notranslate"><span class="pre">Worldline.eval_vel_s()</span></code>. What is Alice’s velocity at, say time <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">=</span> <span class="pre">5</span></code>? This is during the first leg of her journey, so we’d expect the velocity to be positive, since she is moving in the positive x-direction. As for the magnitude, each leg is 10 lightyears long and takes 10.1 years, so we’d expect it to be <code class="docutils literal notranslate"><span class="pre">distance</span> <span class="pre">/</span> <span class="pre">time</span> <span class="pre">=</span> <span class="pre">10</span> <span class="pre">/</span> <span class="pre">10.1</span></code>, which is:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bob_0</span><span class="o">.</span><span class="n">proper_time_delta</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">total_time</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mi">10</span> <span class="o">/</span> <span class="mf">10.1</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>12.477142857142859
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.9900990099009901
 </pre></div>
 </div>
 </div>
 </div>
-<p>Not surprisingly, Bob experiences 12.477 years of time, since we defined the problem from his perspective. But what about Alice?</p>
+<p>Let’s see what SpacetimeLib gives.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">alice_0</span><span class="o">.</span><span class="n">proper_time_delta</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">total_time</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">first_leg_vel_0</span> <span class="o">=</span> <span class="n">alice_0</span><span class="o">.</span><span class="n">eval_vel_s</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">first_leg_vel_0</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>8.910462270699037
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.99009901])
 </pre></div>
 </div>
 </div>
 </div>
-<p>Alice experiences 8.91 years of time over her whole journey, which is significantly less time than Bob experiences. They are twins, so they were the same age before Alice left, but she’ll be about 3.5 years younger than Bob after the journey.</p>
+<p>That’s what we expected. What about the other leg? Let’s check <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">=</span> <span class="pre">15</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">second_leg_vel_0</span> <span class="o">=</span> <span class="n">alice_0</span><span class="o">.</span><span class="n">eval_vel_s</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">second_leg_vel_0</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([-0.99009901])
+</pre></div>
+</div>
+</div>
+</div>
+<p>The magnitude is the same, but the direction is opposite, since this is during the second leg and Alice is traveling back to Earth.</p>
 </section>
-<section id="different-reference-frames">
-<h2>Different reference frames<a class="headerlink" href="#different-reference-frames" title="Permalink to this heading">¶</a></h2>
-<p>We can choose to view this scenario from different reference frames. What paths of motion do Alice, Bob, and Alpha Centauri take from Alice’s perspective?</p>
-<p>We can use <code class="docutils literal notranslate"><span class="pre">Worldline.boost()</span></code> to find out. “Boosting” a worldline means applying a <a class="reference external" href="https://en.wikipedia.org/wiki/Lorentz_transformation">Lorentz transformation</a> to it to find out how to describe the same worldline in a different reference frame moving at a different constant speed. We’ll boost the worldlines by the speed of Alice’s spacecraft. This will give us the worldlines in Alice’s reference frame during the first half of her journey.</p>
+<section id="viewing-from-a-different-reference-frame">
+<h2>Viewing from a different reference frame<a class="headerlink" href="#viewing-from-a-different-reference-frame" title="Permalink to this heading">¶</a></h2>
+<p>Currently, we’ve only been viewing Alice and Bob’s worldlines from Bob’s reference frame. But we can apply a <a class="reference external" href="https://en.wikipedia.org/wiki/Lorentz_transformation">Lorentz transformation</a> to view the same worldlines from a different reference frame that is moving at a different velocity relative to the original reference frame. This process is called “boosting”, and we can use <code class="docutils literal notranslate"><span class="pre">Worldline.boost()</span></code> to do it.</p>
+<p>Let’s view the worldlines from Alice’s perspective during the first leg of her trip.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">alice_1</span> <span class="o">=</span> <span class="n">alice_0</span><span class="o">.</span><span class="n">boost</span><span class="p">(</span><span class="n">speed</span><span class="p">)</span>
-<span class="n">bob_1</span> <span class="o">=</span> <span class="n">bob_0</span><span class="o">.</span><span class="n">boost</span><span class="p">(</span><span class="n">speed</span><span class="p">)</span>
-<span class="n">alpha_centauri_1</span> <span class="o">=</span> <span class="n">alpha_centauri_0</span><span class="o">.</span><span class="n">boost</span><span class="p">(</span><span class="n">speed</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">alice_1</span> <span class="o">=</span> <span class="n">alice_0</span><span class="o">.</span><span class="n">boost</span><span class="p">(</span><span class="n">first_leg_vel_0</span><span class="p">)</span>
+<span class="n">bob_1</span> <span class="o">=</span> <span class="n">bob_0</span><span class="o">.</span><span class="n">boost</span><span class="p">(</span><span class="n">first_leg_vel_0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>I named these variables with <code class="docutils literal notranslate"><span class="pre">_1</span></code> to for this new reference frame. Let’s plot them.</p>
+<p>I named these variables with <code class="docutils literal notranslate"><span class="pre">_1</span></code> to refer to Alice’s reference frame during the first leg of her journey. Let’s plot these boosted worldlines.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 
-<span class="n">plotter</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">alice_1</span><span class="p">,</span> <span class="s2">&quot;Alice&quot;</span><span class="p">)</span>
-<span class="n">plotter</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">bob_1</span><span class="p">,</span> <span class="s2">&quot;Bob&quot;</span><span class="p">)</span>
-<span class="n">plotter</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">alpha_centauri_1</span><span class="p">,</span> <span class="s2">&quot;Alpha Centauri&quot;</span><span class="p">)</span>
+<span class="n">plot_worldline</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">alice_1</span><span class="p">,</span> <span class="s2">&quot;Alice&quot;</span><span class="p">)</span>
+<span class="n">plot_worldline</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">bob_1</span><span class="p">,</span> <span class="s2">&quot;Bob&quot;</span><span class="p">)</span>
 
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(0.0, 20.0)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(0.0, 10.0)
 </pre></div>
 </div>
-<img alt="../_images/ddcb929a7fea0bc868d6b2d0c868fb4b5c8225181b91a63e92f96fed65d638f4.png" src="../_images/ddcb929a7fea0bc868d6b2d0c868fb4b5c8225181b91a63e92f96fed65d638f4.png" />
+<img alt="../_images/2626ba1558ff9d312daf3e238ddf21537f86f0637eb9ceb1d7cf28e2ea3fd33d.png" src="../_images/2626ba1558ff9d312daf3e238ddf21537f86f0637eb9ceb1d7cf28e2ea3fd33d.png" />
 </div>
 </div>
-<p>Here we see that Alice stays at rest during the first half of her journey, which is what we would expect. Bob is traveling away from alice, which we also would expect. We also see Alpha Centauri traveling toward Alice until she reaches it. Then Alice turns around and heads toward home again.</p>
-<p>TODO: Show how to calculate the velocities and how to get the vertices, once those APIs exist.</p>
 </section>
 </section>
 
@@ -216,14 +271,17 @@
 
 
 <h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Start Here - Twin Paradox tutorial</a></li>
+</ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../start-here.html">Start here</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../concepts.html">Concepts</a></li>
 </ul>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Twin Paradox</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="Worldline%20Tutorial.html"><code class="docutils literal notranslate"><span class="pre">spacetime.Worldline</span></code> Tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../api-reference.html">API Reference</a></li>
@@ -233,8 +291,8 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="../start-here.html" title="previous chapter">Start here</a></li>
-      <li>Next: <a href="Worldline%20Tutorial.html" title="next chapter"><code class="docutils literal notranslate"><span class="pre">spacetime.Worldline</span></code> Tutorial</a></li>
+      <li>Previous: <a href="../index.html" title="previous chapter">SpacetimeLib documentation</a></li>
+      <li>Next: <a href="../installation.html" title="next chapter">Installation</a></li>
   </ul></li>
 </ul>
 </div>

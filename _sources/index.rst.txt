@@ -21,17 +21,22 @@ Contents
 .. toctree::
    :maxdepth: 1
 
-   start-here
-
-.. toctree::
-   :maxdepth: 1
-
    notebooks/Twin Paradox
 
 .. toctree::
    :maxdepth: 1
 
-   notebooks/Worldline Tutorial
+   installation
+
+.. toctree::
+   :maxdepth: 1
+
+   concepts
+
+.. toctree::
+   :maxdepth: 1
+
+   tutorials
 
 .. toctree::
    :maxdepth: 2

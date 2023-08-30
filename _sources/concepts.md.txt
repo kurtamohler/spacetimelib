@@ -1,4 +1,4 @@
-# Start here
+# Concepts
 
 ## Welcome to SpacetimeLib
 
@@ -19,22 +19,6 @@ CLI. However, it would certainly be helpful to have a basic understanding of
 the subject. If you know how to calculate Lorentz transformations with one
 spatial dimension, then you probably know enough to understand everything in
 this document.
-
-## Installing SpacetimeLib
-
-TODO: Fill this in after adding package to conda and pip
-
-## How to import SpacetimeLib
-
-To access SpacetimeLib, import it into your Python code:
-
-```python
->>> import spacetime as st
-```
-
-We shorten the imported name to `st` for better readability of code using
-SpacetimeLib, but you can name it whatever you want or just use the unshortened
-name.
 
 ## Spacetime
 
