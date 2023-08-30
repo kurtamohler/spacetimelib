@@ -7,7 +7,7 @@
    "source": [
     "# Start Here - Twin Paradox tutorial\n",
     "\n",
-    "To show what SpacetimeLib can do, let's look at a well-known thought experience called the [twin paradox](https://en.wikipedia.org/wiki/Twin_paradox).\n",
+    "To show what SpacetimeLib can do, let's look at a well-known thought experiment called the [twin paradox](https://en.wikipedia.org/wiki/Twin_paradox).\n",
     "\n",
     "Alice and Bob are twins living on Earth. Alice gets on a spaceship, travels 10 light years away from Earth, and then comes right back. Her ship can travel extremely fast, but not as fast as light. From Bob's perspective, each leg of Alice's trip takes 10.1 years, and when Alice arrives back home, Bob has aged 20.2 years. How much time does the trip take from Alice's perspective?\n",
     "\n",
