@@ -18,6 +18,7 @@
     <script src="_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Learning resources" href="learning-resources.html" />
     <link rel="prev" title="spacetime.Worldline Tutorial" href="notebooks/Worldline%20Tutorial.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -493,7 +494,7 @@ is returned.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetime.Worldline.plot">
-<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline.plot" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_extension_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetime.Worldline.plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get an array that can be given directly to <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html">matplotlib.pyplot.plot()</a>,
 to generate a 2D plot of the worldline in two of its N+1 dimensions.</p>
 <p>You will need to expand the array with <cite>*</cite>, like so:
@@ -509,11 +510,19 @@ to generate a 2D plot of the worldline in two of its N+1 dimensions.</p>
 </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Size: (2, M) for M vertices</p>
+<dt class="field-even">Keyword Arguments<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>end_extension_time</strong> (<em>float</em><em>, </em><em>optional</em>) – <p>If not <code class="docutils literal notranslate"><span class="pre">None</span></code>, add an extra vertex to the past and future if the
+worldline has a past and future velocity. This is to make it possible
+to show the past and future sections of the worldline on a Matplotlib
+plot, since we cannot plot infinitely long rays in Matplotlib.</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Size: (2, M) for M vertices</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -735,12 +744,19 @@ time.</p>
 </ul>
 </li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="learning-resources.html">Learning resources</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/kurtamohler/spacetimelib">GitHub Source</a></li>
+</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="notebooks/Worldline%20Tutorial.html" title="previous chapter"><code class="docutils literal notranslate"><span class="pre">spacetime.Worldline</span></code> Tutorial</a></li>
+      <li>Next: <a href="learning-resources.html" title="next chapter">Learning resources</a></li>
   </ul></li>
 </ul>
 </div>

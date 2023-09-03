@@ -1,0 +1,275 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Length contraction &#8212; spacetime 0.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="spacetime.Worldline Tutorial" href="Worldline%20Tutorial.html" />
+    <link rel="prev" title="Tutorials" href="../tutorials.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="length-contraction">
+<h1>Length contraction<a class="headerlink" href="#length-contraction" title="Permalink to this heading">¶</a></h1>
+<p>Alice has a very fast car. She passes Bob, who is standing on the ground, at a speed of 0.99 light-seconds per second. In Alice’s frame, the car is 10 meters long. Is the car also 10 meters long in Bob’s frame, or does it change?</p>
+<p>Let’s first plot the situation in Alice’s frame of reference.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">spacetime</span> <span class="k">as</span> <span class="nn">st</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="k">def</span> <span class="nf">plot_worldline</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">w_plot_data</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">w_plot_data</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;x-axis&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;t-axis&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;center left&#39;</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s say that at time <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">=</span> <span class="pre">0</span></code>, the back of Alice’s car is at <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">0</span></code> and the front is at <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">10</span></code>. Both the front and back of the car are not moving, since they are stationary with respect to Alice, so they have velocity <code class="docutils literal notranslate"><span class="pre">dx/dt</span> <span class="pre">=</span> <span class="pre">0</span></code>.</p>
+<p>Also at <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">=</span> <span class="pre">0</span></code>, Bob is standing at <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">0</span></code>. He moves at a velocity of <code class="docutils literal notranslate"><span class="pre">dx/dt</span> <span class="pre">=</span> <span class="pre">-0.99</span></code>.</p>
+<p>We can create worldlines to describe the scenario like so:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">car_front_0</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">Worldline</span><span class="p">(</span>
+    <span class="n">vertices</span><span class="o">=</span><span class="p">[</span>
+        <span class="c1"># (t, x)</span>
+        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="p">],</span>
+    <span class="n">ends_vel_s</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,))</span>
+
+<span class="n">car_back_0</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">Worldline</span><span class="p">(</span>
+    <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)],</span>
+    <span class="p">(</span><span class="mi">0</span><span class="p">,))</span>
+
+<span class="n">bob_0</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">Worldline</span><span class="p">(</span>
+    <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)],</span>
+    <span class="p">(</span><span class="o">-</span><span class="mf">0.99</span><span class="p">,))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The API documentation describes the <code class="docutils literal notranslate"><span class="pre">ends_vel_s</span></code> argument, but in brief, it allows you to specify the velocity of the worldline at its past and future ends, so that we can define worldlines that span infinitely into the past and future at a fixed velocity.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="n">plot_worldline</span><span class="p">(</span>
+    <span class="n">ax</span><span class="p">,</span>
+    <span class="n">car_front_0</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">end_extension_time</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
+    <span class="s2">&quot;Car front&quot;</span><span class="p">)</span>
+
+<span class="n">plot_worldline</span><span class="p">(</span>
+    <span class="n">ax</span><span class="p">,</span>
+    <span class="n">car_back_0</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">end_extension_time</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
+    <span class="s2">&quot;Car back&quot;</span><span class="p">)</span>
+
+<span class="n">plot_worldline</span><span class="p">(</span>
+    <span class="n">ax</span><span class="p">,</span>
+    <span class="n">bob_0</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">end_extension_time</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
+    <span class="s2">&quot;Bob&quot;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(-10.0, 20.0)
+</pre></div>
+</div>
+<img alt="../_images/bde47ab923acb0c8113f47539fbc35c772311c0323fbd3a832b06b825e6f9bd4.png" src="../_images/bde47ab923acb0c8113f47539fbc35c772311c0323fbd3a832b06b825e6f9bd4.png" />
+</div>
+</div>
+<p>We can see that Alice’s car remains 10 meters long the whole time. Now let’s boost to Bob’s frame to see what happens.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">car_front_1</span> <span class="o">=</span> <span class="n">car_front_0</span><span class="o">.</span><span class="n">boost</span><span class="p">(</span><span class="o">-</span><span class="mf">0.99</span><span class="p">)</span>
+<span class="n">car_back_1</span> <span class="o">=</span> <span class="n">car_back_0</span><span class="o">.</span><span class="n">boost</span><span class="p">(</span><span class="o">-</span><span class="mf">0.99</span><span class="p">)</span>
+<span class="n">bob_1</span> <span class="o">=</span> <span class="n">bob_0</span><span class="o">.</span><span class="n">boost</span><span class="p">(</span><span class="o">-</span><span class="mf">0.99</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="n">plot_worldline</span><span class="p">(</span>
+    <span class="n">ax</span><span class="p">,</span>
+    <span class="n">car_front_1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">end_extension_time</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
+    <span class="s2">&quot;Car front&quot;</span><span class="p">)</span>
+
+<span class="n">plot_worldline</span><span class="p">(</span>
+    <span class="n">ax</span><span class="p">,</span>
+    <span class="n">car_back_1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">end_extension_time</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
+    <span class="s2">&quot;Car back&quot;</span><span class="p">)</span>
+
+<span class="n">plot_worldline</span><span class="p">(</span>
+    <span class="n">ax</span><span class="p">,</span>
+    <span class="n">bob_1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">end_extension_time</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
+    <span class="s2">&quot;Bob&quot;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(-5.0, 10.0)
+</pre></div>
+</div>
+<img alt="../_images/7b7bd90e4a682ba4a258f106c063ccc69a4358f25ea5599df7b8b7b635064307.png" src="../_images/7b7bd90e4a682ba4a258f106c063ccc69a4358f25ea5599df7b8b7b635064307.png" />
+</div>
+</div>
+<p>We can clearly see that in Bob’s frame, Alice’s car is no longer 10 meters long.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">car_back_1</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0., 0.])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">car_front_1</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.       , 1.4106736])
+</pre></div>
+</div>
+</div>
+</div>
+<p>At <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">=</span> <span class="pre">0</span></code> in Bob’s frame, the back of the car is at <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">0</span></code> and the front is as <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">1.41</span></code>, so Alice’s car has contracted to 1.41 meters.</p>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">spacetime</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Twin%20Paradox.html">Start Here - Twin Paradox tutorial</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../concepts.html">Concepts</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Twin%20Paradox.html">Start Here - Twin Paradox tutorial</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Length contraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Worldline%20Tutorial.html"><code class="docutils literal notranslate"><span class="pre">spacetime.Worldline</span></code> Tutorial</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api-reference.html">API Reference</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../learning-resources.html">Learning resources</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/kurtamohler/spacetimelib">GitHub Source</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../tutorials.html">Tutorials</a><ul>
+      <li>Previous: <a href="../tutorials.html" title="previous chapter">Tutorials</a></li>
+      <li>Next: <a href="Worldline%20Tutorial.html" title="next chapter"><code class="docutils literal notranslate"><span class="pre">spacetime.Worldline</span></code> Tutorial</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Kurt Mohler.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../_sources/notebooks/Length contraction.ipynb.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -8,7 +8,7 @@ creating physics simulations that exhibit relativistic effects like time
 dilation, length contraction, and the relativity of simultaneity.
 
 This page describes the main concepts, terminology, and library features
-required to start using SpacetimeLib. A few of the basic ideas of special
+required to start using SpacetimeLib. A few of the ideas of special
 relativity are explained briefly, but we will not start from the very beginning
 or do any derivations--there are many exising resources for that. (TODO: Create
 and link to page with recommended learning resources)
@@ -29,13 +29,13 @@ If a spacetime has N spatial dimensions, it can be called an N+1 spacetime. The
 "+1" is for the time dimension.
 
 Special relativity focuses on a particular type of N+1 spacetime called
-a [Minkowski spacetime](https://en.wikipedia.org/wiki/Minkowski_space).
-A defining rule of Minkowski spacetime is that light always travels at the same
-constant speed in every inertial reference frame, and nothing can travel faster
-than light.
+[Minkowski spacetime](https://en.wikipedia.org/wiki/Minkowski_space).
+A defining rule of Minkowski spacetime is that a light ray always travels at
+the same constant speed in every inertial reference frame, and nothing can
+travel faster than light.
 
-SpacetimeLib provides operations for manipulating events, velocities, and
-worldlines in an N+1 Minkowski spacetime.
+SpacetimeLib provides operations for manipulating objects in N+1 Minkowski
+spacetimes.
 
 ## Events
 
