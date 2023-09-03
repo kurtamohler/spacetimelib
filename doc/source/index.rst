@@ -8,8 +8,11 @@ SpacetimeLib documentation
 
 **SpacetimeLib** is a special relativity physics library for Python.
 
-With SpacetimeLib, you can easily calculate Lorentz transformations, time
-dilation, length contraction, and more.
+SpacetimeLib performs mathematical operations on events, velocities, and
+worldlines in N+1 Minkowski spacetime.
+
+You can calculate Lorentz transformations, time dilation, length contraction,
+and more.
 
 .. note::
 
@@ -42,3 +45,12 @@ Contents
    :maxdepth: 2
 
    api-reference
+
+.. toctree::
+   :maxdepth: 1
+
+   learning-resources
+
+.. toctree::
+
+   GitHub Source <https://github.com/kurtamohler/spacetimelib>
