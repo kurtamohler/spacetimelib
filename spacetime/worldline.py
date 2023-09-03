@@ -636,7 +636,7 @@ class Worldline:
     # TODO: Should probably take a list (or array_like potentially) of dim
     # indices instead, to support extracting fewer or more dims than two,
     # if that is ever useful for people.
-    def plot(self, dim0=1, dim1=0):
+    def plot(self, dim0=1, dim1=0, *, end_extension_time=None):
         '''
         Get an array that can be given directly to `matplotlib.pyplot.plot()
         <https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html>`_,
@@ -656,6 +656,17 @@ class Worldline:
             Second dimension to plot
 
             Default: 0
+
+        Keyword args:
+
+          end_extension_time (float, optional):
+
+            If not ``None``, add an extra vertex to the past and future if the
+            worldline has a past and future velocity. This is to make it possible
+            to show the past and future sections of the worldline on a Matplotlib
+            plot, since we cannot plot infinitely long rays in Matplotlib.
+
+            Default: ``None``
 
         Returns:
 
@@ -677,6 +688,28 @@ class Worldline:
             lambda: f'dim1 must be >=0 or <{num_dims}, but got {dim1}')
 
         vertices_t = self._vertices.transpose()
+
+        if end_extension_time is not None:
+            check(
+                end_extension_time > 0,
+                TypeError,
+                lambda: f'end_extension_time must be >0')
+
+            if self.past_vel_s is not None:
+                past_vertex = self.eval(self.vertex(0)[0] - end_extension_time)
+                vertices_t = np.concatenate(
+                    [
+                        past_vertex[:, np.newaxis],
+                        vertices_t
+                    ], axis=1)
+
+            if self.future_vel_s is not None:
+                future_vertex = self.eval(self.vertex(-1)[0] + end_extension_time)
+                vertices_t = np.concatenate(
+                    [
+                        vertices_t,
+                        future_vertex[:, np.newaxis]
+                    ], axis=1)
 
         return np.stack([
             vertices_t[dim0],

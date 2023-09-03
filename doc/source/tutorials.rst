@@ -9,4 +9,9 @@ Tutorials
 .. toctree::
    :maxdepth: 1
 
+   notebooks/Length contraction
+
+.. toctree::
+   :maxdepth: 1
+
    notebooks/Worldline Tutorial
