@@ -14,4 +14,9 @@ Tutorials
 .. toctree::
    :maxdepth: 1
 
+   notebooks/Length contraction of a circle
+
+.. toctree::
+   :maxdepth: 1
+
    notebooks/Worldline Tutorial
