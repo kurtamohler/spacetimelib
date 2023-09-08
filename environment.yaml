@@ -14,3 +14,4 @@ dependencies:
     - jupyter
     - matplotlib
     - perfplot
+    - build

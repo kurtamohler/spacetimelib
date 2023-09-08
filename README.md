@@ -19,6 +19,14 @@ page is a good starting point to see what SpacetimeLib can do.
 
 ## Install
 
+### Pip
+
+```bash
+pip install spacetimelib
+```
+
+### From source
+
 Install Miniconda:
 [instructions](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html)
 

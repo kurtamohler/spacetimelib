@@ -7,13 +7,12 @@ cmdclass = {'build_sphinx': BuildDoc}
 with open('README.md') as f:
     readme = f.read()
 
-# TODO: Decide which license to use
-# with open('LICENSE') as f:
-#    license = f.read()
+with open('LICENSE') as f:
+   license = f.read()
 
 name = 'spacetime'
 version = '0.0'
-release = '0.0.0'
+release = '0.0.1'
 
 setup(
     name=name,
@@ -33,5 +32,7 @@ setup(
             'version': ('setup.py', version),
             'release': ('setup.py', release),
             'source_dir': ('setup.py', 'doc/source')}},
+    install_requires=[
+        'numpy',
+    ],
 )
-
