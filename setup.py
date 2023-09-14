@@ -10,7 +10,7 @@ with open('README.md') as f:
 with open('LICENSE') as f:
    license = f.read()
 
-name = 'spacetime'
+name = 'spacetimelib'
 version = '0.0'
 release = '0.0.1'
 
@@ -23,7 +23,7 @@ setup(
     author_email='kurtamohler@gmail.com',
     url='https://github.com/kurtamohler/spacetimelib',
     # license=license,
-    packages=['spacetime'],
+    packages=['spacetimelib'],
     cmdclass=cmdclass,
     # these are optional and override conf.py settings
     command_options={

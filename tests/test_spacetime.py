@@ -1,4 +1,4 @@
-import spacetime as st
+import spacetimelib as st
 import numpy as np
 import unittest
 from itertools import product
@@ -28,7 +28,7 @@ def check_boost_velocity_1D(v, u):
     u = np.array(u)
     return (u - v) / (1 - u * v)
 
-class SpacetimeTestSuite(unittest.TestCase):
+class SpacetimelibTestSuite(unittest.TestCase):
 
     def test_norm_s(self):
         test_sizes = [
@@ -403,7 +403,7 @@ class SpacetimeTestSuite(unittest.TestCase):
 
         self.assertTrue(np.isclose(u_out, u_out_check).all())
 
-    # Test `spacetime.boost` with lots of different input shapes
+    # Test `spacetimelib.boost` with lots of different input shapes
     def test_boost_shapes(self):
         input_shapes = [
             # frame_v_shape, x_shape, u_shape, x_out_shape_check, u_out_shape_check

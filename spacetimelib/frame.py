@@ -3,7 +3,7 @@ from collections import OrderedDict
 from itertools import islice
 import re
 
-import spacetime as st
+import spacetimelib as st
 from .error_checking import check, internal_assert, maybe_wrap_index
 
 class Frame:

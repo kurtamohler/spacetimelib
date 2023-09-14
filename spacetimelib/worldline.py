@@ -1,7 +1,7 @@
 import numpy as np
 import numbers
 
-import spacetime as st
+import spacetimelib as st
 from .error_checking import check, internal_assert
 
 class Worldline:
@@ -482,7 +482,7 @@ class Worldline:
             Space-velocity to boost the worldline by.
 
         Returns:
-          :class:`spacetime.Worldline`:
+          :class:`spacetimelib.Worldline`:
         '''
         vertices = st.boost(self._vertices, boost_vel_s)
         past_vel_s = None
@@ -513,7 +513,7 @@ class Worldline:
             Displacements to add to each dimension.
 
         Returns:
-          :class:`spacetime.Worldline`:
+          :class:`spacetimelib.Worldline`:
         '''
         event_delta = np.asarray(event_delta)
         check(event_delta.shape == self._vertices[0].shape, ValueError, lambda: (
@@ -537,7 +537,7 @@ class Worldline:
             Displacements to subtract from each dimension.
 
         Returns:
-          :class:`spacetime.Worldline`:
+          :class:`spacetimelib.Worldline`:
         '''
         return self + (-event_delta)
 
@@ -548,7 +548,7 @@ class Worldline:
 
         Args:
 
-          other (:class:`spacetime.Worldline`):
+          other (:class:`spacetimelib.Worldline`):
             Other worldline
 
         Returns:

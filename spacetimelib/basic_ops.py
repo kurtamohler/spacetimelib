@@ -377,7 +377,7 @@ def velocity_st(vel_s, light_speed=1):
     Spacetime-velocity is traditionally called four-velocity in the context of
     3+1 Minkowski spacetime.
 
-    This is the reverse of :func:`spacetime.velocity_s`.
+    This is the reverse of :func:`spacetimelib.velocity_s`.
 
     Args:
 
@@ -427,7 +427,7 @@ def velocity_s(vel_st):
     '''
     Calculates the space-velocity vector from a spacetime-velocity vector.
 
-    This is the reverse of :func:`spacetime.velocity_st`.
+    This is the reverse of :func:`spacetimelib.velocity_st`.
 
     Args:
 

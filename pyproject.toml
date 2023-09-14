@@ -1,7 +1,6 @@
 [build-system]
 requires = [
   "setuptools>=61.0",
-  "numpy",
   "sphinx",
   "myst-parser",
   "myst-nb",
@@ -22,6 +21,9 @@ classifiers = [
   "Programming Language :: Python :: 3",
   "License :: OSI Approved :: MIT License",
   "Operating System :: OS Independent",
+]
+dependencies = [
+  'numpy',
 ]
 
 [project.urls]

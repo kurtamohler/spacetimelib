@@ -2,7 +2,7 @@ import itertools
 import pygame
 import numpy as np
 
-from spacetime import Frame, boost, boost_velocity_s, Worldline
+from spacetimelib import Frame, boost, boost_velocity_s, Worldline
 
 rest_frame = Frame()
 
