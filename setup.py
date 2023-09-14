@@ -12,7 +12,7 @@ with open('LICENSE') as f:
 
 name = 'spacetimelib'
 version = '0.0'
-release = '0.0.1'
+release = '0.0.2'
 
 setup(
     name=name,
@@ -22,7 +22,7 @@ setup(
     author='Kurt Mohler',
     author_email='kurtamohler@gmail.com',
     url='https://github.com/kurtamohler/spacetimelib',
-    # license=license,
+    license=license,
     packages=['spacetimelib'],
     cmdclass=cmdclass,
     # these are optional and override conf.py settings

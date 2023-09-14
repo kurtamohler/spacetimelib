@@ -17,7 +17,7 @@ The [Start Here - Twin Paradox
 tutorial](https://kurtamohler.github.io/spacetimelib/notebooks/Twin%20Paradox.html)
 page is a good starting point to see what SpacetimeLib can do.
 
-## Install
+## Installation
 
 ### Pip
 
@@ -47,3 +47,14 @@ Then install SpacetimeLib.
 ```bash
 pip install -e .
 ```
+
+## How to import SpacetimeLib
+
+To access SpacetimeLib, import it into your Python code:
+
+```python
+>>> import spacetimelib as st
+```
+
+Shorten the imported name to `st` for better code readability, but you can just
+use the unshortened name if you want.

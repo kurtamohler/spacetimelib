@@ -7,7 +7,7 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'SpacetimeLib'
-copyright = '2022, Kurt Mohler'
+copyright = '2022-2023, Kurt Mohler'
 author = 'Kurt Mohler'
 release = '0.0.0'
 
