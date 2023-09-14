@@ -1,22 +1,29 @@
 # Installation
 
-## Install from source
-
-Install Miniconda: [instructions](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html)
-
-Clone the repository.
+## Pip
 
 ```bash
-git clone https://github.com/kurtamohler/spacetimelib.git && cd spacetimelib
+pip install spacetimelib
 ```
 
-Create conda environment.
+## From source
+
+Install Miniconda:
+[instructions](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html)
+
+Clone SpacetimeLib the repository.
+
+```bash
+https://github.com/kurtamohler/spacetimelib.git && cd spacetimelib
+```
+
+Run the following to create and activate an environment with all dependencies.
 
 ```bash
 conda env create -f environment.yaml -n spacetimelib && conda activate spacetimelib
 ```
 
-Install SpacetimeLib.
+Then install SpacetimeLib.
 
 ```bash
 pip install -e .

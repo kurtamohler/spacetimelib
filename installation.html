@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Installation &#8212; spacetimelib 0.0.1 documentation</title>
+    <title>Installation &#8212; spacetimelib 0.0.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -38,18 +38,25 @@
             
   <section id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h1>
-<section id="install-from-source">
-<h2>Install from source<a class="headerlink" href="#install-from-source" title="Permalink to this heading">¶</a></h2>
-<p>Install Miniconda: <a class="reference external" href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html">instructions</a></p>
-<p>Clone the repository.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/kurtamohler/spacetimelib.git<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>spacetimelib
+<section id="pip">
+<h2>Pip<a class="headerlink" href="#pip" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>spacetimelib
 </pre></div>
 </div>
-<p>Create conda environment.</p>
+</section>
+<section id="from-source">
+<h2>From source<a class="headerlink" href="#from-source" title="Permalink to this heading">¶</a></h2>
+<p>Install Miniconda:
+<a class="reference external" href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html">instructions</a></p>
+<p>Clone SpacetimeLib the repository.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>https://github.com/kurtamohler/spacetimelib.git<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>spacetimelib
+</pre></div>
+</div>
+<p>Run the following to create and activate an environment with all dependencies.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>environment.yaml<span class="w"> </span>-n<span class="w"> </span>spacetimelib<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>conda<span class="w"> </span>activate<span class="w"> </span>spacetimelib
 </pre></div>
 </div>
-<p>Install SpacetimeLib.</p>
+<p>Then install SpacetimeLib.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
 </pre></div>
 </div>
@@ -136,7 +143,7 @@ use the unshortened name if you want.</p>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2022, Kurt Mohler.
+      &copy;2022-2023, Kurt Mohler.
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
