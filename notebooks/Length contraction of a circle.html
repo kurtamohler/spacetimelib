@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Length contraction - 2 spatial dims &#8212; spacetime 0.0.1 documentation</title>
+    <title>Length contraction - 2 spatial dims &#8212; spacetimelib 0.0.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -18,7 +18,7 @@
     <script src="../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="spacetime.Worldline Tutorial" href="Worldline%20Tutorial.html" />
+    <link rel="next" title="spacetimelib.Worldline Tutorial" href="Worldline%20Tutorial.html" />
     <link rel="prev" title="Length contraction" href="Length%20contraction.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -42,7 +42,7 @@
 <p>We’ll create and plot a circle of particles sitting at rest. We’ll do this by just creating a number of <code class="docutils literal notranslate"><span class="pre">st.Worldline</span></code>s each with one vertex arranged in a circle. We’ll combine all these worldlines into one <code class="docutils literal notranslate"><span class="pre">st.Frame</span></code>. Then we can plot the x- and y-coordinates of each of the particles at a particular time.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">spacetime</span> <span class="k">as</span> <span class="nn">st</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">spacetimelib</span> <span class="k">as</span> <span class="nn">st</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
@@ -101,7 +101,7 @@
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(-6.0, 6.0)
 </pre></div>
 </div>
-<img alt="../_images/9c8d4a493d365bd555a62293d056b64ba045828bda0d70235dd0efe40036fcb9.png" src="../_images/9c8d4a493d365bd555a62293d056b64ba045828bda0d70235dd0efe40036fcb9.png" />
+<img alt="../_images/d7694de3993af02f7a7efdc78118881fa43187fcb1e55cc28c454114aa248cac.png" src="../_images/d7694de3993af02f7a7efdc78118881fa43187fcb1e55cc28c454114aa248cac.png" />
 </div>
 </div>
 <p>Now let’s see what happens if we view this circle in another reference frame. Let’s boost the frame by a velocity of 0.9 along the x-axis.</p>
@@ -120,7 +120,7 @@
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(-6.0, 6.0)
 </pre></div>
 </div>
-<img alt="../_images/50b14ac5a344d3228500e7c35da4af4a7ec86a5cf931ff398d853227b7eda932.png" src="../_images/50b14ac5a344d3228500e7c35da4af4a7ec86a5cf931ff398d853227b7eda932.png" />
+<img alt="../_images/91b838a5ad4777b3632fab0b85d7f95c1b9d78d0a8ed1a2ac46f72aa1e4e086a.png" src="../_images/91b838a5ad4777b3632fab0b85d7f95c1b9d78d0a8ed1a2ac46f72aa1e4e086a.png" />
 </div>
 </div>
 <p>The circle is contracted along the x-axis because the boost velocity we used is along the x-axis.</p>
@@ -140,7 +140,7 @@
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(-6.0, 6.0)
 </pre></div>
 </div>
-<img alt="../_images/c04647e10bbb605538d1b6b535ea99c68a6a87b5f930ca6afd9b08415d4dd5da.png" src="../_images/c04647e10bbb605538d1b6b535ea99c68a6a87b5f930ca6afd9b08415d4dd5da.png" />
+<img alt="../_images/6baad45b48646736e5c92e9a6310832d77413f746f25ae54e2f5b67e2bf392d2.png" src="../_images/6baad45b48646736e5c92e9a6310832d77413f746f25ae54e2f5b67e2bf392d2.png" />
 </div>
 </div>
 <p>We can also easily step forward or backward in time to see how this contracted circle moves over time.</p>
@@ -160,7 +160,7 @@
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(-6.0, 6.0)
 </pre></div>
 </div>
-<img alt="../_images/ae64efba852c20311443d0e385d2987eaa5ac2ff56b84fd25cf17974f8b96d74.png" src="../_images/ae64efba852c20311443d0e385d2987eaa5ac2ff56b84fd25cf17974f8b96d74.png" />
+<img alt="../_images/977668a803e7a3b9d8201feae6c096586925477a4649ed086442c4bac389cb96.png" src="../_images/977668a803e7a3b9d8201feae6c096586925477a4649ed086442c4bac389cb96.png" />
 </div>
 </div>
 <p>Since we used a boost velocity of <code class="docutils literal notranslate"><span class="pre">[-0.9,</span> <span class="pre">0.4]</span></code>, in this frame the contracted circle moves at a velocity of <code class="docutils literal notranslate"><span class="pre">[0.9,</span> <span class="pre">-0.4]</span></code>, the opposite of the boost velocity, which is down and to the right on the above plot.</p>
@@ -173,7 +173,7 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../index.html">spacetime</a></h1>
+<h1 class="logo"><a href="../index.html">spacetimelib</a></h1>
 
 
 
@@ -197,7 +197,7 @@
 <li class="toctree-l2"><a class="reference internal" href="Twin%20Paradox.html">Start Here - Twin Paradox tutorial</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Length%20contraction.html">Length contraction</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Length contraction - 2 spatial dims</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Worldline%20Tutorial.html"><code class="docutils literal notranslate"><span class="pre">spacetime.Worldline</span></code> Tutorial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Worldline%20Tutorial.html"><code class="docutils literal notranslate"><span class="pre">spacetimelib.Worldline</span></code> Tutorial</a></li>
 </ul>
 </li>
 </ul>
@@ -217,7 +217,7 @@
   <li><a href="../index.html">Documentation overview</a><ul>
   <li><a href="../tutorials.html">Tutorials</a><ul>
       <li>Previous: <a href="Length%20contraction.html" title="previous chapter">Length contraction</a></li>
-      <li>Next: <a href="Worldline%20Tutorial.html" title="next chapter"><code class="docutils literal notranslate"><span class="pre">spacetime.Worldline</span></code> Tutorial</a></li>
+      <li>Next: <a href="Worldline%20Tutorial.html" title="next chapter"><code class="docutils literal notranslate"><span class="pre">spacetimelib.Worldline</span></code> Tutorial</a></li>
   </ul></li>
   </ul></li>
 </ul>

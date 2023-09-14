@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Concepts &#8212; spacetime 0.0.1 documentation</title>
+    <title>Concepts &#8212; spacetimelib 0.0.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -108,7 +108,7 @@ terminology.</p>
 <h2>Distance and norms<a class="headerlink" href="#distance-and-norms" title="Permalink to this heading">¶</a></h2>
 <p>To find the distance between two points, we take the norm of the difference between
 them, and in general, we can take the norm of any vector.</p>
-<p>We can use <a class="reference internal" href="api-reference.html#spacetime.norm_s" title="spacetime.norm_s"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">spacetime.norm_s</span></code></span></a> to calculate the norm of any
+<p>We can use <a class="reference internal" href="api-reference.html#spacetimelib.norm_s" title="spacetimelib.norm_s"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">spacetimelib.norm_s</span></code></span></a> to calculate the norm of any
 space-vector.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">st</span><span class="o">.</span><span class="n">norm_s</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
 <span class="go">5.0</span>
@@ -120,7 +120,7 @@ space-vector.</p>
 <span class="go">5.0</span>
 </pre></div>
 </div>
-<p>We can use <a class="reference internal" href="api-reference.html#spacetime.norm2_st" title="spacetime.norm2_st"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">spacetime.norm2_st</span></code></span></a> to calculate the square
+<p>We can use <a class="reference internal" href="api-reference.html#spacetimelib.norm2_st" title="spacetimelib.norm2_st"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">spacetimelib.norm2_st</span></code></span></a> to calculate the square
 norm of any spacetime-vector. The square norm is more convenient than the norm
 itself, because the square norm of a spacetime-vector can be negative.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">st</span><span class="o">.</span><span class="n">norm2_st</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
@@ -161,8 +161,8 @@ spacetime with respect to proper time. For instance, the space-velocity
 spacetime-velocity from a space-velocity vector. Given a space-velocity <code class="docutils literal notranslate"><span class="pre">v</span> <span class="pre">=</span> <span class="pre">(v1,</span> <span class="pre">...,</span> <span class="pre">vN)</span></code>, the spacetime-velocity is calculated by <code class="docutils literal notranslate"><span class="pre">(1</span> <span class="pre">,</span> <span class="pre">v1,</span> <span class="pre">...,</span> <span class="pre">vN)</span> <span class="pre">/</span> <span class="pre">sqrt(1</span> <span class="pre">-</span> <span class="pre">norm_s(v)**2)</span></code>.</p>
 <p>The squared norm of a spacetime-velocity must always be equal to the negative
 of the speed of light.</p>
-<p>SpacetimeLib has the functions <a class="reference internal" href="api-reference.html#spacetime.velocity_st" title="spacetime.velocity_st"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">spacetime.velocity_st</span></code></span></a>
-and <a class="reference internal" href="api-reference.html#spacetime.velocity_s" title="spacetime.velocity_s"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">spacetime.velocity_s</span></code></span></a> for converting
+<p>SpacetimeLib has the functions <a class="reference internal" href="api-reference.html#spacetimelib.velocity_st" title="spacetimelib.velocity_st"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">spacetimelib.velocity_st</span></code></span></a>
+and <a class="reference internal" href="api-reference.html#spacetimelib.velocity_s" title="spacetimelib.velocity_s"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">spacetimelib.velocity_s</span></code></span></a> for converting
 between the two kinds of velocity vectors.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Velocity of 0.1 in the x-dimension and -0.2 in the y-dimension</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">vel_s</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">]</span>
@@ -225,7 +225,7 @@ constant velocity with respect to each other and which share the same origin.
 If we know the coordinates of some event in one of the frames, we can use the
 <a class="reference external" href="https://en.wikipedia.org/wiki/Lorentz_transformation">Lorentz transformation</a>
 to find the event’s coordinates in the other frame. In SpacetimeLib, the
-<a class="reference internal" href="api-reference.html#spacetime.boost" title="spacetime.boost"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">spacetime.boost</span></code></span></a> function performs a rotation-free Lorentz
+<a class="reference internal" href="api-reference.html#spacetimelib.boost" title="spacetimelib.boost"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">spacetimelib.boost</span></code></span></a> function performs a rotation-free Lorentz
 transformation, also known as a Lorentz boost. A Lorentz boost is just
 a Lorentz transformation in which the two reference frames’ corresponding
 spatial dimensions are pointed in the same directions. In other words, the
@@ -233,7 +233,7 @@ frames have different relative velocities, but not different relative spatial
 rotations.</p>
 <section id="boost-example-superhuman-footrace">
 <h3>Boost example: Superhuman footrace<a class="headerlink" href="#boost-example-superhuman-footrace" title="Permalink to this heading">¶</a></h3>
-<p>Let’s look at an example problem that <a class="reference internal" href="api-reference.html#spacetime.boost" title="spacetime.boost"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">spacetime.boost</span></code></span></a> can
+<p>Let’s look at an example problem that <a class="reference internal" href="api-reference.html#spacetimelib.boost" title="spacetimelib.boost"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">spacetimelib.boost</span></code></span></a> can
 solve for us. Alice is watching a footrace of superhuman athletes. She stands
 still at the starting line for the whole race, at <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">0</span></code>, and the finish line
 is 10 light-seconds away from her, at <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">10</span></code>. The race begins at time <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">=</span> <span class="pre">0</span></code>
@@ -243,7 +243,7 @@ reaches the finish line at <code class="docutils literal notranslate"><span clas
 <p>In Alice’s frame, the coordinates of the event when Bob passes the finish line
 are given by the vector <code class="docutils literal notranslate"><span class="pre">(12.5,</span> <span class="pre">10)</span></code>. But what are the coordinates of this same
 event from Bob’s perspective? Let’s solve this with
-<a class="reference internal" href="api-reference.html#spacetime.boost" title="spacetime.boost"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">spacetime.boost</span></code></span></a>.  We’ll plug in the coordinates of the
+<a class="reference internal" href="api-reference.html#spacetimelib.boost" title="spacetimelib.boost"><span class="xref myst py py-func"><code class="docutils literal notranslate"><span class="pre">spacetimelib.boost</span></code></span></a>.  We’ll plug in the coordinates of the
 event in Alice’s reference frame and boost it by Bob’s velocity, <code class="docutils literal notranslate"><span class="pre">0.8</span></code>, to get
 the coordinates of the event in Bob’s reference frame.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bob_vel</span> <span class="o">=</span> <span class="mf">0.8</span>
@@ -291,7 +291,7 @@ worldline with respect to time is discrete.</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">spacetime</a></h1>
+<h1 class="logo"><a href="index.html">spacetimelib</a></h1>
 
 
 

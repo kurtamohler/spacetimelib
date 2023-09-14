@@ -79,7 +79,7 @@ terminology.
 To find the distance between two points, we take the norm of the difference between
 them, and in general, we can take the norm of any vector.
 
-We can use [`spacetime.norm_s`](spacetime.norm_s) to calculate the norm of any
+We can use [`spacetimelib.norm_s`](spacetimelib.norm_s) to calculate the norm of any
 space-vector.
 
 ```python
@@ -93,7 +93,7 @@ space-vector.
 5.0
 ```
 
-We can use [`spacetime.norm2_st`](spacetime.norm2_st) to calculate the square
+We can use [`spacetimelib.norm2_st`](spacetimelib.norm2_st) to calculate the square
 norm of any spacetime-vector. The square norm is more convenient than the norm
 itself, because the square norm of a spacetime-vector can be negative.
 
@@ -145,8 +145,8 @@ vN) / sqrt(1 - norm_s(v)**2)`.
 The squared norm of a spacetime-velocity must always be equal to the negative
 of the speed of light.
 
-SpacetimeLib has the functions [`spacetime.velocity_st`](spacetime.velocity_st)
-and [`spacetime.velocity_s`](spacetime.velocity_s) for converting
+SpacetimeLib has the functions [`spacetimelib.velocity_st`](spacetimelib.velocity_st)
+and [`spacetimelib.velocity_s`](spacetimelib.velocity_s) for converting
 between the two kinds of velocity vectors.
 
 ```python
@@ -212,7 +212,7 @@ constant velocity with respect to each other and which share the same origin.
 If we know the coordinates of some event in one of the frames, we can use the
 [Lorentz transformation](https://en.wikipedia.org/wiki/Lorentz_transformation)
 to find the event's coordinates in the other frame. In SpacetimeLib, the
-[`spacetime.boost`](spacetime.boost) function performs a rotation-free Lorentz
+[`spacetimelib.boost`](spacetimelib.boost) function performs a rotation-free Lorentz
 transformation, also known as a Lorentz boost. A Lorentz boost is just
 a Lorentz transformation in which the two reference frames' corresponding
 spatial dimensions are pointed in the same directions. In other words, the
@@ -221,7 +221,7 @@ rotations.
 
 ### Boost example: Superhuman footrace
 
-Let's look at an example problem that [`spacetime.boost`](spacetime.boost) can
+Let's look at an example problem that [`spacetimelib.boost`](spacetimelib.boost) can
 solve for us. Alice is watching a footrace of superhuman athletes. She stands
 still at the starting line for the whole race, at `x = 0`, and the finish line
 is 10 light-seconds away from her, at `x = 10`. The race begins at time `t = 0`
@@ -232,7 +232,7 @@ reaches the finish line at `t = (10 / 0.8) = 12.5` seconds.
 In Alice's frame, the coordinates of the event when Bob passes the finish line
 are given by the vector `(12.5, 10)`. But what are the coordinates of this same
 event from Bob's perspective? Let's solve this with
-[`spacetime.boost`](spacetime.boost).  We'll plug in the coordinates of the
+[`spacetimelib.boost`](spacetimelib.boost).  We'll plug in the coordinates of the
 event in Alice's reference frame and boost it by Bob's velocity, `0.8`, to get
 the coordinates of the event in Bob's reference frame.
 

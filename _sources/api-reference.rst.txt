@@ -1,21 +1,21 @@
 API Reference
 =============
 
-.. autofunction:: spacetime.norm_s
+.. autofunction:: spacetimelib.norm_s
 
-.. autofunction:: spacetime.norm2_st
+.. autofunction:: spacetimelib.norm2_st
 
-.. autofunction:: spacetime.velocity_st
+.. autofunction:: spacetimelib.velocity_st
 
-.. autofunction:: spacetime.velocity_s
+.. autofunction:: spacetimelib.velocity_s
 
-.. autofunction:: spacetime.boost
+.. autofunction:: spacetimelib.boost
 
-.. autofunction:: spacetime.boost_velocity_s
+.. autofunction:: spacetimelib.boost_velocity_s
 
-.. autofunction:: spacetime.proper_time_delta
+.. autofunction:: spacetimelib.proper_time_delta
 
-.. autoclass:: spacetime.Worldline
+.. autoclass:: spacetimelib.Worldline
    :members:
 
    .. automethod:: __len__
@@ -26,7 +26,7 @@ API Reference
 
    .. automethod:: __eq__
 
-.. autoclass:: spacetime.Frame
+.. autoclass:: spacetimelib.Frame
    :members:
 
    .. automethod:: __len__
