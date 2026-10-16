@@ -1,21 +1,18 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>API Reference &#8212; spacetimelib 0.0.2 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
+    <title>API Reference &#8212; SpacetimeLib 0.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <script src="_static/documentation_options.js?v=7026087e"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Learning resources" href="learning-resources.html" />
@@ -23,8 +20,9 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
+
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  
 
   </head><body>
   
@@ -37,10 +35,10 @@
           <div class="body" role="main">
             
   <section id="api-reference">
-<h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this heading">¶</a></h1>
+<h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="spacetimelib.norm_s">
-<span class="sig-prename descclassname"><span class="pre">spacetimelib.</span></span><span class="sig-name descname"><span class="pre">norm_s</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec_s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.norm_s" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">spacetimelib.</span></span><span class="sig-name descname"><span class="pre">norm_s</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec_s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.norm_s" title="Link to this definition">¶</a></dt>
 <dd><p>Calculate the norm of a space-vector. This is simply the Euclidean norm, or
 more formally, the <a class="reference external" href="https://mathworld.wolfram.com/L2-Norm.html">L-2 norm</a>.</p>
 <p>Given an N-dimensional space-vector <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">(a1,</span> <span class="pre">...,</span> <span class="pre">aN)</span></code>, the norm is
@@ -58,7 +56,7 @@ of two positions in space, then its norm is the distance between the events.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="spacetimelib.norm2_st">
-<span class="sig-prename descclassname"><span class="pre">spacetimelib.</span></span><span class="sig-name descname"><span class="pre">norm2_st</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec_st</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.norm2_st" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">spacetimelib.</span></span><span class="sig-name descname"><span class="pre">norm2_st</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec_st</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.norm2_st" title="Link to this definition">¶</a></dt>
 <dd><p>Calculate the square of the norm of a spacetime-vector.</p>
 <p>Given an N+1-dimensional spacetime-vector <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">(a0,</span> <span class="pre">a1,</span> <span class="pre">...,</span> <span class="pre">aN)</span></code>, the
 square norm is <code class="docutils literal notranslate"><span class="pre">norm2_st(a)</span> <span class="pre">=</span> <span class="pre">-</span> <span class="pre">a0^2</span> <span class="pre">+</span> <span class="pre">a1^2</span> <span class="pre">+</span> <span class="pre">...</span> <span class="pre">+</span> <span class="pre">aN^2</span></code>.</p>
@@ -79,7 +77,7 @@ events.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="spacetimelib.velocity_st">
-<span class="sig-prename descclassname"><span class="pre">spacetimelib.</span></span><span class="sig-name descname"><span class="pre">velocity_st</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vel_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">light_speed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.velocity_st" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">spacetimelib.</span></span><span class="sig-name descname"><span class="pre">velocity_st</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vel_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">light_speed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.velocity_st" title="Link to this definition">¶</a></dt>
 <dd><p>Calculates the spacetime-velocity vector from a space-velocity vector.</p>
 <p>Given a space-velocity <code class="docutils literal notranslate"><span class="pre">v</span> <span class="pre">=</span> <span class="pre">(v1,</span> <span class="pre">...,</span> <span class="pre">vN)</span></code>, the spacetime-velocity is
 calculated by <code class="docutils literal notranslate"><span class="pre">(1</span> <span class="pre">,</span> <span class="pre">v1,</span> <span class="pre">...,</span> <span class="pre">vN)</span> <span class="pre">/</span> <span class="pre">sqrt(1</span> <span class="pre">-</span> <span class="pre">|v|**2)</span></code>.</p>
@@ -105,7 +103,7 @@ the spacetime-velocity is undefined and an error will raise.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="spacetimelib.velocity_s">
-<span class="sig-prename descclassname"><span class="pre">spacetimelib.</span></span><span class="sig-name descname"><span class="pre">velocity_s</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vel_st</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.velocity_s" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">spacetimelib.</span></span><span class="sig-name descname"><span class="pre">velocity_s</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vel_st</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.velocity_s" title="Link to this definition">¶</a></dt>
 <dd><p>Calculates the space-velocity vector from a spacetime-velocity vector.</p>
 <p>This is the reverse of <a class="reference internal" href="#spacetimelib.velocity_st" title="spacetimelib.velocity_st"><code class="xref py py-func docutils literal notranslate"><span class="pre">spacetimelib.velocity_st()</span></code></a>.</p>
 <dl class="field-list simple">
@@ -121,7 +119,7 @@ respect to proper time.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="spacetimelib.boost">
-<span class="sig-prename descclassname"><span class="pre">spacetimelib.</span></span><span class="sig-name descname"><span class="pre">boost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec_st</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boost_vel_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">light_speed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_old</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.boost" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">spacetimelib.</span></span><span class="sig-name descname"><span class="pre">boost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec_st</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boost_vel_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">light_speed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_old</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.boost" title="Link to this definition">¶</a></dt>
 <dd><p>Boost a spacetime-vector by a specified space-velocity.</p>
 <p>This operation uses the Lorentz vector transformations as described here:
 <a class="reference external" href="https://en.wikipedia.org/wiki/Lorentz_transformation#Vector_transformations">Lorentz Transformation: Vector transformations - Wikipedia</a></p>
@@ -163,7 +161,7 @@ transformation.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="spacetimelib.boost_velocity_s">
-<span class="sig-prename descclassname"><span class="pre">spacetimelib.</span></span><span class="sig-name descname"><span class="pre">boost_velocity_s</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vel_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boost_vel_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">light_speed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.boost_velocity_s" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">spacetimelib.</span></span><span class="sig-name descname"><span class="pre">boost_velocity_s</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vel_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boost_vel_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">light_speed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.boost_velocity_s" title="Link to this definition">¶</a></dt>
 <dd><p>Boost a space-velocity by a specified space-velocity.</p>
 <p>This operation uses the Lorentz vector transformations as described here:
 <a class="reference external" href="https://en.wikipedia.org/wiki/Lorentz_transformation#Transformation_of_velocities">Lorentz Transformation: Transformation of velocities - Wikipedia</a></p>
@@ -200,7 +198,7 @@ transformation.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="spacetimelib.proper_time_delta">
-<span class="sig-prename descclassname"><span class="pre">spacetimelib.</span></span><span class="sig-name descname"><span class="pre">proper_time_delta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.proper_time_delta" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">spacetimelib.</span></span><span class="sig-name descname"><span class="pre">proper_time_delta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.proper_time_delta" title="Link to this definition">¶</a></dt>
 <dd><p>Calculate the proper time between two events.</p>
 <p>The result preserves the sign of the difference between the time
 coordinates of the two events. So if <code class="docutils literal notranslate"><span class="pre">event1</span></code> is in the future with
@@ -227,7 +225,7 @@ Shape: (…)</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="spacetimelib.Worldline">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">spacetimelib.</span></span><span class="sig-name descname"><span class="pre">Worldline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ends_vel_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">past_vel_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">future_vel_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proper_time_origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proper_time_offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Worldline" title="Permalink to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">spacetimelib.</span></span><span class="sig-name descname"><span class="pre">Worldline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ends_vel_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">past_vel_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">future_vel_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proper_time_origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proper_time_offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Worldline" title="Link to this definition">¶</a></dt>
 <dd><p>The worldline of a particle is represented as a finite list of events,
 called “vertices”, through which the particle passes in an inertial
 reference frame. The particle moves in straight lines between the vertices.</p>
@@ -289,7 +287,7 @@ the coordinate time <code class="docutils literal notranslate"><span class="pre"
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetimelib.Worldline.__len__">
-<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Worldline.__len__" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Worldline.__len__" title="Link to this definition">¶</a></dt>
 <dd><p>Get the number of vertices in the worldline.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -300,7 +298,7 @@ the coordinate time <code class="docutils literal notranslate"><span class="pre"
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetimelib.Worldline.__add__">
-<span class="sig-name descname"><span class="pre">__add__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_delta</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Worldline.__add__" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__add__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_delta</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Worldline.__add__" title="Link to this definition">¶</a></dt>
 <dd><p>Add a displacement to all events in the worldline.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -314,7 +312,7 @@ the coordinate time <code class="docutils literal notranslate"><span class="pre"
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetimelib.Worldline.__sub__">
-<span class="sig-name descname"><span class="pre">__sub__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_delta</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Worldline.__sub__" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__sub__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_delta</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Worldline.__sub__" title="Link to this definition">¶</a></dt>
 <dd><p>Subtract a displacement from all events in the worldline.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -328,7 +326,7 @@ the coordinate time <code class="docutils literal notranslate"><span class="pre"
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetimelib.Worldline.__eq__">
-<span class="sig-name descname"><span class="pre">__eq__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Worldline.__eq__" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__eq__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Worldline.__eq__" title="Link to this definition">¶</a></dt>
 <dd><p>Check if two worldlines are equal. This checks every property of the
 two worldlines. If any one of them differs, they are not equal.</p>
 <dl class="field-list simple">
@@ -343,7 +341,7 @@ two worldlines. If any one of them differs, they are not equal.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetimelib.Worldline.boost">
-<span class="sig-name descname"><span class="pre">boost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boost_vel_s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Worldline.boost" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">boost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boost_vel_s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Worldline.boost" title="Link to this definition">¶</a></dt>
 <dd><p>Boost the worldline to a different inertial reference frame. The vertices,
 past and future velocities, and :attr:<code class="docutils literal notranslate"><span class="pre">Worldline.proper_time_origin</span></code> are
 all boosted.</p>
@@ -359,7 +357,7 @@ all boosted.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetimelib.Worldline.eval">
-<span class="sig-name descname"><span class="pre">eval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Worldline.eval" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">eval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Worldline.eval" title="Link to this definition">¶</a></dt>
 <dd><p>Calculates the event at a specified time on the worldline. The particle
 travels in straight lines between vertices, so we use simple linear
 interpolation for this.</p>
@@ -389,7 +387,7 @@ indices of vertices surrounding the specified <code class="docutils literal notr
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetimelib.Worldline.eval_proper_time">
-<span class="sig-name descname"><span class="pre">eval_proper_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proper_time_delta</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Worldline.eval_proper_time" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">eval_proper_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proper_time_delta</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Worldline.eval_proper_time" title="Link to this definition">¶</a></dt>
 <dd><p>Calculates the coordinates of the event located at the specified proper
 time displacement away from a specified time coordinate along the
 worldline.</p>
@@ -408,7 +406,7 @@ worldline.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetimelib.Worldline.eval_vel_s">
-<span class="sig-name descname"><span class="pre">eval_vel_s</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Worldline.eval_vel_s" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">eval_vel_s</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Worldline.eval_vel_s" title="Link to this definition">¶</a></dt>
 <dd><p>Calculates the space-velocity at a specified time on the worldline. If
 the time coincides with a vertex, the future velocity after the vertex
 is returned.</p>
@@ -424,7 +422,7 @@ is returned.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="spacetimelib.Worldline.future_vel_s">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">future_vel_s</span></span><a class="headerlink" href="#spacetimelib.Worldline.future_vel_s" title="Permalink to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">future_vel_s</span></span><a class="headerlink" href="#spacetimelib.Worldline.future_vel_s" title="Link to this definition">¶</a></dt>
 <dd><p>Space-velocity of the worldline after the last vertex.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -438,7 +436,7 @@ is returned.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="spacetimelib.Worldline.future_vel_st">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">future_vel_st</span></span><a class="headerlink" href="#spacetimelib.Worldline.future_vel_st" title="Permalink to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">future_vel_st</span></span><a class="headerlink" href="#spacetimelib.Worldline.future_vel_st" title="Link to this definition">¶</a></dt>
 <dd><p>Spacetime-velocity of the worldline after the last vertex.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -452,7 +450,7 @@ is returned.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="spacetimelib.Worldline.ndim">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ndim</span></span><a class="headerlink" href="#spacetimelib.Worldline.ndim" title="Permalink to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">ndim</span></span><a class="headerlink" href="#spacetimelib.Worldline.ndim" title="Link to this definition">¶</a></dt>
 <dd><p>Get the number of spatial plus time dimensions, N+1, for this worldline.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -466,7 +464,7 @@ is returned.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="spacetimelib.Worldline.past_vel_s">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">past_vel_s</span></span><a class="headerlink" href="#spacetimelib.Worldline.past_vel_s" title="Permalink to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">past_vel_s</span></span><a class="headerlink" href="#spacetimelib.Worldline.past_vel_s" title="Link to this definition">¶</a></dt>
 <dd><p>Space-velocity of the worldline before the first vertex.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -480,7 +478,7 @@ is returned.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="spacetimelib.Worldline.past_vel_st">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">past_vel_st</span></span><a class="headerlink" href="#spacetimelib.Worldline.past_vel_st" title="Permalink to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">past_vel_st</span></span><a class="headerlink" href="#spacetimelib.Worldline.past_vel_st" title="Link to this definition">¶</a></dt>
 <dd><p>Spacetime-velocity of the worldline before the first vertex.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -494,7 +492,7 @@ is returned.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetimelib.Worldline.plot">
-<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_extension_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Worldline.plot" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_extension_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Worldline.plot" title="Link to this definition">¶</a></dt>
 <dd><p>Get an array that can be given directly to <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html">matplotlib.pyplot.plot()</a>,
 to generate a 2D plot of the worldline in two of its N+1 dimensions.</p>
 <p>You will need to expand the array with <cite>*</cite>, like so:
@@ -529,7 +527,7 @@ plot, since we cannot plot infinitely long rays in Matplotlib.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetimelib.Worldline.proper_time">
-<span class="sig-name descname"><span class="pre">proper_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Worldline.proper_time" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">proper_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Worldline.proper_time" title="Link to this definition">¶</a></dt>
 <dd><p>Calculate the proper time along a section of the worldline between
 :attr:<code class="docutils literal notranslate"><span class="pre">Worldline.proper_time_origin</span></code> and a specified time coordinate,
 plus the :attr:<code class="docutils literal notranslate"><span class="pre">Worldline.proper_time_offset</span></code>. This is equivalent to
@@ -549,7 +547,7 @@ set to :attr:<code class="docutils literal notranslate"><span class="pre">Worldl
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetimelib.Worldline.proper_time_delta">
-<span class="sig-name descname"><span class="pre">proper_time_delta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Worldline.proper_time_delta" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">proper_time_delta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Worldline.proper_time_delta" title="Link to this definition">¶</a></dt>
 <dd><p>Measure the proper time along a section of the worldline between two
 specified time coordinates. Note that if <code class="docutils literal notranslate"><span class="pre">time1</span> <span class="pre">&lt;</span> <span class="pre">time0</span></code>, result is
 negative.</p>
@@ -568,7 +566,7 @@ negative.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="spacetimelib.Worldline.proper_time_offset">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">proper_time_offset</span></span><a class="headerlink" href="#spacetimelib.Worldline.proper_time_offset" title="Permalink to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">proper_time_offset</span></span><a class="headerlink" href="#spacetimelib.Worldline.proper_time_offset" title="Link to this definition">¶</a></dt>
 <dd><p>Get the proper time offset of the worldline.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -579,7 +577,7 @@ negative.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="spacetimelib.Worldline.proper_time_origin">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">proper_time_origin</span></span><a class="headerlink" href="#spacetimelib.Worldline.proper_time_origin" title="Permalink to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">proper_time_origin</span></span><a class="headerlink" href="#spacetimelib.Worldline.proper_time_origin" title="Link to this definition">¶</a></dt>
 <dd><p>Get the proper time origin of the worldline.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -590,7 +588,7 @@ negative.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetimelib.Worldline.vertex">
-<span class="sig-name descname"><span class="pre">vertex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Worldline.vertex" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">vertex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Worldline.vertex" title="Link to this definition">¶</a></dt>
 <dd><p>Get the vertex at the specified index.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -609,7 +607,7 @@ negative.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="spacetimelib.Frame">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">spacetimelib.</span></span><span class="sig-name descname"><span class="pre">Frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">worldlines</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Frame" title="Permalink to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">spacetimelib.</span></span><span class="sig-name descname"><span class="pre">Frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">worldlines</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Frame" title="Link to this definition">¶</a></dt>
 <dd><p>An inertial reference frame is represented as a set of <a class="reference internal" href="#spacetimelib.Worldline" title="spacetimelib.Worldline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Worldline</span></code></a>
 s, all in the same coordinate system. All worldlines in the same frame must
 have the same number of N+1 dimensions.</p>
@@ -621,22 +619,22 @@ If no name is given, a default name of the format “wl&lt;number&gt;” is
 automatically assigned to it.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetimelib.Frame.__len__">
-<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Frame.__len__" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Frame.__len__" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetimelib.Frame.__getitem__">
-<span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Frame.__getitem__" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Frame.__getitem__" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetimelib.Frame.__setitem__">
-<span class="sig-name descname"><span class="pre">__setitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Frame.__setitem__" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__setitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Frame.__setitem__" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetimelib.Frame.__add__">
-<span class="sig-name descname"><span class="pre">__add__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_delta</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Frame.__add__" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__add__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_delta</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Frame.__add__" title="Link to this definition">¶</a></dt>
 <dd><p>Add a displacement to all worldlines in the frame.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -650,7 +648,7 @@ automatically assigned to it.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetimelib.Frame.boost">
-<span class="sig-name descname"><span class="pre">boost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boost_vel_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_delta_pre</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_delta_post</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_batched</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Frame.boost" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">boost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boost_vel_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_delta_pre</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_delta_post</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_batched</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Frame.boost" title="Link to this definition">¶</a></dt>
 <dd><p>Boost each worldline in the frame by the specified velocity.</p>
 <p>The <code class="xref py py-attr docutils literal notranslate"><span class="pre">event_delta_pre</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">event_delta_post</span></code> arguments
 can be used to add optional spacetime-vector offsets to the frame
@@ -677,7 +675,7 @@ usually significantly faster to use this combined operation.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spacetimelib.Frame.eval">
-<span class="sig-name descname"><span class="pre">eval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Frame.eval" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">eval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spacetimelib.Frame.eval" title="Link to this definition">¶</a></dt>
 <dd><p>Calculates the event coordinates and proper times for all worldlines at
 a specified time.</p>
 <dl class="field-list simple">
@@ -706,9 +704,9 @@ time.</p>
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">spacetimelib</a></h1>
+<h1 class="logo"><a href="index.html">SpacetimeLib</a></h1>
 
 
 
@@ -717,7 +715,16 @@ time.</p>
 
 
 
-<h3>Navigation</h3>
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="notebooks/Twin%20Paradox.html">Start Here - Twin Paradox tutorial</a></li>
 </ul>
@@ -760,16 +767,6 @@ time.</p>
   </ul></li>
 </ul>
 </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -783,11 +780,11 @@ time.</p>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2022-2023, Kurt Mohler.
+      &#169;2022-2023, Kurt Mohler.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
       <a href="_sources/api-reference.rst.txt"

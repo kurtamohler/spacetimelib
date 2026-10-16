@@ -1,21 +1,18 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Start Here - Twin Paradox tutorial &#8212; spacetimelib 0.0.2 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
+    <title>Start Here - Twin Paradox tutorial &#8212; SpacetimeLib 0.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <script src="../_static/documentation_options.js?v=7026087e"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Installation" href="../installation.html" />
@@ -23,8 +20,9 @@
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
+
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  
 
   </head><body>
   
@@ -37,19 +35,19 @@
           <div class="body" role="main">
             
   <section id="start-here-twin-paradox-tutorial">
-<h1>Start Here - Twin Paradox tutorial<a class="headerlink" href="#start-here-twin-paradox-tutorial" title="Permalink to this heading">¶</a></h1>
+<h1>Start Here - Twin Paradox tutorial<a class="headerlink" href="#start-here-twin-paradox-tutorial" title="Link to this heading">¶</a></h1>
 <p>To show what SpacetimeLib can do, let’s look at a well-known thought experiment called the <a class="reference external" href="https://en.wikipedia.org/wiki/Twin_paradox">twin paradox</a>.</p>
 <p>Alice and Bob are twins living on Earth. Alice gets on a spaceship, travels 10 light years away from Earth, and then comes right back. Her ship can travel extremely fast, but not as fast as light. From Bob’s perspective, each leg of Alice’s trip takes 10.1 years, and when Alice arrives back home, Bob has aged 20.2 years. How much time does the trip take from Alice’s perspective?</p>
 <p>If you haven’t learned about special relativity and <a class="reference external" href="https://en.wikipedia.org/wiki/Time_dilation">time dilation</a> before, you may be tempted to say that the trip takes 20.2 years from Alice’s perspective as well, because time passes at the same rate for everyone. However, special relativity teaches us that time actually passes at different rates for two people traveling at different velocities. Let’s get more into it.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">spacetimelib</span> <span class="k">as</span> <span class="nn">st</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">spacetimelib</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
 </pre></div>
 </div>
 </div>
 </div>
 <section id="creating-worldlines">
-<h2>Creating worldlines<a class="headerlink" href="#creating-worldlines" title="Permalink to this heading">¶</a></h2>
+<h2>Creating worldlines<a class="headerlink" href="#creating-worldlines" title="Link to this heading">¶</a></h2>
 <p>SpacetimeLib has an object called <code class="docutils literal notranslate"><span class="pre">spacetimelib.Worldline</span></code> to represent the <a class="reference external" href="https://en.wikipedia.org/wiki/World_line">worldline</a> (a trajectory through spacetime) of a particle. We give it a list of events that a particle travels through, and SpacetimeLib will draw straight lines through those points to create a trajectory.</p>
 <p>An event is just a point in spacetime, so it contains a time and a spatial position.</p>
 <p>Alice and Bob both start at the same event <code class="docutils literal notranslate"><span class="pre">(t=0,</span> <span class="pre">x=0)</span></code>. Halfway through her trip, Alice is at the event <code class="docutils literal notranslate"><span class="pre">(t=10.1,</span> <span class="pre">x=10)</span></code>. Then at the end of her trip, both Alice and Bob are at the event <code class="docutils literal notranslate"><span class="pre">(t=20.2,</span> <span class="pre">x=0)</span></code>. Let’s create the worldlines for Alice and Bob.</p>
@@ -73,7 +71,7 @@
 <p>I put <code class="docutils literal notranslate"><span class="pre">_0</span></code> on these variable names to keep track of which reference frame we used for the coordinates of the worldlines. <code class="docutils literal notranslate"><span class="pre">_0</span></code> will refer to Bob’s reference frame.</p>
 </section>
 <section id="proper-time-along-worldlines">
-<h2>Proper time along worldlines<a class="headerlink" href="#proper-time-along-worldlines" title="Permalink to this heading">¶</a></h2>
+<h2>Proper time along worldlines<a class="headerlink" href="#proper-time-along-worldlines" title="Link to this heading">¶</a></h2>
 <p>Finding the answer to the question, “How much time does the trip take from Alice’s perspective?”, is easy. We can just call <code class="docutils literal notranslate"><span class="pre">Worldline.proper_time_delta()</span></code> to find the <a class="reference external" href="https://en.wikipedia.org/wiki/Proper_time">proper time</a> along a worldline between two time coordinates.</p>
 <p>Let’s first find Bob’s proper time over the course of Alice’s journey.</p>
 <div class="cell docutils container">
@@ -83,7 +81,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>20.2
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(20.2)
 </pre></div>
 </div>
 </div>
@@ -96,7 +94,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.8354893757515587
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(2.8354893757515587)
 </pre></div>
 </div>
 </div>
@@ -116,7 +114,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.02828427831811963
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.02828427831811963)
 </pre></div>
 </div>
 </div>
@@ -129,7 +127,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10.323761586113665
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(10.323761586113665)
 </pre></div>
 </div>
 </div>
@@ -138,17 +136,17 @@
 <p>Imagine this: Right before Alice starts her journey, Alice and Bob celebrate their 18th birthday, and they also welcome Bob’s newborn daughter into the world. When Alice arrives back home after her trip, it is her niece’s 20th birthday and Bob’s 38th birthday, while Alice is only 18 years and 10 days old.</p>
 </section>
 <section id="plotting">
-<h2>Plotting<a class="headerlink" href="#plotting" title="Permalink to this heading">¶</a></h2>
+<h2>Plotting<a class="headerlink" href="#plotting" title="Link to this heading">¶</a></h2>
 <p>We can plot worldlines with <a class="reference external" href="https://matplotlib.org/">Matplotlib</a>. Obtaining plottable data from worldlines is easy, with <code class="docutils literal notranslate"><span class="pre">Worldline.plot()</span></code>. If you’re not familiar with Matplotlib, don’t worry about understanding how it works right now. There are <a class="reference external" href="https://matplotlib.org/stable/tutorials/introductory/quick_start.html">tutorials</a> for it, which you can check out later.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
-<span class="k">def</span> <span class="nf">plot_worldline</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">w</span><span class="o">.</span><span class="n">plot</span><span class="p">(),</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;x-axis&#39;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;t-axis&#39;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;center left&#39;</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_worldline</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">w</span><span class="o">.</span><span class="n">plot</span><span class="p">(),</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'.'</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'x-axis'</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'t-axis'</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">'center left'</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">out</span>
 </pre></div>
 </div>
@@ -158,8 +156,8 @@
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 
-<span class="n">plot_worldline</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">alice_0</span><span class="p">,</span> <span class="s2">&quot;Alice&quot;</span><span class="p">)</span>
-<span class="n">plot_worldline</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">bob_0</span><span class="p">,</span> <span class="s2">&quot;Bob&quot;</span><span class="p">)</span>
+<span class="n">plot_worldline</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">alice_0</span><span class="p">,</span> <span class="s2">"Alice"</span><span class="p">)</span>
+<span class="n">plot_worldline</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">bob_0</span><span class="p">,</span> <span class="s2">"Bob"</span><span class="p">)</span>
 
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">7</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">22</span><span class="p">)</span>
@@ -170,12 +168,12 @@
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(0.0, 22.0)
 </pre></div>
 </div>
-<img alt="../_images/66a095f27ce066071e6dfbb48a882760eebddd4a670307953434b68087151eae.png" src="../_images/66a095f27ce066071e6dfbb48a882760eebddd4a670307953434b68087151eae.png" />
+<img alt="../_images/cfde6ee961efabc56146566a55775da8a79cec72567c5dd824989ed222962797.png" src="../_images/cfde6ee961efabc56146566a55775da8a79cec72567c5dd824989ed222962797.png" />
 </div>
 </div>
 </section>
 <section id="velocity-along-a-worldline">
-<h2>Velocity along a worldline<a class="headerlink" href="#velocity-along-a-worldline" title="Permalink to this heading">¶</a></h2>
+<h2>Velocity along a worldline<a class="headerlink" href="#velocity-along-a-worldline" title="Link to this heading">¶</a></h2>
 <p>Another thing we can do with these worldlines is calculate the velocity of Alice and Bob at different points in time with <code class="docutils literal notranslate"><span class="pre">Worldline.eval_vel_s()</span></code>. What is Alice’s velocity at, say time <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">=</span> <span class="pre">5</span></code>? This is during the first leg of her journey, so we’d expect the velocity to be positive, since she is moving in the positive x-direction. As for the magnitude, each leg is 10 lightyears long and takes 10.1 years, so we’d expect it to be <code class="docutils literal notranslate"><span class="pre">distance</span> <span class="pre">/</span> <span class="pre">time</span> <span class="pre">=</span> <span class="pre">10</span> <span class="pre">/</span> <span class="pre">10.1</span></code>, which is:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -220,7 +218,7 @@
 <p>The magnitude is the same, but the direction is opposite, since this is during the second leg and Alice is traveling back to Earth.</p>
 </section>
 <section id="viewing-from-a-different-reference-frame">
-<h2>Viewing from a different reference frame<a class="headerlink" href="#viewing-from-a-different-reference-frame" title="Permalink to this heading">¶</a></h2>
+<h2>Viewing from a different reference frame<a class="headerlink" href="#viewing-from-a-different-reference-frame" title="Link to this heading">¶</a></h2>
 <p>Currently, we’ve only been viewing Alice and Bob’s worldlines from Bob’s reference frame. But we can apply a <a class="reference external" href="https://en.wikipedia.org/wiki/Lorentz_transformation">Lorentz transformation</a> to view the same worldlines from a different reference frame that is moving at a different velocity relative to the original reference frame. This process is called “boosting”, and we can use <code class="docutils literal notranslate"><span class="pre">Worldline.boost()</span></code> to do it.</p>
 <p>Let’s view the worldlines from Alice’s perspective during the first leg of her trip.</p>
 <div class="cell docutils container">
@@ -236,8 +234,8 @@
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 
-<span class="n">plot_worldline</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">alice_1</span><span class="p">,</span> <span class="s2">&quot;Alice&quot;</span><span class="p">)</span>
-<span class="n">plot_worldline</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">bob_1</span><span class="p">,</span> <span class="s2">&quot;Bob&quot;</span><span class="p">)</span>
+<span class="n">plot_worldline</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">alice_1</span><span class="p">,</span> <span class="s2">"Alice"</span><span class="p">)</span>
+<span class="n">plot_worldline</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">bob_1</span><span class="p">,</span> <span class="s2">"Bob"</span><span class="p">)</span>
 
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
@@ -248,7 +246,7 @@
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(0.0, 10.0)
 </pre></div>
 </div>
-<img alt="../_images/431c46f93ee5b48daeee29c8ba42a705b36d619eece3d9a37c7ab1ae28a3088d.png" src="../_images/431c46f93ee5b48daeee29c8ba42a705b36d619eece3d9a37c7ab1ae28a3088d.png" />
+<img alt="../_images/0b5e6e04eb133df8ea8d591c9d042eba153530fa8b7c02339069a624af04bde3.png" src="../_images/0b5e6e04eb133df8ea8d591c9d042eba153530fa8b7c02339069a624af04bde3.png" />
 </div>
 </div>
 </section>
@@ -259,9 +257,9 @@
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../index.html">spacetimelib</a></h1>
+<h1 class="logo"><a href="../index.html">SpacetimeLib</a></h1>
 
 
 
@@ -270,7 +268,16 @@
 
 
 
-<h3>Navigation</h3>
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Start Here - Twin Paradox tutorial</a></li>
 </ul>
@@ -308,16 +315,6 @@
   </ul></li>
 </ul>
 </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -331,11 +328,11 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2022-2023, Kurt Mohler.
+      &#169;2022-2023, Kurt Mohler.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
       <a href="../_sources/notebooks/Twin Paradox.ipynb.txt"

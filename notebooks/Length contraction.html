@@ -1,21 +1,18 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Length contraction &#8212; spacetimelib 0.0.2 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
+    <title>Length contraction &#8212; SpacetimeLib 0.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <script src="../_static/documentation_options.js?v=7026087e"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Length contraction - 2 spatial dims" href="Length%20contraction%20of%20a%20circle.html" />
@@ -23,8 +20,9 @@
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
+
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  
 
   </head><body>
   
@@ -37,19 +35,19 @@
           <div class="body" role="main">
             
   <section id="length-contraction">
-<h1>Length contraction<a class="headerlink" href="#length-contraction" title="Permalink to this heading">¶</a></h1>
+<h1>Length contraction<a class="headerlink" href="#length-contraction" title="Link to this heading">¶</a></h1>
 <p>Alice has a very fast car. She passes Bob, who is standing on the ground, at a speed of 0.99 light-seconds per second. In Alice’s frame, the car is 10 meters long. Is the car also 10 meters long in Bob’s frame, or does it change?</p>
 <p>Let’s first plot the situation in Alice’s frame of reference.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">spacetimelib</span> <span class="k">as</span> <span class="nn">st</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">spacetimelib</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
-<span class="k">def</span> <span class="nf">plot_worldline</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">w_plot_data</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">w_plot_data</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;x-axis&#39;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;t-axis&#39;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;center left&#39;</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_worldline</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">w_plot_data</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">w_plot_data</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'.'</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'x-axis'</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'t-axis'</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">'center left'</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">out</span>
 </pre></div>
 </div>
@@ -86,17 +84,17 @@
 <span class="n">plot_worldline</span><span class="p">(</span>
     <span class="n">ax</span><span class="p">,</span>
     <span class="n">car_front_0</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">end_extension_time</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
-    <span class="s2">&quot;Car front&quot;</span><span class="p">)</span>
+    <span class="s2">"Car front"</span><span class="p">)</span>
 
 <span class="n">plot_worldline</span><span class="p">(</span>
     <span class="n">ax</span><span class="p">,</span>
     <span class="n">car_back_0</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">end_extension_time</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
-    <span class="s2">&quot;Car back&quot;</span><span class="p">)</span>
+    <span class="s2">"Car back"</span><span class="p">)</span>
 
 <span class="n">plot_worldline</span><span class="p">(</span>
     <span class="n">ax</span><span class="p">,</span>
     <span class="n">bob_0</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">end_extension_time</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
-    <span class="s2">&quot;Bob&quot;</span><span class="p">)</span>
+    <span class="s2">"Bob"</span><span class="p">)</span>
 
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
@@ -107,7 +105,7 @@
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(-10.0, 20.0)
 </pre></div>
 </div>
-<img alt="../_images/b6e41304b99470f89f694fdb65664711a9cc0c6b9c7c98db1c679de70d39d8ac.png" src="../_images/b6e41304b99470f89f694fdb65664711a9cc0c6b9c7c98db1c679de70d39d8ac.png" />
+<img alt="../_images/d28f3a6cb2101a4f6c317cf0b3b006ca1043bc51ff2c6bb9346718ff31409c5c.png" src="../_images/d28f3a6cb2101a4f6c317cf0b3b006ca1043bc51ff2c6bb9346718ff31409c5c.png" />
 </div>
 </div>
 <p>We can see that Alice’s car remains 10 meters long the whole time. Now let’s boost to Bob’s frame to see what happens.</p>
@@ -127,17 +125,17 @@
 <span class="n">plot_worldline</span><span class="p">(</span>
     <span class="n">ax</span><span class="p">,</span>
     <span class="n">car_front_1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">end_extension_time</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
-    <span class="s2">&quot;Car front&quot;</span><span class="p">)</span>
+    <span class="s2">"Car front"</span><span class="p">)</span>
 
 <span class="n">plot_worldline</span><span class="p">(</span>
     <span class="n">ax</span><span class="p">,</span>
     <span class="n">car_back_1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">end_extension_time</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
-    <span class="s2">&quot;Car back&quot;</span><span class="p">)</span>
+    <span class="s2">"Car back"</span><span class="p">)</span>
 
 <span class="n">plot_worldline</span><span class="p">(</span>
     <span class="n">ax</span><span class="p">,</span>
     <span class="n">bob_1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">end_extension_time</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
-    <span class="s2">&quot;Bob&quot;</span><span class="p">)</span>
+    <span class="s2">"Bob"</span><span class="p">)</span>
 
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
@@ -148,7 +146,7 @@
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(-5.0, 10.0)
 </pre></div>
 </div>
-<img alt="../_images/13b952aa14dc3653390af7bedac132970757e41c9fa0b1a0550b90783dfdab02.png" src="../_images/13b952aa14dc3653390af7bedac132970757e41c9fa0b1a0550b90783dfdab02.png" />
+<img alt="../_images/fbb733b01162a1138cab30f9069b351f62b39957b8ca4b5777508abcc0de6623.png" src="../_images/fbb733b01162a1138cab30f9069b351f62b39957b8ca4b5777508abcc0de6623.png" />
 </div>
 </div>
 <p>We can clearly see that in Bob’s frame, Alice’s car is no longer 10 meters long.</p>
@@ -184,9 +182,9 @@
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../index.html">spacetimelib</a></h1>
+<h1 class="logo"><a href="../index.html">SpacetimeLib</a></h1>
 
 
 
@@ -195,7 +193,16 @@
 
 
 
-<h3>Navigation</h3>
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Twin%20Paradox.html">Start Here - Twin Paradox tutorial</a></li>
 </ul>
@@ -235,16 +242,6 @@
   </ul></li>
 </ul>
 </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -258,11 +255,11 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2022-2023, Kurt Mohler.
+      &#169;2022-2023, Kurt Mohler.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
       <a href="../_sources/notebooks/Length contraction.ipynb.txt"
