@@ -33,7 +33,7 @@ Install Miniconda:
 Clone SpacetimeLib the repository.
 
 ```bash
-https://github.com/kurtamohler/spacetimelib.git && cd spacetimelib
+git clone https://github.com/kurtamohler/spacetimelib.git && cd spacetimelib
 ```
 
 Run the following to create and activate an environment with all dependencies.
@@ -46,6 +46,12 @@ Then install SpacetimeLib.
 
 ```bash
 pip install -e .
+```
+
+Build documentation:
+
+```bash
+python -m sphinx doc/source/ doc/_build
 ```
 
 ## How to import SpacetimeLib
