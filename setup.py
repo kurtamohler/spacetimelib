@@ -9,7 +9,7 @@ with open('LICENSE') as f:
 
 name = 'spacetimelib'
 version = '0.0'
-release = '0.0.2'
+release = '0.0.3'
 
 setup(
     name=name,
