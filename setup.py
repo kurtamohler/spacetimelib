@@ -1,8 +1,5 @@
 from setuptools import setup, find_packages
 
-from sphinx.setup_command import BuildDoc
-cmdclass = {'build_sphinx': BuildDoc}
-
 
 with open('README.md') as f:
     readme = f.read()
@@ -24,7 +21,6 @@ setup(
     url='https://github.com/kurtamohler/spacetimelib',
     license=license,
     packages=['spacetimelib'],
-    cmdclass=cmdclass,
     # these are optional and override conf.py settings
     command_options={
         'build_sphinx': {

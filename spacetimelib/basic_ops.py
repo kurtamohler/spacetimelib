@@ -81,9 +81,9 @@ def boost(vec_st, boost_vel_s, light_speed=1, _old=False):
     check(light_speed > 0, ValueError, lambda: (
         f"expected 'light_speed' to be positive, but got {light_speed}"))
 
-    dtype = np.find_common_type([boost_vel_s.dtype, light_speed.dtype], [])
+    dtype = np.result_type(boost_vel_s.dtype, light_speed.dtype)
 
-    dtype = np.find_common_type([vec_st.dtype, dtype], [])
+    dtype = np.result_type(vec_st.dtype, dtype)
 
     # Change dtypes to match each other
     boost_vel_s = boost_vel_s.astype(dtype)
@@ -225,11 +225,10 @@ def boost_velocity_s(vel_s, boost_vel_s, light_speed=1):
     check(light_speed > 0, ValueError, lambda: (
         f"expected 'light_speed' to be positive, but got {light_speed}"))
 
-    dtype = np.find_common_type([
+    dtype = np.result_type(
         boost_vel_s.dtype,
         light_speed.dtype,
-        vel_s.dtype,
-    ], [])
+        vel_s.dtype)
 
     speed = np.linalg.norm(vel_s, axis=-1)
     check((speed <= light_speed).all(), ValueError, lambda: (
